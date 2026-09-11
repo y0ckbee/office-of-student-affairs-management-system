@@ -1,0 +1,2403 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - SVMS | CHMSU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   	<link rel="icon" type="image/png" href="{% static 'violations/images/chmsu_favicon_round.png' %}" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateX(-2px);
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .print-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .print-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26, 71, 42, 0.3);
+        }
+        
+        .refresh-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        /* Main Container */
+        .analytics-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        /* Official Document Header */
+        .document-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            border: 2px solid #1a472a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .university-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .university-logos img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+        }
+        
+        .university-name {
+            font-family: 'Times New Roman', serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a472a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        
+        .document-title-box {
+            background: #1a472a;
+            padding: 12px 24px;
+            margin: 16px auto 12px;
+            max-width: 500px;
+            border-radius: 4px;
+        }
+        
+        .document-title {
+            font-family: 'Times New Roman', serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        .document-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            color: rgba(255,255,255,0.85);
+            margin: 4px 0 0;
+            letter-spacing: 1px;
+        }
+        
+        .document-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .meta-item {
+            text-align: center;
+        }
+        
+        .meta-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 9px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .meta-value {
+            font-family: 'Times New Roman', serif;
+            font-size: 11px;
+            color: #374151;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #1a472a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-top: 16px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-badge {
+            display: inline-block;
+            background: #1a472a;
+            padding: 10px 32px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .section-badge h2 {
+            font-family: 'Times New Roman', serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        .section-badge i {
+            color: #fbbf24;
+            margin-right: 8px;
+        }
+        
+        .section-desc {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            color: #6b7280;
+            margin: 8px 0 0;
+        }
+        
+        /* Summary Cards Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .summary-card {
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .summary-card.total { background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%); }
+        .summary-card.major { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+        .summary-card.minor { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+        .summary-card.resolved { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        
+        .summary-card i {
+            font-size: 28px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .summary-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .summary-label {
+            font-size: 11px;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-icon.week { background: #dbeafe; color: #2563eb; }
+        .stat-icon.month { background: #fef3c7; color: #d97706; }
+        .stat-icon.change { background: #dcfce7; color: #059669; }
+        .stat-icon.change.negative { background: #fee2e2; color: #dc2626; }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        /* Chart Containers */
+        .charts-row {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .charts-row.two-cols { grid-template-columns: 2fr 1fr; }
+        .charts-row.equal { grid-template-columns: 1fr 1fr; }
+        .charts-row.full { grid-template-columns: 1fr; }
+        
+        .chart-card {
+            background: #ffffff;
+            border: 2px solid #1a472a;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .chart-header {
+            background: #1a472a;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chart-header span {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+        
+        .chart-body {
+            padding: 20px;
+            height: 280px;
+        }
+        
+        .chart-body.centered {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Diagnostic Analytics Styles */
+        .diagnostic-section {
+            margin-top: 32px;
+            border-top: 3px double #7c3aed;
+            padding-top: 24px;
+        }
+        
+        .diagnostic-summary {
+            background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: none;
+        }
+        
+        .diagnostic-summary-inner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .diagnostic-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .diagnostic-icon i {
+            font-size: 24px;
+        }
+        
+        .diagnostic-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+        
+        .diagnostic-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+        
+        /* Diagnostic Cards */
+        .diagnostic-card {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        
+        .diagnostic-header {
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .diagnostic-header.root-cause { background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%); }
+        .diagnostic-header.time-pattern { background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%); }
+        .diagnostic-header.hotspot { background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%); }
+        .diagnostic-header.correlation { background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%); }
+        
+        .diagnostic-header span {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+        
+        .diagnostic-body {
+            padding: 16px;
+            border: 2px solid;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .diagnostic-body.root-cause { border-color: #7c3aed; }
+        .diagnostic-body.time-pattern { border-color: #06b6d4; }
+        .diagnostic-body.hotspot { border-color: #ea580c; }
+        .diagnostic-body.correlation { border-color: #6366f1; }
+        
+        .diagnostic-item {
+            background: #faf5ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .diagnostic-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .diagnostic-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .diagnostic-item-header i {
+            color: #7c3aed;
+            font-size: 16px;
+        }
+        
+        .diagnostic-item-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1f2937;
+            margin: 0;
+        }
+        
+        .diagnostic-item-percentage {
+            background: #8b5cf6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        .diagnostic-item-finding {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            color: #4b5563;
+            margin: 8px 0;
+            padding-left: 26px;
+        }
+        
+        .diagnostic-causes {
+            margin: 12px 0 0 26px;
+            padding: 0;
+        }
+        
+        .diagnostic-causes li {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 4px;
+            list-style-type: disc;
+            line-height: 1.5;
+        }
+        
+        .diagnostic-insight {
+            background: #f0fdf4;
+            border-left: 3px solid #22c55e;
+            padding: 8px 12px;
+            margin: 12px 0 0 26px;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .diagnostic-insight p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            color: #166534;
+            margin: 0;
+        }
+        
+        .diagnostic-hotspot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        
+        .diagnostic-hotspot-item {
+            background: #fff7ed;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #fed7aa;
+            text-align: center;
+        }
+        
+        .diagnostic-hotspot-icon {
+            width: 36px;
+            height: 36px;
+            background: #ea580c;
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        
+        .diagnostic-hotspot-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            color: #1f2937;
+            margin: 0 0 4px 0;
+        }
+        
+        .diagnostic-hotspot-count {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #c2410c;
+        }
+        
+        .diagnostic-hotspot-percent {
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            color: #9a3412;
+        }
+        
+        .time-pattern-item {
+            background: #ecfeff;
+            border-left-color: #06b6d4;
+        }
+        
+        .time-pattern-item .diagnostic-item-header i {
+            color: #0891b2;
+        }
+        
+        .correlation-item {
+            background: #eef2ff;
+            border-left-color: #6366f1;
+        }
+        
+        .correlation-item .diagnostic-item-header i {
+            color: #4338ca;
+        }
+        
+        .no-diagnostic {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            display: none;
+        }
+        
+        .no-diagnostic i {
+            font-size: 40px;
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+        
+        .no-diagnostic p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        /* Prescriptive Analytics Styles */
+        .prescriptive-section {
+            margin-top: 32px;
+            border-top: 3px double #1a472a;
+            padding-top: 24px;
+        }
+        
+        .prescriptive-summary {
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: none;
+        }
+        
+        .prescriptive-summary-inner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .prescriptive-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .prescriptive-icon i {
+            font-size: 24px;
+        }
+        
+        .prescriptive-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+        
+        .prescriptive-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+        
+        /* Action Cards */
+        .action-section {
+            display: none;
+            margin-bottom: 24px;
+        }
+        
+        .action-card {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .action-header {
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .action-header.priority { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+        .action-header.prevention { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); }
+        .action-header.department { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .action-header.insights { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        
+        .action-header span {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+        
+        .action-body {
+            padding: 16px;
+            border: 2px solid;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .action-body.priority { border-color: #dc2626; }
+        .action-body.prevention { border-color: #2563eb; }
+        .action-body.department { border-color: #f59e0b; }
+        .action-body.insights { border-color: #10b981; }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        /* Prescriptive Cards */
+        .prescriptive-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
+        
+        .prescriptive-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .prescriptive-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .prescriptive-card.severity-high {
+            border-left-color: #dc2626;
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+        }
+        
+        .prescriptive-card.severity-medium {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+        }
+        
+        .prescriptive-card.severity-low {
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+        }
+        
+        .prescriptive-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .prescriptive-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .prescriptive-card.severity-high .prescriptive-card-icon {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .prescriptive-card.severity-medium .prescriptive-card-icon {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .prescriptive-card.severity-low .prescriptive-card-icon {
+            background: #dcfce7;
+            color: #059669;
+        }
+        
+        .prescriptive-card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+        
+        .prescriptive-card-desc {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            color: #6b7280;
+            margin: 0 0 12px 0;
+            line-height: 1.5;
+        }
+        
+        .prescriptive-action-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f3f4f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            color: #374151;
+            font-weight: 500;
+        }
+        
+        .prescriptive-action-badge i {
+            color: #1a472a;
+        }
+        
+        .prescriptive-action-list {
+            margin: 0;
+            padding: 0 0 0 20px;
+            list-style: none;
+        }
+        
+        .prescriptive-action-list li {
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            color: #4b5563;
+            padding: 4px 0;
+            padding-left: 12px;
+        }
+        
+        .prescriptive-action-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #1a472a;
+            font-weight: bold;
+        }
+        
+        /* No Recommendations */
+        .no-recommendations {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .no-recommendations i {
+            font-size: 48px;
+            color: #10b981;
+            margin-bottom: 16px;
+        }
+        
+        .no-recommendations h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 8px 0;
+        }
+        
+        .no-recommendations p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        /* Scope Statement */
+        .scope-section {
+            background: #ffffff;
+            border: 2px solid #1a472a;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 24px;
+        }
+        
+        .scope-header {
+            background: #1a472a;
+            padding: 10px 16px;
+        }
+        
+        .scope-header h4 {
+            font-family: 'Times New Roman', serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .scope-body {
+            padding: 16px;
+            background: #f9fafb;
+        }
+        
+        .scope-body p {
+            font-family: 'Times New Roman', serif;
+            font-size: 12px;
+            color: #374151;
+            margin: 0 0 12px;
+            line-height: 1.7;
+            text-align: justify;
+        }
+        
+        .scope-note {
+            background: #f0fdf4;
+            border-left: 4px solid #1a472a;
+            padding: 12px 16px;
+            margin-top: 12px;
+        }
+        
+        .scope-note p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            color: #166534;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .scope-footer {
+            background: #f3f4f6;
+            padding: 12px 16px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .scope-footer p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 9px;
+            color: #9ca3af;
+            margin: 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .charts-row.two-cols,
+            .charts-row.equal {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .summary-grid,
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+            .document-meta {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .page-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .university-logos {
+                flex-direction: column;
+            }
+        }
+        
+        /* ========================================
+           PRINT STYLES - A4 Portrait
+           ======================================== */
+        
+        /* Print Summary Section - Hidden on screen */
+        .print-summary-section {
+            display: none;
+        }
+        
+        .print-summary-card {
+            background: #ffffff;
+            border: 2px solid #1a472a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            page-break-inside: avoid;
+        }
+        
+        .print-summary-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 12px;
+        }
+        
+        .print-summary-header i {
+            font-size: 18px;
+        }
+        
+        .print-summary-header.descriptive i { color: #1a472a; }
+        .print-summary-header.diagnostic i { color: #7c3aed; }
+        .print-summary-header.prescriptive i { color: #2563eb; }
+        
+        .print-summary-header h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0;
+            color: #1f2937;
+        }
+        
+        .print-summary-header.descriptive { border-bottom-color: #1a472a; }
+        .print-summary-header.diagnostic { border-bottom-color: #7c3aed; }
+        .print-summary-header.prescriptive { border-bottom-color: #2563eb; }
+        
+        .print-summary-content {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            color: #374151;
+            line-height: 1.6;
+        }
+        
+        .print-summary-content p {
+            margin: 0 0 8px 0;
+        }
+        
+        .print-summary-content ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        
+        .print-summary-content li {
+            margin-bottom: 4px;
+        }
+        
+        .print-summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .print-stat-item {
+            text-align: center;
+            padding: 8px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+        
+        .print-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a472a;
+        }
+        
+        .print-stat-label {
+            font-size: 9px;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+        
+        @page {
+            size: 210mm 297mm portrait;
+            margin: 10mm 12mm 15mm 12mm;
+        }
+        
+        @media print {
+            *, *::before, *::after {
+                box-shadow: none !important;
+                text-shadow: none !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            html, body {
+                width: 210mm !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                font-size: 10pt !important;
+                overflow: visible !important;
+            }
+            
+            body {
+                padding: 0 !important;
+            }
+            
+            .no-print,
+            .page-header,
+            #loadingState,
+            .charts-row,
+            .diagnostic-section,
+            .prescriptive-section,
+            .scope-section {
+                display: none !important;
+            }
+            
+            .print-summary-section {
+                display: block !important;
+            }
+            
+            .analytics-container {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .document-header {
+                border: 2px solid #1a472a !important;
+                margin-bottom: 16px !important;
+                page-break-after: avoid;
+            }
+            
+            .document-title-box {
+                background: #1a472a !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+            
+            .summary-grid {
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 10px !important;
+                margin-bottom: 16px !important;
+            }
+            
+            .summary-card {
+                padding: 12px !important;
+                border-radius: 6px !important;
+            }
+            
+            .summary-card i {
+                font-size: 20px !important;
+            }
+            
+            .summary-value {
+                font-size: 20px !important;
+            }
+            
+            .summary-label {
+                font-size: 9px !important;
+            }
+            
+            .stats-row {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 10px !important;
+                margin-bottom: 16px !important;
+            }
+            
+            .stat-card {
+                padding: 10px !important;
+            }
+            
+            .section-header {
+                margin-bottom: 12px !important;
+            }
+            
+            .section-badge {
+                padding: 8px 16px !important;
+            }
+            
+            .section-badge h2 {
+                font-size: 12px !important;
+            }
+            
+            .print-summary-card {
+                page-break-inside: avoid !important;
+            }
+            
+            .print-summary-stats {
+                grid-template-columns: repeat(4, 1fr) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header -->
+    <header class="page-header no-print">
+        <div class="header-left">
+            <a href="{% url 'violations:faculty_dashboard' %}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+            <span class="header-title"><i class="fas fa-chart-line"></i> Analytics Dashboard</span>
+        </div>
+        <div class="header-right">
+            <button class="print-btn" id="printBtn">
+                <i class="fas fa-print"></i> Print Analytics Report
+            </button>
+            <button class="refresh-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="analytics-container">
+        <!-- Official Document Header -->
+        <div class="document-header">
+            <div class="university-logos">
+                <img src="{% static 'violations/images/chmsu_logo.png' %}" alt="CHMSU Logo">
+                <div style="text-align:center;">
+                    <p style="font-family:'Times New Roman',serif; font-size:11px; color:#374151; margin:0; letter-spacing:1px;">Republic of the Philippines</p>
+                    <h1 class="university-name">CARLOS HILADO MEMORIAL STATE UNIVERSITY</h1>
+                    <p style="font-family:'Times New Roman',serif; font-size:10px; color:#6b7280; margin:0;">Talisay City, Negros Occidental</p>
+                </div>
+                <img src="{% static 'violations/images/chmsu_logo.png' %}" alt="CHMSU Logo">
+            </div>
+            
+            <p style="font-family:'Times New Roman',serif; font-size:12px; font-weight:600; color:#1a472a; margin:12px 0; letter-spacing:2px; text-transform:uppercase;">Office of Student Affairs</p>
+            
+            <div class="document-title-box">
+                <h2 class="document-title">ANALYTICS REPORT</h2>
+                <p class="document-subtitle">Descriptive, Diagnostic &amp; Prescriptive Analysis</p>
+            </div>
+            
+            <div class="document-meta">
+                <div class="meta-item">
+                    <p class="meta-label">Document Type</p>
+                    <p class="meta-value">Statistical Report</p>
+                </div>
+                <div class="meta-item">
+                    <p class="meta-label">Generated On</p>
+                    <p class="meta-value" id="generatedDate">{% now "F d, Y" %}</p>
+                </div>
+                <div class="meta-item">
+                    <p class="meta-label">Academic Year</p>
+                    <p class="meta-value">2025-2026</p>
+                </div>
+                <div class="meta-item">
+                    <p class="meta-label">Classification</p>
+                    <p class="meta-value">Internal Use</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-container" id="loadingState">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading analytics data...</p>
+        </div>
+
+        <!-- Analytics Content -->
+        <div id="analyticsContent" style="display:none;">
+            <!-- Descriptive Analytics Section -->
+            <div class="section-header">
+                <div class="section-badge">
+                    <h2><i class="fas fa-chart-bar"></i> DESCRIPTIVE ANALYTICS</h2>
+                </div>
+                <p class="section-desc">Statistical summary and data visualization of violation records</p>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card total">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div class="summary-value" id="summaryTotalViolations">0</div>
+                    <div class="summary-label">Total Violations</div>
+                </div>
+                <div class="summary-card major">
+                    <i class="fas fa-ban"></i>
+                    <div class="summary-value" id="summaryMajor">0</div>
+                    <div class="summary-label">Major Offenses</div>
+                </div>
+                <div class="summary-card minor">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div class="summary-value" id="summaryMinor">0</div>
+                    <div class="summary-label">Minor Offenses</div>
+                </div>
+                <div class="summary-card resolved">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="summary-value" id="summaryResolved">0</div>
+                    <div class="summary-label">Resolved Cases</div>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon week">
+                        <i class="fas fa-calendar-week" style="font-size:20px;"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="summaryThisWeek">0</div>
+                        <div class="stat-label">This Week</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon month">
+                        <i class="fas fa-calendar-alt" style="font-size:20px;"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="summaryThisMonth">0</div>
+                        <div class="stat-label">Last 30 Days</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon change" id="weekChangeIcon">
+                        <i class="fas fa-arrow-up" style="font-size:20px;"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="summaryWeekChange">0%</div>
+                        <div class="stat-label">vs. Last Week</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================ -->
+            <!-- PRINT SUMMARY SECTION (Hidden on screen, shown on print) -->
+            <!-- ================================ -->
+            <div class="print-summary-section" id="printSummarySection">
+                <!-- Descriptive Analytics Summary -->
+                <div class="print-summary-card">
+                    <div class="print-summary-header descriptive">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>DESCRIPTIVE ANALYTICS SUMMARY</h3>
+                    </div>
+                    <div class="print-summary-content">
+                        <p><strong>What Happened:</strong></p>
+                        <div class="print-summary-stats">
+                            <div class="print-stat-item">
+                                <div class="print-stat-value" id="printTotalViolations">0</div>
+                                <div class="print-stat-label">Total Violations</div>
+                            </div>
+                            <div class="print-stat-item">
+                                <div class="print-stat-value" id="printMajorOffenses">0</div>
+                                <div class="print-stat-label">Major Offenses</div>
+                            </div>
+                            <div class="print-stat-item">
+                                <div class="print-stat-value" id="printMinorOffenses">0</div>
+                                <div class="print-stat-label">Minor Offenses</div>
+                            </div>
+                            <div class="print-stat-item">
+                                <div class="print-stat-value" id="printResolved">0</div>
+                                <div class="print-stat-label">Resolved Cases</div>
+                            </div>
+                        </div>
+                        <div id="printDescriptiveSummary"></div>
+                    </div>
+                </div>
+
+                <!-- Diagnostic Analytics Summary -->
+                <div class="print-summary-card">
+                    <div class="print-summary-header diagnostic">
+                        <i class="fas fa-search-plus"></i>
+                        <h3>DIAGNOSTIC ANALYTICS SUMMARY</h3>
+                    </div>
+                    <div class="print-summary-content">
+                        <p><strong>Why It Happened:</strong></p>
+                        <div id="printDiagnosticSummary"></div>
+                    </div>
+                </div>
+
+                <!-- Prescriptive Analytics Summary -->
+                <div class="print-summary-card">
+                    <div class="print-summary-header prescriptive">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>PRESCRIPTIVE ANALYTICS SUMMARY</h3>
+                    </div>
+                    <div class="print-summary-content">
+                        <p><strong>What Should Be Done:</strong></p>
+                        <div id="printPrescriptiveSummary"></div>
+                    </div>
+                </div>
+
+                <!-- Signature Section -->
+                <div style="margin-top: 40px; padding-top: 20px;">
+                    <div style="width: 250px; margin-left: auto; text-align: center;">
+                        <div style="border-bottom: 1px solid #1f2937; width: 100%; margin-bottom: 8px;"></div>
+                        <p style="font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; color: #1f2937; margin: 0;">
+                            VICTORIA VIOLANDA
+                        </p>
+                        <p style="font-family: 'Poppins', sans-serif; font-size: 10px; color: #4b5563; margin: 4px 0 0 0;">
+                            OSA Coordinator
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Report Footer -->
+                <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb; text-align: center;">
+                    <p style="font-family: 'Poppins', sans-serif; font-size: 9px; color: #6b7280; margin: 0;">
+                        This report was generated from the CHMSU Student Violation Tracking System Analytics Dashboard.
+                    </p>
+                    <p style="font-family: 'Poppins', sans-serif; font-size: 9px; color: #9ca3af; margin: 4px 0 0;">
+                        Report generated on: <span id="printReportDate"></span> | Classification: Internal Use
+                    </p>
+                </div>
+            </div>
+
+            <!-- Charts Row 1: Trends & Type Breakdown -->
+            <div class="charts-row two-cols">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <i class="fas fa-chart-area"></i>
+                        <span>VIOLATION TRENDS (Last 30 Days)</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="trendsChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>TYPE BREAKDOWN</span>
+                    </div>
+                    <div class="chart-body centered">
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 2: Status & Top Violations -->
+            <div class="charts-row equal">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <i class="fas fa-tasks"></i>
+                        <span>STATUS DISTRIBUTION</span>
+                    </div>
+                    <div class="chart-body centered" style="height:260px;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <i class="fas fa-list-ol"></i>
+                        <span>TOP VIOLATION TYPES</span>
+                    </div>
+                    <div class="chart-body" style="height:260px;">
+                        <canvas id="topViolationsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 3: Department Distribution -->
+            <div class="charts-row full">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <i class="fas fa-building"></i>
+                        <span>VIOLATIONS BY DEPARTMENT/COLLEGE</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================ -->
+            <!-- DIAGNOSTIC ANALYTICS SECTION -->
+            <!-- ================================ -->
+            <div class="diagnostic-section">
+                <div class="section-header">
+                    <div class="section-badge" style="background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);">
+                        <h2><i class="fas fa-search-plus"></i> DIAGNOSTIC ANALYTICS</h2>
+                    </div>
+                    <p class="section-desc">Root cause analysis and pattern identification</p>
+                    <p style="font-family:'Times New Roman',serif; font-size:10px; color:#9ca3af; margin:4px 0 0; font-style:italic;">
+                        Understanding why violations occur and their contributing factors
+                    </p>
+                </div>
+
+                <!-- Summary Banner -->
+                <div class="diagnostic-summary" id="diagnosticSummary">
+                    <div class="diagnostic-summary-inner">
+                        <div class="diagnostic-icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <div>
+                            <h4 class="diagnostic-title">Analysis Overview</h4>
+                            <p class="diagnostic-text" id="diagnosticSummaryText">Analyzing patterns...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Root Cause Analysis -->
+                <div class="diagnostic-card" id="rootCauseCard" style="display:none;">
+                    <div class="diagnostic-header root-cause">
+                        <i class="fas fa-magnifying-glass-chart"></i>
+                        <span>ROOT CAUSE ANALYSIS</span>
+                    </div>
+                    <div class="diagnostic-body root-cause" id="rootCauseList"></div>
+                </div>
+
+                <!-- Time Patterns -->
+                <div class="diagnostic-card" id="timePatternsCard" style="display:none;">
+                    <div class="diagnostic-header time-pattern">
+                        <i class="fas fa-clock"></i>
+                        <span>TIME PATTERNS</span>
+                    </div>
+                    <div class="diagnostic-body time-pattern" id="timePatternsList"></div>
+                </div>
+
+                <!-- Hotspots Grid -->
+                <div class="actions-grid">
+                    <div class="diagnostic-card" id="deptHotspotsCard" style="display:none;">
+                        <div class="diagnostic-header hotspot">
+                            <i class="fas fa-building"></i>
+                            <span>DEPARTMENT HOTSPOTS</span>
+                        </div>
+                        <div class="diagnostic-body hotspot">
+                            <div class="diagnostic-hotspot-grid" id="deptHotspotsList"></div>
+                        </div>
+                    </div>
+                    <div class="diagnostic-card" id="locHotspotsCard" style="display:none;">
+                        <div class="diagnostic-header hotspot">
+                            <i class="fas fa-location-dot"></i>
+                            <span>LOCATION HOTSPOTS</span>
+                        </div>
+                        <div class="diagnostic-body hotspot">
+                            <div class="diagnostic-hotspot-grid" id="locHotspotsList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Correlations -->
+                <div class="diagnostic-card" id="correlationsCard" style="display:none;">
+                    <div class="diagnostic-header correlation">
+                        <i class="fas fa-link"></i>
+                        <span>CORRELATIONS & RELATIONSHIPS</span>
+                    </div>
+                    <div class="diagnostic-body correlation" id="correlationsList"></div>
+                </div>
+
+                <!-- No Diagnostic Data State -->
+                <div class="no-diagnostic" id="noDiagnostic">
+                    <i class="fas fa-chart-line"></i>
+                    <p>Insufficient data to identify patterns. More violation records needed for analysis.</p>
+                </div>
+            </div>
+
+            <!-- ================================ -->
+            <!-- PRESCRIPTIVE ANALYTICS SECTION -->
+            <!-- ================================ -->
+            <div class="prescriptive-section">
+                <div class="section-header">
+                    <div class="section-badge">
+                        <h2><i class="fas fa-lightbulb"></i> PRESCRIPTIVE ANALYTICS</h2>
+                    </div>
+                    <p class="section-desc">Rule-based recommendations for informed decision-making</p>
+                    <p style="font-family:'Times New Roman',serif; font-size:10px; color:#9ca3af; margin:4px 0 0; font-style:italic;">
+                        Based on aggregated violation data analysis
+                    </p>
+                </div>
+
+                <!-- Summary Recommendation Banner -->
+                <div class="prescriptive-summary" id="prescriptiveSummary">
+                    <div class="prescriptive-summary-inner">
+                        <div class="prescriptive-icon">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="prescriptive-title">Overall Assessment</h4>
+                            <p class="prescriptive-text" id="summaryRecommendationText">Loading recommendations...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Priority Actions -->
+                <div class="action-section" id="priorityActionsSection">
+                    <div class="action-card">
+                        <div class="action-header priority">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>PRIORITY ACTIONS REQUIRED</span>
+                        </div>
+                        <div class="action-body priority" id="priorityActionsList"></div>
+                    </div>
+                </div>
+
+                <!-- Prevention Strategies & Department Focus Grid -->
+                <div class="actions-grid">
+                    <div class="action-section" id="preventionStrategiesSection">
+                        <div class="action-card" style="height:100%;">
+                            <div class="action-header prevention">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>PREVENTION STRATEGIES</span>
+                            </div>
+                            <div class="action-body prevention" id="preventionStrategiesList"></div>
+                        </div>
+                    </div>
+                    <div class="action-section" id="departmentFocusSection">
+                        <div class="action-card" style="height:100%;">
+                            <div class="action-header department">
+                                <i class="fas fa-building"></i>
+                                <span>DEPARTMENT FOCUS</span>
+                            </div>
+                            <div class="action-body department" id="departmentFocusList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Violation Insights -->
+                <div class="action-section" id="violationInsightsSection">
+                    <div class="action-card">
+                        <div class="action-header insights">
+                            <i class="fas fa-search"></i>
+                            <span>INSIGHTS & OBSERVATIONS</span>
+                        </div>
+                        <div class="action-body insights" id="violationInsightsList"></div>
+                    </div>
+                </div>
+
+                <!-- No Recommendations State -->
+                <div class="no-recommendations" id="noRecommendations">
+                    <i class="fas fa-check-circle"></i>
+                    <h4>All Clear!</h4>
+                    <p>No immediate actions required. Continue monitoring and maintain current preventive measures.</p>
+                </div>
+            </div>
+
+            <!-- Scope Statement -->
+            <div class="scope-section">
+                <div class="scope-header">
+                    <h4><i class="fas fa-file-alt"></i> SCOPE AND LIMITATIONS</h4>
+                </div>
+                <div class="scope-body">
+                    <p>The analytics functions implemented in the Student Violation Monitoring System perform 
+                    <strong>descriptive, diagnostic, and prescriptive analysis</strong> by aggregating violation records 
+                    and applying rule-based logic to generate actionable recommendations.</p>
+                    <div class="scope-note">
+                        <p><i class="fas fa-check-circle" style="margin-right:6px;"></i>
+                        <strong>Note:</strong> These functions compute counts, distributions, comparisons, and provide 
+                        decision-support insights <strong>without using predictive algorithms or automated decision-making</strong>.
+                        All recommendations are rule-based and require human judgment for implementation.</p>
+                    </div>
+                </div>
+                <div class="scope-footer">
+                    <p><i class="fas fa-university" style="margin-right:4px;"></i>
+                    Office of Student Affairs &bull; Carlos Hilado Memorial State University</p>
+                    <p>Document generated by SVMS &bull; For internal use only</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js and Analytics Script -->
+    <script>
+    (function(){
+        const loadingState = document.getElementById('loadingState');
+        const analyticsContent = document.getElementById('analyticsContent');
+        const refreshBtn = document.getElementById('refreshBtn');
+        
+        // Chart instances
+        let trendsChart = null;
+        let typeChart = null;
+        let statusChart = null;
+        let topViolationsChart = null;
+        let departmentChart = null;
+
+        // Load analytics data from API
+        async function loadAnalyticsData() {
+            loadingState.style.display = 'flex';
+            analyticsContent.style.display = 'none';
+
+            try {
+                const response = await fetch('{% url "violations:faculty_analytics_api" %}');
+                if (!response.ok) throw new Error('Failed to fetch analytics');
+                
+                const data = await response.json();
+                
+                if (!data.success) throw new Error('Invalid response');
+                
+                // Update summary cards (data comes from nested summary object)
+                const summary = data.summary || {};
+                document.getElementById('summaryTotalViolations').textContent = summary.total_violations || 0;
+                document.getElementById('summaryMajor').textContent = summary.total_major || 0;
+                document.getElementById('summaryMinor').textContent = summary.total_minor || 0;
+                document.getElementById('summaryResolved').textContent = summary.total_resolved || 0;
+                document.getElementById('summaryThisWeek').textContent = summary.this_week || 0;
+                document.getElementById('summaryThisMonth').textContent = summary.this_month || 0;
+                
+                // Week change indicator
+                const weekChange = summary.week_change_percent || 0;
+                const weekChangeEl = document.getElementById('summaryWeekChange');
+                const weekChangeIcon = document.getElementById('weekChangeIcon');
+                
+                if (weekChange > 0) {
+                    weekChangeEl.textContent = `+${weekChange}%`;
+                    weekChangeIcon.className = 'stat-icon change negative';
+                    weekChangeIcon.innerHTML = '<i class="fas fa-arrow-up" style="font-size:20px;"></i>';
+                } else if (weekChange < 0) {
+                    weekChangeEl.textContent = `${weekChange}%`;
+                    weekChangeIcon.className = 'stat-icon change';
+                    weekChangeIcon.innerHTML = '<i class="fas fa-arrow-down" style="font-size:20px;"></i>';
+                } else {
+                    weekChangeEl.textContent = '0%';
+                    weekChangeIcon.className = 'stat-icon change';
+                    weekChangeIcon.innerHTML = '<i class="fas fa-minus" style="font-size:20px;"></i>';
+                }
+
+                // Render charts (API returns objects with labels, data, colors arrays)
+                renderTrendsChart(data.trends || {});
+                renderTypeChart(data.type_breakdown || {});
+                renderStatusChart(data.status_breakdown || {});
+                renderTopViolationsChart(data.top_violation_types || {});
+                renderDepartmentChart(data.department_breakdown || {});
+                
+                // Render diagnostic analytics
+                renderDiagnosticAnalytics(data.diagnostic || {});
+                
+                // Render prescriptive analytics
+                renderPrescriptiveAnalytics(data.prescriptive || {});
+                
+                // Populate print summary for printing
+                populatePrintSummary(data);
+
+                loadingState.style.display = 'none';
+                analyticsContent.style.display = 'block';
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                loadingState.innerHTML = `
+                    <i class="fas fa-exclamation-triangle" style="font-size:48px; color:#dc2626; margin-bottom:16px;"></i>
+                    <p style="color:#dc2626;">Failed to load analytics data. Please try again.</p>
+                    <button onclick="location.reload()" style="margin-top:16px; padding:10px 20px; background:#1a472a; color:white; border:none; border-radius:8px; cursor:pointer;">
+                        <i class="fas fa-redo"></i> Retry
+                    </button>
+                `;
+            }
+        }
+
+        // Render Trends Chart (API returns {labels: [], data: []})
+        function renderTrendsChart(trends) {
+            const ctx = document.getElementById('trendsChart').getContext('2d');
+            if (trendsChart) trendsChart.destroy();
+            
+            trendsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: trends.labels || [],
+                    datasets: [{
+                        label: 'Violations',
+                        data: trends.data || [],
+                        borderColor: '#1a472a',
+                        backgroundColor: 'rgba(26, 71, 42, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#1a472a',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1a472a',
+                            titleFont: { family: 'Poppins', size: 12 },
+                            bodyFont: { family: 'Poppins', size: 11 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label;
+                                },
+                                label: function(context) {
+                                    return `Violations: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { family: 'Poppins', size: 9 },
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkip: true,
+                                maxTicksLimit: 15
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#e5e7eb' },
+                            ticks: { 
+                                font: { family: 'Poppins', size: 10 },
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Type Chart (Doughnut) - API returns {labels: [], data: [], colors: []}
+        function renderTypeChart(typeData) {
+            const ctx = document.getElementById('typeChart').getContext('2d');
+            if (typeChart) typeChart.destroy();
+            
+            typeChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: typeData.labels || ['Major Offense', 'Minor Offense'],
+                    datasets: [{
+                        data: typeData.data || [0, 0],
+                        backgroundColor: typeData.colors || ['#dc2626', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 20, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Status Chart (Pie) - API returns {labels: [], data: [], colors: []}
+        function renderStatusChart(statusData) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            if (statusChart) statusChart.destroy();
+            
+            statusChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: statusData.labels || [],
+                    datasets: [{
+                        data: statusData.data || [],
+                        backgroundColor: statusData.colors || ['#3b82f6', '#f59e0b', '#10b981', '#6b7280'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 15, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Top Violations Chart (Horizontal Bar) - API returns {labels: [], data: [], colors: []}
+        function renderTopViolationsChart(topViolations) {
+            const ctx = document.getElementById('topViolationsChart').getContext('2d');
+            if (topViolationsChart) topViolationsChart.destroy();
+            
+            const hasData = topViolations.labels && topViolations.labels.length > 0;
+            
+            topViolationsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: hasData ? topViolations.labels : ['No data available'],
+                    datasets: [{
+                        label: 'Count',
+                        data: hasData ? topViolations.data : [0],
+                        backgroundColor: hasData ? topViolations.colors : ['#e5e7eb'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Department Chart (Bar) - API returns {labels: [], data: [], colors: []}
+        function renderDepartmentChart(deptData) {
+            const ctx = document.getElementById('departmentChart').getContext('2d');
+            if (departmentChart) departmentChart.destroy();
+            
+            const hasData = deptData.labels && deptData.labels.length > 0;
+            
+            departmentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: hasData ? deptData.labels : ['No department data'],
+                    datasets: [{
+                        label: 'Violations',
+                        data: hasData ? deptData.data : [0],
+                        backgroundColor: hasData ? deptData.colors : ['#e5e7eb'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Diagnostic Analytics - API returns object with root_causes, time_patterns, hotspots, correlations
+        function renderDiagnosticAnalytics(diagnostic) {
+            const hasDiagnostic = diagnostic && (
+                diagnostic.summary ||
+                (diagnostic.root_causes && diagnostic.root_causes.length > 0) ||
+                (diagnostic.time_patterns && diagnostic.time_patterns.length > 0) ||
+                (diagnostic.hotspots && diagnostic.hotspots.length > 0) ||
+                (diagnostic.correlations && diagnostic.correlations.length > 0)
+            );
+
+            if (!hasDiagnostic) {
+                document.getElementById('noDiagnostic').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('noDiagnostic').style.display = 'none';
+
+            // Summary
+            if (diagnostic.summary) {
+                document.getElementById('diagnosticSummary').style.display = 'block';
+                document.getElementById('diagnosticSummaryText').textContent = diagnostic.summary;
+            }
+
+            // Root Cause Analysis
+            if (diagnostic.root_causes && diagnostic.root_causes.length > 0) {
+                document.getElementById('rootCauseCard').style.display = 'block';
+                document.getElementById('rootCauseList').innerHTML = diagnostic.root_causes.map(cause => `
+                    <div class="diagnostic-item">
+                        <div class="diagnostic-item-header">
+                            <i class="fas ${cause.icon || 'fa-magnifying-glass-chart'}"></i>
+                            <h5 class="diagnostic-item-title">${cause.title}</h5>
+                            ${cause.percentage ? `<span class="diagnostic-item-percentage">${cause.percentage}</span>` : ''}
+                        </div>
+                        <p class="diagnostic-item-finding">${cause.finding}</p>
+                        ${cause.possible_causes && cause.possible_causes.length > 0 ? `
+                            <ul class="diagnostic-causes">
+                                ${cause.possible_causes.map(c => `<li>${c}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                    </div>
+                `).join('');
+            }
+
+            // Time Patterns
+            if (diagnostic.time_patterns && diagnostic.time_patterns.length > 0) {
+                document.getElementById('timePatternsCard').style.display = 'block';
+                document.getElementById('timePatternsList').innerHTML = diagnostic.time_patterns.map(pattern => `
+                    <div class="diagnostic-item time-pattern-item">
+                        <div class="diagnostic-item-header">
+                            <i class="fas ${pattern.icon || 'fa-clock'}"></i>
+                            <h5 class="diagnostic-item-title">${pattern.title}</h5>
+                        </div>
+                        <p class="diagnostic-item-finding">${pattern.finding}</p>
+                        ${pattern.insight ? `
+                            <div class="diagnostic-insight">
+                                <p><i class="fas fa-lightbulb" style="color:#22c55e; margin-right:4px;"></i> ${pattern.insight}</p>
+                            </div>
+                        ` : ''}
+                        ${pattern.peak_hours && pattern.peak_hours.length > 0 ? `
+                            <div style="margin-top:12px; padding-left:26px;">
+                                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                    ${pattern.peak_hours.map((ph, idx) => `
+                                        <span style="background:${idx === 0 ? '#0891b2' : '#e0f2fe'}; color:${idx === 0 ? 'white' : '#0891b2'}; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:500;">
+                                            ${ph.time} (${ph.count})
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            }
+
+            // Department Hotspots
+            const deptHotspots = diagnostic.hotspots ? diagnostic.hotspots.filter(h => h.department) : [];
+            if (deptHotspots.length > 0) {
+                document.getElementById('deptHotspotsCard').style.display = 'block';
+                document.getElementById('deptHotspotsList').innerHTML = deptHotspots.map((hotspot, idx) => `
+                    <div class="diagnostic-hotspot-item">
+                        <div class="diagnostic-hotspot-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <p class="diagnostic-hotspot-name">${hotspot.department}</p>
+                        <p class="diagnostic-hotspot-count">${hotspot.count}</p>
+                        <p class="diagnostic-hotspot-percent">${hotspot.percentage} of total</p>
+                    </div>
+                `).join('');
+            }
+
+            // Location Hotspots
+            const locHotspots = diagnostic.hotspots ? diagnostic.hotspots.filter(h => h.type === 'location') : [];
+            if (locHotspots.length > 0) {
+                document.getElementById('locHotspotsCard').style.display = 'block';
+                document.getElementById('locHotspotsList').innerHTML = locHotspots.map(hotspot => `
+                    <div class="diagnostic-hotspot-item">
+                        <div class="diagnostic-hotspot-icon">
+                            <i class="fas fa-location-dot"></i>
+                        </div>
+                        <p class="diagnostic-hotspot-name">${hotspot.location}</p>
+                        <p class="diagnostic-hotspot-count">${hotspot.count}</p>
+                        <p class="diagnostic-hotspot-percent">incidents</p>
+                    </div>
+                `).join('');
+            }
+
+            // Correlations
+            if (diagnostic.correlations && diagnostic.correlations.length > 0) {
+                document.getElementById('correlationsCard').style.display = 'block';
+                document.getElementById('correlationsList').innerHTML = diagnostic.correlations.map(correlation => `
+                    <div class="diagnostic-item correlation-item">
+                        <div class="diagnostic-item-header">
+                            <i class="fas ${correlation.icon || 'fa-link'}"></i>
+                            <h5 class="diagnostic-item-title">${correlation.title}</h5>
+                        </div>
+                        <p class="diagnostic-item-finding">${correlation.finding}</p>
+                        ${correlation.insight ? `
+                            <div class="diagnostic-insight">
+                                <p><i class="fas fa-lightbulb" style="color:#22c55e; margin-right:4px;"></i> ${correlation.insight}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Render Prescriptive Analytics - API returns object with priority_actions, prevention_strategies, etc.
+        function renderPrescriptiveAnalytics(prescriptive) {
+            const hasPrescriptive = prescriptive && (
+                prescriptive.summary_recommendation ||
+                (prescriptive.priority_actions && prescriptive.priority_actions.length > 0) ||
+                (prescriptive.prevention_strategies && prescriptive.prevention_strategies.length > 0) ||
+                (prescriptive.department_focus && prescriptive.department_focus.length > 0) ||
+                (prescriptive.violation_insights && prescriptive.violation_insights.length > 0)
+            );
+
+            if (!hasPrescriptive) {
+                document.getElementById('noRecommendations').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('noRecommendations').style.display = 'none';
+
+            // Summary Recommendation
+            if (prescriptive.summary_recommendation) {
+                document.getElementById('prescriptiveSummary').style.display = 'block';
+                document.getElementById('summaryRecommendationText').textContent = prescriptive.summary_recommendation;
+            }
+
+            // Priority Actions
+            if (prescriptive.priority_actions && prescriptive.priority_actions.length > 0) {
+                document.getElementById('priorityActionsSection').style.display = 'block';
+                document.getElementById('priorityActionsList').innerHTML = prescriptive.priority_actions.map(action => `
+                    <div class="prescriptive-card severity-${action.severity || 'medium'}">
+                        <div class="prescriptive-card-header">
+                            <div class="prescriptive-card-icon">
+                                <i class="fas ${action.icon || 'fa-exclamation-triangle'}"></i>
+                            </div>
+                            <h5 class="prescriptive-card-title">${action.title}</h5>
+                        </div>
+                        <p class="prescriptive-card-desc">${action.description}</p>
+                        ${action.action ? `<span class="prescriptive-action-badge"><i class="fas fa-arrow-right"></i> ${action.action}</span>` : ''}
+                    </div>
+                `).join('');
+            }
+
+            // Prevention Strategies
+            if (prescriptive.prevention_strategies && prescriptive.prevention_strategies.length > 0) {
+                document.getElementById('preventionStrategiesSection').style.display = 'block';
+                document.getElementById('preventionStrategiesList').innerHTML = prescriptive.prevention_strategies.map(strategy => `
+                    <div class="prescriptive-card severity-${strategy.severity || 'low'}">
+                        <div class="prescriptive-card-header">
+                            <div class="prescriptive-card-icon">
+                                <i class="fas ${strategy.icon || 'fa-shield-alt'}"></i>
+                            </div>
+                            <h5 class="prescriptive-card-title">${strategy.title}</h5>
+                        </div>
+                        <p class="prescriptive-card-desc">${strategy.description}</p>
+                        ${strategy.actions ? `
+                            <ul class="prescriptive-action-list">
+                                ${strategy.actions.map(a => `<li>${a}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        ${strategy.action ? `<span class="prescriptive-action-badge"><i class="fas fa-arrow-right"></i> ${strategy.action}</span>` : ''}
+                    </div>
+                `).join('');
+            }
+
+            // Department Focus
+            if (prescriptive.department_focus && prescriptive.department_focus.length > 0) {
+                document.getElementById('departmentFocusSection').style.display = 'block';
+                document.getElementById('departmentFocusList').innerHTML = prescriptive.department_focus.map(dept => `
+                    <div class="prescriptive-card severity-${dept.severity || 'medium'}">
+                        <div class="prescriptive-card-header">
+                            <div class="prescriptive-card-icon">
+                                <i class="fas ${dept.icon || 'fa-building'}"></i>
+                            </div>
+                            <h5 class="prescriptive-card-title">${dept.title}</h5>
+                        </div>
+                        <p class="prescriptive-card-desc">${dept.description}</p>
+                        ${dept.action ? `<span class="prescriptive-action-badge"><i class="fas fa-arrow-right"></i> ${dept.action}</span>` : ''}
+                    </div>
+                `).join('');
+            }
+
+            // Violation Insights
+            if (prescriptive.violation_insights && prescriptive.violation_insights.length > 0) {
+                document.getElementById('violationInsightsSection').style.display = 'block';
+                document.getElementById('violationInsightsList').innerHTML = prescriptive.violation_insights.map(insight => `
+                    <div class="prescriptive-card severity-${insight.severity || 'low'}">
+                        <div class="prescriptive-card-header">
+                            <div class="prescriptive-card-icon">
+                                <i class="fas ${insight.icon || 'fa-info-circle'}"></i>
+                            </div>
+                            <h5 class="prescriptive-card-title">${insight.title}</h5>
+                        </div>
+                        <p class="prescriptive-card-desc">${insight.description}</p>
+                        ${insight.action ? `<span class="prescriptive-action-badge"><i class="fas fa-arrow-right"></i> ${insight.action}</span>` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Store analytics data for printing
+        let currentAnalyticsData = null;
+
+        // Populate Print Summary Section
+        function populatePrintSummary(data) {
+            currentAnalyticsData = data;
+            
+            // Set report date
+            const now = new Date();
+            document.getElementById('printReportDate').textContent = now.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Populate Descriptive Stats
+            const summary = data.summary || {};
+            document.getElementById('printTotalViolations').textContent = summary.total_violations || 0;
+            document.getElementById('printMajorOffenses').textContent = summary.total_major || 0;
+            document.getElementById('printMinorOffenses').textContent = summary.total_minor || 0;
+            document.getElementById('printResolved').textContent = summary.total_resolved || 0;
+            
+            // Descriptive Summary Text
+            let descriptiveHTML = `
+                <ul>
+                    <li><strong>This Week:</strong> ${summary.this_week || 0} violations recorded</li>
+                    <li><strong>Last 30 Days:</strong> ${summary.this_month || 0} violations recorded</li>
+                    <li><strong>Week-over-Week Change:</strong> ${summary.week_change_percent > 0 ? '+' : ''}${summary.week_change_percent || 0}%</li>
+                    <li><strong>Resolution Rate:</strong> ${summary.total_violations > 0 ? ((summary.total_resolved / summary.total_violations) * 100).toFixed(1) : 0}%</li>
+                </ul>
+            `;
+            
+            // Add top violation types
+            if (data.top_violation_types && data.top_violation_types.labels && data.top_violation_types.labels.length > 0) {
+                descriptiveHTML += `<p><strong>Top Violation Types:</strong></p><ul>`;
+                for (let i = 0; i < Math.min(5, data.top_violation_types.labels.length); i++) {
+                    descriptiveHTML += `<li>${data.top_violation_types.labels[i]}: ${data.top_violation_types.data[i]} cases</li>`;
+                }
+                descriptiveHTML += `</ul>`;
+            }
+            
+            // Add department breakdown
+            if (data.department_breakdown && data.department_breakdown.labels && data.department_breakdown.labels.length > 0) {
+                descriptiveHTML += `<p><strong>Violations by Department:</strong></p><ul>`;
+                for (let i = 0; i < Math.min(5, data.department_breakdown.labels.length); i++) {
+                    descriptiveHTML += `<li>${data.department_breakdown.labels[i]}: ${data.department_breakdown.data[i]} cases</li>`;
+                }
+                descriptiveHTML += `</ul>`;
+            }
+            
+            document.getElementById('printDescriptiveSummary').innerHTML = descriptiveHTML;
+            
+            // Populate Diagnostic Summary
+            const diagnostic = data.diagnostic || {};
+            let diagnosticHTML = '';
+            
+            if (diagnostic.summary) {
+                diagnosticHTML += `<p><em>${diagnostic.summary}</em></p>`;
+            }
+            
+            // Root Causes
+            if (diagnostic.root_causes && diagnostic.root_causes.length > 0) {
+                diagnosticHTML += `<p><strong>Root Cause Analysis:</strong></p><ul>`;
+                diagnostic.root_causes.forEach(cause => {
+                    diagnosticHTML += `<li><strong>${cause.title}</strong> (${cause.percentage || 'N/A'}): ${cause.finding}`;
+                    if (cause.possible_causes && cause.possible_causes.length > 0) {
+                        diagnosticHTML += `<ul>`;
+                        cause.possible_causes.forEach(pc => {
+                            diagnosticHTML += `<li>${pc}</li>`;
+                        });
+                        diagnosticHTML += `</ul>`;
+                    }
+                    diagnosticHTML += `</li>`;
+                });
+                diagnosticHTML += `</ul>`;
+            }
+            
+            // Time Patterns
+            if (diagnostic.time_patterns && diagnostic.time_patterns.length > 0) {
+                diagnosticHTML += `<p><strong>Time Patterns Identified:</strong></p><ul>`;
+                diagnostic.time_patterns.forEach(pattern => {
+                    diagnosticHTML += `<li><strong>${pattern.title}:</strong> ${pattern.finding}`;
+                    if (pattern.insight) {
+                        diagnosticHTML += ` <em>(${pattern.insight})</em>`;
+                    }
+                    diagnosticHTML += `</li>`;
+                });
+                diagnosticHTML += `</ul>`;
+            }
+            
+            // Hotspots
+            const deptHotspots = diagnostic.hotspots ? diagnostic.hotspots.filter(h => h.department) : [];
+            if (deptHotspots.length > 0) {
+                diagnosticHTML += `<p><strong>Department Hotspots:</strong></p><ul>`;
+                deptHotspots.forEach(h => {
+                    diagnosticHTML += `<li>${h.department}: ${h.count} violations (${h.percentage})</li>`;
+                });
+                diagnosticHTML += `</ul>`;
+            }
+            
+            // Correlations
+            if (diagnostic.correlations && diagnostic.correlations.length > 0) {
+                diagnosticHTML += `<p><strong>Correlations Found:</strong></p><ul>`;
+                diagnostic.correlations.forEach(corr => {
+                    diagnosticHTML += `<li><strong>${corr.title}:</strong> ${corr.finding}`;
+                    if (corr.insight) {
+                        diagnosticHTML += ` <em>(${corr.insight})</em>`;
+                    }
+                    diagnosticHTML += `</li>`;
+                });
+                diagnosticHTML += `</ul>`;
+            }
+            
+            if (!diagnosticHTML) {
+                diagnosticHTML = '<p>Insufficient data to identify patterns. More violation records needed for analysis.</p>';
+            }
+            
+            document.getElementById('printDiagnosticSummary').innerHTML = diagnosticHTML;
+            
+            // Populate Prescriptive Summary
+            const prescriptive = data.prescriptive || {};
+            let prescriptiveHTML = '';
+            
+            if (prescriptive.summary_recommendation) {
+                prescriptiveHTML += `<p><em>${prescriptive.summary_recommendation}</em></p>`;
+            }
+            
+            // Priority Actions
+            if (prescriptive.priority_actions && prescriptive.priority_actions.length > 0) {
+                prescriptiveHTML += `<p><strong>Priority Actions Required:</strong></p><ul>`;
+                prescriptive.priority_actions.forEach(action => {
+                    prescriptiveHTML += `<li><strong>${action.title}:</strong> ${action.description}`;
+                    if (action.action) {
+                        prescriptiveHTML += ` → <em>${action.action}</em>`;
+                    }
+                    prescriptiveHTML += `</li>`;
+                });
+                prescriptiveHTML += `</ul>`;
+            }
+            
+            // Prevention Strategies
+            if (prescriptive.prevention_strategies && prescriptive.prevention_strategies.length > 0) {
+                prescriptiveHTML += `<p><strong>Prevention Strategies:</strong></p><ul>`;
+                prescriptive.prevention_strategies.forEach(strategy => {
+                    prescriptiveHTML += `<li><strong>${strategy.title}:</strong> ${strategy.description}`;
+                    if (strategy.actions && strategy.actions.length > 0) {
+                        prescriptiveHTML += `<ul>`;
+                        strategy.actions.forEach(a => {
+                            prescriptiveHTML += `<li>${a}</li>`;
+                        });
+                        prescriptiveHTML += `</ul>`;
+                    }
+                    prescriptiveHTML += `</li>`;
+                });
+                prescriptiveHTML += `</ul>`;
+            }
+            
+            // Department Focus
+            if (prescriptive.department_focus && prescriptive.department_focus.length > 0) {
+                prescriptiveHTML += `<p><strong>Department Focus Areas:</strong></p><ul>`;
+                prescriptive.department_focus.forEach(dept => {
+                    prescriptiveHTML += `<li><strong>${dept.title}:</strong> ${dept.description}`;
+                    if (dept.action) {
+                        prescriptiveHTML += ` → <em>${dept.action}</em>`;
+                    }
+                    prescriptiveHTML += `</li>`;
+                });
+                prescriptiveHTML += `</ul>`;
+            }
+            
+            // Violation Insights
+            if (prescriptive.violation_insights && prescriptive.violation_insights.length > 0) {
+                prescriptiveHTML += `<p><strong>Key Insights:</strong></p><ul>`;
+                prescriptive.violation_insights.forEach(insight => {
+                    prescriptiveHTML += `<li><strong>${insight.title}:</strong> ${insight.description}</li>`;
+                });
+                prescriptiveHTML += `</ul>`;
+            }
+            
+            if (!prescriptiveHTML) {
+                prescriptiveHTML = '<p>No specific recommendations at this time. Continue standard monitoring and enforcement.</p>';
+            }
+            
+            document.getElementById('printPrescriptiveSummary').innerHTML = prescriptiveHTML;
+        }
+
+        // Print Analytics Report
+        function printAnalyticsReport() {
+            if (!currentAnalyticsData) {
+                alert('Please wait for analytics data to load before printing.');
+                return;
+            }
+            
+            // Populate print summary with latest data
+            populatePrintSummary(currentAnalyticsData);
+            
+            // Trigger print
+            window.print();
+        }
+
+        // Event Listeners
+        const printBtn = document.getElementById('printBtn');
+        printBtn.addEventListener('click', printAnalyticsReport);
+        refreshBtn.addEventListener('click', loadAnalyticsData);
+
+        // Load data on page load
+        loadAnalyticsData();
+    })();
+    </script>
+</body>
+</html>

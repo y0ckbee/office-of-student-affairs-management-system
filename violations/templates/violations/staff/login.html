@@ -1,0 +1,898 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#1a472a" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Staff Login - CHMSU SVMS</title>
+  <link rel="stylesheet" href="{% static 'violations/css/style.css' %}" />
+  <link rel="stylesheet" href="{% static 'violations/css/main.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="apple-touch-icon" href="{% static 'violations/images/chmsu_logo.png' %}" />
+  <link rel="icon" type="image/png" href="{% static 'violations/images/chmsu_favicon_round.png' %}" />
+</head>
+<body class="role-staff">
+  <div class="background-overlay"></div>
+  <div class="background-image"></div>
+  
+  <!-- Floating Decorative Elements -->
+  <div class="floating-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <main class="login-container">
+    <!-- Login Card -->
+    <div class="login-card">
+      <!-- Official Header Inside Card -->
+      <div class="card-official-header">
+        <div class="header-logo-wrapper">
+          <img src="{% static 'violations/images/chmsu_logo.png' %}" alt="CHMSU Logo" />
+        </div>
+        <div class="header-details">
+          <span class="republic-text">Republic of the Philippines</span>
+          <h1 class="university-name">CARLOS HILADO MEMORIAL STATE UNIVERSITY</h1>
+          <span class="department-text">Office of Student Affairs</span>
+        </div>
+      </div>
+
+      <!-- Role Section -->
+      <div class="card-role-section">
+        <div class="role-icon-wrapper">
+          <div class="role-icon-bg">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="role-badge">
+            <i class="fas fa-briefcase"></i>
+          </div>
+        </div>
+        <h2 class="role-title">OSA Staff Portal</h2>
+        <p class="role-subtitle">Staff Administrative Access</p>
+      </div>
+
+      <!-- Login Form -->
+      <div class="card-body">
+        <form method="POST" action="{% url 'violations:staff_login' %}" class="login-form">
+          {% csrf_token %}
+          <input type="hidden" name="role" value="staff" />
+          
+          {% if messages %}
+          <div class="error-message">
+            <div class="error-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="error-content">
+              <span class="error-title">Authentication Failed</span>
+              {% for message in messages %}
+              <span class="error-text">{{ message }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="form-group">
+            <label for="staff_email">
+              <i class="fas fa-envelope"></i> Email Address
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="email" 
+                id="staff_email" 
+                name="staff_email" 
+                placeholder="you@chmsu.edu.ph"
+                autocomplete="email"
+                required 
+                autofocus
+              />
+              <span class="input-icon">
+                <i class="fas fa-at"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="staff_password">
+              <i class="fas fa-lock"></i> Password
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="password" 
+                id="staff_password" 
+                name="staff_password" 
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              />
+              <span class="input-icon password-toggle" onclick="togglePassword()">
+                <i class="fas fa-eye" id="toggleIcon"></i>
+              </span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-icon">
+              <i class="fas fa-arrow-right"></i>
+            </span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="card-footer">
+        <div class="other-portals">
+          <span class="portal-label">Other Portals:</span>
+          <div class="portal-links">
+            <a href="{% url 'violations:student_login' %}" class="portal-link" title="Student Login">
+              <i class="fas fa-user-graduate"></i>
+              <span>Student</span>
+            </a>
+            <a href="{% url 'violations:faculty_login' %}" class="portal-link" title="OSA Coordinator Login">
+              <i class="fas fa-chalkboard-user"></i>
+              <span>OSA Coordinator</span>
+            </a>
+            <a href="{% url 'violations:guard_login' %}" class="portal-link" title="Guard Login">
+              <i class="fas fa-shield-alt"></i>
+              <span>Guard</span>
+            </a>
+            <a href="{% url 'violations:formator_login' %}" class="portal-link" title="Formator Login">
+              <i class="fas fa-user-check"></i>
+              <span>Formator</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <p>
+        <i class="fas fa-shield-alt"></i>
+        Student Violation Management System
+      </p>
+      <p class="copyright">&copy; {{ current_year|default:"2026" }} Carlos Hilado Memorial State University</p>
+    </div>
+  </main>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: #0a1f13;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .background-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(26, 71, 42, 0.97) 0%, rgba(10, 31, 19, 0.98) 100%);
+      z-index: 1;
+    }
+
+    .background-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("{% static 'violations/images/chmsu_bg.jpg' %}") center/cover no-repeat;
+      z-index: 0;
+      filter: blur(3px);
+    }
+
+    /* Floating Decorative Shapes */
+    .floating-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .shape-1 {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 300px;
+      height: 300px;
+      bottom: -50px;
+      left: -50px;
+      animation-delay: -5s;
+    }
+
+    .shape-3 {
+      width: 200px;
+      height: 200px;
+      top: 50%;
+      left: 10%;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20px, -20px) rotate(5deg); }
+      50% { transform: translate(0, -40px) rotate(0deg); }
+      75% { transform: translate(-20px, -20px) rotate(-5deg); }
+    }
+
+    .login-container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 0 5px 5px; margin: 0; }
+
+    /* Login Card */
+    .login-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+      animation: cardSlideUp 0.6s ease-out;
+      margin: 15px 0 0 0;
+    }
+
+    @keyframes cardSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Official Header Inside Card */
+    .card-official-header {
+      background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 3px solid #fbbf24;
+    }
+
+    .header-logo-wrapper {
+      flex-shrink: 0;
+    }
+
+    .header-logo-wrapper img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      padding: 2px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-details {
+      flex: 1;
+    }
+
+    .republic-text {
+      font-family: 'Times New Roman', Georgia, serif;
+      font-size: 9px;
+      color: #fbbf24;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .university-name {
+      font-family: 'Times New Roman', Georgia, serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+      margin: 2px 0;
+      line-height: 1.2;
+    }
+
+    .department-text {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
+      display: block;
+    }
+
+    /* Role Section */
+    .card-role-section {
+      background: linear-gradient(180deg, #f8faf9 0%, #ffffff 100%);
+      padding: 8px 20px 6px;
+      text-align: center;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .role-icon-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .role-icon-bg {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #1a472a 0%, #2d6a3f 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 10px 30px rgba(26, 71, 42, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transform: rotate(-5deg);
+      transition: transform 0.3s ease;
+    }
+
+    .login-card:hover .role-icon-bg {
+      transform: rotate(0deg);
+    }
+
+    .role-icon-bg i {
+      font-size: 22px;
+      color: #ffffff;
+    }
+
+    .role-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+      border: 3px solid #ffffff;
+    }
+
+    .role-badge i {
+      font-size: 10px;
+      color: #1a472a;
+    }
+
+    .role-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a472a;
+      margin: 0 0 2px 0;
+    }
+
+    .role-subtitle {
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      color: #6b7280;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* Card Body */
+    .card-body {
+      padding: 10px 20px;
+    }
+
+    /* Error Message */
+    .error-message {
+      background: linear-gradient(135deg, #fef2f2 0%, #fff5f5 100%);
+      border: 1px solid #fecaca;
+      border-left: 4px solid #dc2626;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .error-icon {
+      width: 36px;
+      height: 36px;
+      background: #fee2e2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .error-icon i {
+      color: #dc2626;
+      font-size: 16px;
+    }
+
+    .error-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .error-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #991b1b;
+    }
+
+    .error-text {
+      font-size: 12px;
+      color: #dc2626;
+    }
+
+    /* Form Group */
+    .form-group {
+      margin-bottom: 8px;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a472a;
+      margin-bottom: 6px;
+    }
+
+    .form-group label i {
+      margin-right: 8px;
+      color: #2d6a3f;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 40px 12px 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      color: #374151;
+      background: #f9fafb;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #1a472a;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(26, 71, 42, 0.1);
+    }
+
+    .form-group input::placeholder {
+      color: #9ca3af;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 18px;
+      transition: color 0.3s ease;
+    }
+
+    .password-toggle {
+      cursor: pointer;
+    }
+
+    .password-toggle:hover {
+      color: #1a472a;
+    }
+
+    .form-group input:focus + .input-icon {
+      color: #1a472a;
+    }
+
+    /* Login Button */
+    .btn-login {
+      width: 100%;
+      padding: 12px 18px;
+      background: linear-gradient(135deg, #1a472a 0%, #2d6a3f 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-login:hover::before {
+      left: 100%;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(26, 71, 42, 0.4);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-login:hover .btn-icon {
+      transform: translateX(4px);
+    }
+
+    .btn-icon i {
+      font-size: 10px;
+    }
+
+    /* Card Footer */
+    .card-footer {
+      padding: 12px 20px;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .other-portals {
+      text-align: center;
+    }
+
+    .portal-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .portal-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .portal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      color: #6b7280;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: #e5e7eb;
+      transition: all 0.2s ease;
+    }
+
+    .portal-link:hover {
+      color: #1a472a;
+      background: #d1fae5;
+      transform: translateY(-1px);
+    }
+
+    .portal-link i {
+      font-size: 10px;
+    }
+
+    /* Login Footer */
+    .login-footer {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .login-footer p {
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .login-footer p i {
+      color: #fbbf24;
+    }
+
+    .login-footer .copyright {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 4px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .login-container {
+        padding: 20px 16px;
+      }
+
+      .login-card {
+        max-width: 100%;
+        border-radius: 16px;
+      }
+
+      .card-official-header {
+        padding: 20px;
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+      }
+
+      .header-logo-wrapper img {
+        width: 60px;
+        height: 60px;
+      }
+
+      .university-name {
+        font-size: 13px;
+      }
+
+      .card-role-section {
+        padding: 24px 20px 20px;
+      }
+
+      .role-icon-bg {
+        width: 70px;
+        height: 70px;
+      }
+
+      .role-icon-bg i {
+        font-size: 30px;
+      }
+
+      .role-title {
+        font-size: 20px;
+      }
+
+      .card-body {
+        padding: 24px 20px;
+      }
+
+      .form-group input {
+        padding: 14px 45px 14px 16px;
+        font-size: 16px;
+      }
+
+      .btn-login {
+        padding: 14px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 16px 12px;
+      }
+
+      .card-official-header {
+        padding: 16px;
+      }
+
+      .header-logo-wrapper img {
+        width: 50px;
+        height: 50px;
+      }
+
+      .university-name {
+        font-size: 12px;
+      }
+
+      .department-text {
+        font-size: 10px;
+      }
+
+      .card-role-section {
+        padding: 20px 16px;
+      }
+
+      .role-icon-bg {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+      }
+
+      .role-icon-bg i {
+        font-size: 26px;
+      }
+
+      .role-badge {
+        width: 28px;
+        height: 28px;
+      }
+
+      .role-title {
+        font-size: 18px;
+      }
+
+      .role-subtitle {
+        font-size: 12px;
+      }
+
+      .card-body {
+        padding: 20px 16px;
+      }
+
+      .card-footer {
+        padding: 16px;
+      }
+
+      .floating-shapes {
+        display: none;
+      }
+    }
+
+    /* Touch-friendly improvements */
+    @media (hover: none) and (pointer: coarse) {
+      .form-group input,
+      .btn-login {
+        min-height: 52px;
+        font-size: 16px;
+      }
+
+      .portal-link {
+        min-height: 40px;
+        padding: 8px 14px;
+      }
+    }
+
+    /* Safe Area Insets for Notched Devices */
+    @supports (padding: env(safe-area-inset-top)) {
+      .login-container {
+        padding-top: calc(40px + env(safe-area-inset-top));
+        padding-bottom: calc(40px + env(safe-area-inset-bottom));
+        padding-left: calc(20px + env(safe-area-inset-left));
+        padding-right: calc(20px + env(safe-area-inset-right));
+      }
+    }
+
+    /* Prevent Text Selection on UI Elements */
+    .btn-login,
+    .portal-link,
+    .login-card {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Disable Pull-to-Refresh */
+    body {
+      overscroll-behavior-y: contain;
+    }
+
+    /* Reduced Motion for Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      .floating-shapes {
+        display: none;
+      }
+    }
+  </style>
+
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('staff_password');
+      const toggleIcon = document.getElementById('toggleIcon');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      }
+    }
+  </script>
+
+  <script src="{% static 'violations/js/script.js' %}"></script>
+  <script>
+    // Text-to-Speech Role Announcement
+    (function() {
+      let ttsMuted = false;
+      try { ttsMuted = localStorage.getItem('svms_tts_muted') === 'true'; } catch(e) {}
+      if (ttsMuted) return;
+      
+      function announceRole() {
+        if (!('speechSynthesis' in window)) return;
+        const message = 'Talisay Campus Staff role selected. Enter your email and password to sign in.';
+        try {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(message);
+          utterance.rate = 0.95;
+          utterance.pitch = 0.85;
+          utterance.volume = 1;
+          const voices = window.speechSynthesis.getVoices();
+          const preferredVoice = voices.find(v =>
+            v.name.toLowerCase().includes('google uk english male') ||
+            v.name.toLowerCase().includes('david') ||
+            v.name.toLowerCase().includes('mark') ||
+            (v.lang.startsWith('en') && v.name.toLowerCase().includes('male'))
+          );
+          if (preferredVoice) utterance.voice = preferredVoice;
+          window.speechSynthesis.speak(utterance);
+        } catch(e) { console.error('TTS Error:', e); }
+      }
+      
+      if (window.speechSynthesis.getVoices().length > 0) {
+        setTimeout(announceRole, 300);
+      } else {
+        window.speechSynthesis.onvoiceschanged = () => setTimeout(announceRole, 300);
+      }
+    })();
+  </script>
+</body>
+</html>
