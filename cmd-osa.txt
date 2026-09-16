@@ -4,6 +4,7 @@ Email: admin255@gmail.com
 255086aa
 .my stud
 24221682
+2255aa;
 
 ,, activate local
 =.\virtualenv\Scripts\Activate.ps1

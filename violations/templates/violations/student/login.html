@@ -1,9 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -12,15 +14,17 @@
   <title>Student Login - UDM SVMS</title>
   <link rel="stylesheet" href="{% static 'violations/css/style.css' %}" />
   <link rel="stylesheet" href="{% static 'violations/css/main.css' %}" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="apple-touch-icon" href="{% static 'violations/images/chmsu_logo.png' %}" />
   <link rel="icon" type="image/png" href="{% static 'violations/images/chmsu_favicon_round.png' %}" />
 </head>
+
 <body class="role-student">
   <div class="background-overlay"></div>
   <div class="background-image"></div>
-  
+
   <!-- Floating Decorative Elements -->
   <div class="floating-shapes">
     <div class="shape shape-1"></div>
@@ -61,7 +65,7 @@
       <div class="card-body">
         <form method="POST" action="{% url 'violations:student_login_auth' %}" class="login-form">
           {% csrf_token %}
-          
+
           {% if messages %}
           <div class="error-message">
             <div class="error-icon">
@@ -81,21 +85,10 @@
               <i class="fas fa-id-card"></i> Student ID Number
             </label>
             <div class="input-wrapper">
-              <input 
-                type="text" 
-                id="student_id" 
-                name="student_id" 
-                placeholder="Enter 8-digit Student ID (e.g., 20240001)"
-                pattern="\d{8}"
-                maxlength="8"
-                minlength="8"
-                inputmode="numeric"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)"
-                value="{{ prefill_student_id|default:'' }}"
-                autocomplete="off"
-                required 
-                autofocus
-              />
+              <input type="text" id="student_id" name="student_id"
+                placeholder="Enter 8-digit Student ID (e.g., 20240001)" pattern="\d{8}" maxlength="8" minlength="8"
+                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)"
+                value="{{ prefill_student_id|default:'' }}" autocomplete="off" required autofocus />
               <span class="input-icon">
                 <i class="fas fa-user-graduate"></i>
               </span>
@@ -103,6 +96,23 @@
             <span class="input-hint">
               <i class="fas fa-info-circle"></i>
               Enter your 8-digit student ID number
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">
+              <i class="fas fa-lock"></i> Password
+            </label>
+            <div class="input-wrapper">
+              <input type="password" id="password" name="password" placeholder="Enter your password"
+                autocomplete="current-password" required />
+              <span class="input-icon">
+                <i class="fas fa-lock"></i>
+              </span>
+            </div>
+            <span class="input-hint">
+              <i class="fas fa-info-circle"></i>
+              Enter your student portal password
             </span>
           </div>
 
@@ -240,19 +250,41 @@
     }
 
     @keyframes float {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(20px, -20px) rotate(5deg); }
-      50% { transform: translate(0, -40px) rotate(0deg); }
-      75% { transform: translate(-20px, -20px) rotate(-5deg); }
+
+      0%,
+      100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      25% {
+        transform: translate(20px, -20px) rotate(5deg);
+      }
+
+      50% {
+        transform: translate(0, -40px) rotate(0deg);
+      }
+
+      75% {
+        transform: translate(-20px, -20px) rotate(-5deg);
+      }
     }
 
-    .login-container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 0 5px 5px; margin: 0; }
+    .login-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 5px 5px;
+      margin: 0;
+    }
 
     /* Login Card */
     .login-card {
       background: #ffffff;
       border-radius: 20px;
-      box-shadow: 
+      box-shadow:
         0 25px 80px rgba(0, 0, 0, 0.4),
         0 0 0 1px rgba(255, 255, 255, 0.1);
       width: 100%;
@@ -267,6 +299,7 @@
         opacity: 0;
         transform: translateY(30px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -350,7 +383,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 
+      box-shadow:
         0 10px 30px rgba(26, 71, 42, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
       transform: rotate(-5deg);
@@ -512,7 +545,7 @@
       transition: color 0.3s ease;
     }
 
-    .form-group input:focus + .input-icon {
+    .form-group input:focus+.input-icon {
       color: #1a472a;
     }
 
@@ -828,6 +861,7 @@
 
     /* Touch-friendly improvements */
     @media (hover: none) and (pointer: coarse) {
+
       .form-group input,
       .btn-login {
         min-height: 52px;
@@ -866,6 +900,7 @@
 
     /* Reduced Motion for Accessibility */
     @media (prefers-reduced-motion: reduce) {
+
       *,
       *::before,
       *::after {
@@ -873,7 +908,7 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
-      
+
       .floating-shapes {
         display: none;
       }
@@ -883,11 +918,11 @@
   <script src="{% static 'violations/js/script.js' %}"></script>
   <script>
     // Text-to-Speech Role Announcement
-    (function() {
+    (function () {
       let ttsMuted = false;
-      try { ttsMuted = localStorage.getItem('svms_tts_muted') === 'true'; } catch(e) {}
+      try { ttsMuted = localStorage.getItem('svms_tts_muted') === 'true'; } catch (e) { }
       if (ttsMuted) return;
-      
+
       function announceRole() {
         if (!('speechSynthesis' in window)) return;
         const message = 'Talisay Campus Student role selected. Enter your 8-digit student ID to sign in.';
@@ -906,9 +941,9 @@
           );
           if (preferredVoice) utterance.voice = preferredVoice;
           window.speechSynthesis.speak(utterance);
-        } catch(e) { console.error('TTS Error:', e); }
+        } catch (e) { console.error('TTS Error:', e); }
       }
-      
+
       if (window.speechSynthesis.getVoices().length > 0) {
         setTimeout(announceRole, 300);
       } else {
@@ -917,4 +952,5 @@
     })();
   </script>
 </body>
+
 </html>

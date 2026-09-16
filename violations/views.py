@@ -274,41 +274,76 @@ def faculty_login_view(request):
 		return redirect("violations:route_dashboard")
 	return render(request, "violations/osa_coordinator/login.html", {})
 
-
 def student_login_auth(request):
-	"""Authenticate a student by Student ID and log them in.
+    """Authenticate a student using Student ID + password."""
 
-	If not found, re-render login with a suggestion to sign up.
-	"""
-	if request.method != "POST":
-		return redirect("violations:student_login")
+    if request.method != "POST":
+        return redirect("violations:student_login")
 
-	student_id = (request.POST.get("student_id") or "").strip()
-	if not student_id:
-		messages.error(request, "Please enter your Student ID number.")
-		return render(request, "violations/student/login.html", status=400)
+    student_id = (request.POST.get("student_id") or "").strip()
+    password = request.POST.get("password") or ""
 
-	try:
-		student = StudentModel.objects.select_related("user").get(student_id=student_id)
-	except StudentModel.DoesNotExist:
-		messages.warning(
-			request,
-			"We couldn't find that Student ID. You can sign up to create your account."
-		)
-		# Suggest the UI to keep Student role active
-		request.session["login_prefill_role"] = "student"
-		request.session["login_prefill_student_id"] = student_id
-		return render(request, "violations/student/login.html", {"prefill_student_id": student_id}, status=404)
+    # Require both Student ID and password
+    if not student_id or not password:
+        messages.error(request, "Please enter your Student ID and password.")
+        return render(
+            request,
+            "violations/student/login.html",
+            status=400
+        )
 
-	user = student.user
-	if not user.is_active:
-		messages.error(request, "Your account is inactive. Please contact support.")
-		return render(request, "violations/student/login.html", status=403)
+    # Find the student account
+    try:
+        student = StudentModel.objects.select_related("user").get(
+            student_id=student_id
+        )
+    except StudentModel.DoesNotExist:
+        messages.error(request, "Access Denied. Invalid Student ID or password.")
+        return render(
+            request,
+            "violations/student/login.html",
+            status=401
+        )
 
-	# Log in the user via default backend (no password flow for Student ID auth)
-	login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-	return redirect("violations:route_dashboard")
+    user = student.user
 
+    # Check whether the account is active
+    if not user.is_active:
+        messages.error(request, "Access Denied. Your account is inactive.")
+        return render(
+            request,
+            "violations/student/login.html",
+            status=403
+        )
+
+    # Verify the student's password
+    if not user.check_password(password):
+        messages.error(request, "Access Denied. Invalid Student ID or password.")
+        return render(
+            request,
+            "violations/student/login.html",
+            status=401
+        )
+
+    # Make sure this account is actually a Student account
+    if user.role != User.Role.STUDENT:
+        messages.error(request, "Access Denied.")
+        return render(
+            request,
+            "violations/student/login.html",
+            status=403
+        )
+
+    # Login successful
+    login(
+        request,
+        user,
+        
+        
+        backend="django.contrib.auth.backends.ModelBackend"
+    )
+
+    return redirect("violations:route_dashboard")
 
 def credentials_login_auth(request):
 	"""Authenticate Staff/Faculty using email + password.
