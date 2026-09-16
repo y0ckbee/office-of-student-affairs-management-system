@@ -88,7 +88,7 @@ urlpatterns = [
     path('api/welcome-tts/', views.welcome_tts_view, name='welcome_tts'),
     path('api/detect-face/', views.detect_face_view, name='detect_face'),
     path('login/', views.login_view, name='login'),  # General login page (if needed)
-    path('signup/', views.signup_view, name='signup'),
+    # path('signup/', views.signup_view, name='signup'),
     path('dashboard/', views.legacy_dashboard_redirect, name='dashboard'),
     path('route/', views.route_dashboard_view, name='route_dashboard'),
     path('auth/login/', auth_views.LoginView.as_view(template_name='violations/auth/login.html'), name='auth_login'),

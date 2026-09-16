@@ -423,114 +423,114 @@ def logout_view(request):
 	return redirect("violations:login")
 
 
-def signup_view(request):
-	"""Signup page; handles Student signup on POST, renders UI on GET."""
-	if request.method == "POST":
-		role = request.POST.get("role", "student")
+# def signup_view(request):
+# 	"""Signup page; handles Student signup on POST, renders UI on GET."""
+# 	if request.method == "POST":
+# 		role = request.POST.get("role", "student")
 
-		if role != getattr(User.Role, "STUDENT", "student"):
-			messages.error(request, "Only Student signup is available right now.")
-			return render(request, "violations/signup.html", status=400)
+# 		if role != getattr(User.Role, "STUDENT", "student"):
+# 			messages.error(request, "Only Student signup is available right now.")
+# 			return render(request, "violations/signup.html", status=400)
 
-		# Collect basic fields
-		student_id = (request.POST.get("student_id") or "").strip()
-		# Always enforce 8 digits immediately
-		student_id = student_id[:8]
-		name = (request.POST.get("student_name") or "").strip()
-		suffix = (request.POST.get("student_suffix") or "").strip()
-		email = (request.POST.get("student_email") or "").strip().lower()
+# 		# Collect basic fields
+# 		student_id = (request.POST.get("student_id") or "").strip()
+# 		# Always enforce 8 digits immediately
+# 		student_id = student_id[:8]
+# 		name = (request.POST.get("student_name") or "").strip()
+# 		suffix = (request.POST.get("student_suffix") or "").strip()
+# 		email = (request.POST.get("student_email") or "").strip().lower()
 
-		# Student profile fields
-		program = (request.POST.get("program") or "").strip()
-		year_level_raw = (request.POST.get("student_year_level") or "").strip()
-		department = (request.POST.get("student_department") or "").strip()
-		enrollment_status = (request.POST.get("student_enrollment_status") or "Active").strip()
-		guardian_name = (request.POST.get("guardian_name") or "").strip()
-		guardian_contact = (request.POST.get("guardian_contact") or "").strip()
+# 		# Student profile fields
+# 		program = (request.POST.get("program") or "").strip()
+# 		year_level_raw = (request.POST.get("student_year_level") or "").strip()
+# 		department = (request.POST.get("student_department") or "").strip()
+# 		enrollment_status = (request.POST.get("student_enrollment_status") or "Active").strip()
+# 		guardian_name = (request.POST.get("guardian_name") or "").strip()
+# 		guardian_contact = (request.POST.get("guardian_contact") or "").strip()
 
-		# Basic validation
-		missing = [
-			k for k, v in {
-				"Student ID": student_id,
-				"Name": name,
-				"Email": email,
-				"Year Level": year_level_raw,
-				"Program": program,
-				"Department": department,
-				"Guardian Name": guardian_name,
-				"Guardian Contact": guardian_contact,
-			}.items() if not v
-		]
-		if missing:
-			messages.error(request, f"Please fill in all required fields: {', '.join(missing)}.")
-			return render(request, "violations/signup.html", status=400)
+# 		# Basic validation
+# 		missing = [
+# 			k for k, v in {
+# 				"Student ID": student_id,
+# 				"Name": name,
+# 				"Email": email,
+# 				"Year Level": year_level_raw,
+# 				"Program": program,
+# 				"Department": department,
+# 				"Guardian Name": guardian_name,
+# 				"Guardian Contact": guardian_contact,
+# 			}.items() if not v
+# 		]
+# 		if missing:
+# 			messages.error(request, f"Please fill in all required fields: {', '.join(missing)}.")
+# 			return render(request, "violations/signup.html", status=400)
 
-		# Validate student ID is 8 digits
-		if not student_id.isdigit() or len(student_id) != 8:
-			messages.error(request, "Student ID must be exactly 8 digits.")
-			return render(request, "violations/signup.html", status=400)
+# 		# Validate student ID is 8 digits
+# 		if not student_id.isdigit() or len(student_id) != 8:
+# 			messages.error(request, "Student ID must be exactly 8 digits.")
+# 			return render(request, "violations/signup.html", status=400)
 
-		# Validate guardian contact is 11 digits
-		if not guardian_contact.isdigit() or len(guardian_contact) != 11:
-			messages.error(request, "Guardian contact must be exactly 11 digits.")
-			return render(request, "violations/signup.html", status=400)
+# 		# Validate guardian contact is 11 digits
+# 		if not guardian_contact.isdigit() or len(guardian_contact) != 11:
+# 			messages.error(request, "Guardian contact must be exactly 11 digits.")
+# 			return render(request, "violations/signup.html", status=400)
 
-		try:
-			year_level = int(year_level_raw)
-		except ValueError:
-			messages.error(request, "Year Level must be a number.")
-			return render(request, "violations/signup.html", status=400)
+# 		try:
+# 			year_level = int(year_level_raw)
+# 		except ValueError:
+# 			messages.error(request, "Year Level must be a number.")
+# 			return render(request, "violations/signup.html", status=400)
 
-		# Create user and update student profile
-		try:
-			with transaction.atomic():
-				# Generate a random password (user will need to reset via email)
-				import secrets
-				random_password = secrets.token_urlsafe(16)
+# 		# Create user and update student profile
+# 		try:
+# 			with transaction.atomic():
+# 				# Generate a random password (user will need to reset via email)
+# 				import secrets
+# 				random_password = secrets.token_urlsafe(16)
 				
-				# Use email as username to keep uniqueness simple
-				username = email or slugify(name) or student_id
-				user = User.objects.create_user(
-					username=username,
-					email=email,
-					password=random_password,
-					role=User.Role.STUDENT,
-				)
-				# Store name and suffix into first_name for display
-				full_name = f"{name} {suffix}".strip() if suffix else name
-				if full_name:
-					user.first_name = full_name
-					user.save(update_fields=["first_name"])
+# 				# Use email as username to keep uniqueness simple
+# 				username = email or slugify(name) or student_id
+# 				user = User.objects.create_user(
+# 					username=username,
+# 					email=email,
+# 					password=random_password,
+# 					role=User.Role.STUDENT,
+# 				)
+# 				# Store name and suffix into first_name for display
+# 				full_name = f"{name} {suffix}".strip() if suffix else name
+# 				if full_name:
+# 					user.first_name = full_name
+# 					user.save(update_fields=["first_name"])
 
-				# Signals created a Student profile; update it
-				student = getattr(user, "student_profile", None)
-				if student is None:
-					# Fallback if signal didn't fire for some reason
-					from .models import Student as StudentModel
+# 				# Signals created a Student profile; update it
+# 				student = getattr(user, "student_profile", None)
+# 				if student is None:
+# 					# Fallback if signal didn't fire for some reason
+# 					from .models import Student as StudentModel
 
-					student = StudentModel.objects.create(user=user, student_id=student_id[:8])
+# 					student = StudentModel.objects.create(user=user, student_id=student_id[:8])
 
-				# Defensive: ensure student_id is always 8 digits
-				student.student_id = student_id[:8]
-				student.year_level = year_level
-				student.program = program
-				student.department = department
-				student.enrollment_status = enrollment_status
-				student.guardian_name = guardian_name
-				student.guardian_contact = guardian_contact
-				student.save()
+# 				# Defensive: ensure student_id is always 8 digits
+# 				student.student_id = student_id[:8]
+# 				student.year_level = year_level
+# 				student.program = program
+# 				student.department = department
+# 				student.enrollment_status = enrollment_status
+# 				student.guardian_name = guardian_name
+# 				student.guardian_contact = guardian_contact
+# 				student.save()
 
-		except IntegrityError as e:
-			# Likely duplicate email/username/student_id
-			messages.error(request, "That email or student ID is already in use. Please try again.")
-			return render(request, "violations/signup.html", status=400)
+# 		except IntegrityError as e:
+# 			# Likely duplicate email/username/student_id
+# 			messages.error(request, "That email or student ID is already in use. Please try again.")
+# 			return render(request, "violations/signup.html", status=400)
 
-		# Auto-login and route to role dashboard
-		login(request, user)
-		return redirect("violations:route_dashboard")
+# 		# Auto-login and route to role dashboard
+# 		login(request, user)
+# 		return redirect("violations:route_dashboard")
 
-	# GET: render UI
-	return render(request, "violations/signup.html")
+# 	# GET: render UI
+# 	return render(request, "violations/signup.html")
 
 
 # Staff self-signup removed: staff accounts are created by administrators.
