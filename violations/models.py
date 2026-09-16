@@ -96,7 +96,7 @@ class Student(models.Model):
 
 	# ============================================
 	# Certificate of Good Moral Character (CGMC)
-	# Rule-based eligibility system per CHMSU handbook
+	# Rule-based eligibility system per UDM handbook
 	# ============================================
 
 	@property
@@ -230,7 +230,7 @@ class Student(models.Model):
 	def cgmc_eligibility(self):
 		"""Determine Certificate of Good Moral Character eligibility.
 		
-		Based on CHMSU Student Handbook rules:
+		Based on UDM Student Handbook rules:
 		
 		ELIGIBLE (✅): 
 		- No major offense on record
@@ -304,7 +304,7 @@ class Student(models.Model):
 				'status': 'not_eligible',
 				'can_issue': False,
 				'label': 'Not Eligible',
-				'description': f'Student has {major_count} major disciplinary offense(s) on record, which disqualifies them from receiving a Certificate of Good Moral Character per CHMSU Student Handbook.',
+				'description': f'Student has {major_count} major disciplinary offense(s) on record, which disqualifies them from receiving a Certificate of Good Moral Character per UDM Student Handbook.',
 				'reasons': reasons,
 				'recommendations': recommendations,
 				'badge_class': 'badge-ineligible',
@@ -903,7 +903,7 @@ class ApologyLetter(models.Model):
 	verified_at = models.DateTimeField(null=True, blank=True)
 	remarks = models.TextField(blank=True, help_text="Staff notes/feedback")
 	
-	# Letter form data fields (Step 2 - Official CHMSU Form)
+	# Letter form data fields (Step 2 - Official UDM Form)
 	letter_date = models.CharField(max_length=100, blank=True, help_text="Date on the letter")
 	letter_campus = models.CharField(max_length=200, blank=True, help_text="Campus name")
 	letter_full_name = models.CharField(max_length=200, blank=True, help_text="Student full name")
@@ -985,10 +985,10 @@ Student Details:
 
 Please schedule a meeting with the student and the OSA Coordinator as soon as possible.
 
-This is an automated notification from the CHMSU Violation System.
+This is an automated notification from the UDM Violation System.
 
 Regards,
-CHMSU Violation Monitoring System
+UDM Violation Monitoring System
 					""".strip()
 					send_mail(
 						subject,

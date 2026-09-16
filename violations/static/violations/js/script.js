@@ -11,13 +11,13 @@ try {
 function announceRoleSelection(role) {
     if (!roleSpeechEnabled) return;
     if (ttsMuted) return;
-    
+
     // Use Jarvis TTS if available (defined in jarvis_tts.js)
     if (typeof window.announceRoleJarvis === 'function') {
         window.announceRoleJarvis(role);
         return;
     }
-    
+
     // Fallback to basic browser TTS
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
 
@@ -64,25 +64,25 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     }
 }
 
-            (function(){
-                const card = document.getElementById('loginHistoryCard');
-                const modal = document.getElementById('loginHistoryModal');
-                const btnClose = document.getElementById('loginHistClose');
-                const btnClose2 = document.getElementById('loginHistCloseBtn');
-                function open(){ if(modal) modal.classList.add('show'); }
-                function close(){ if(modal) modal.classList.remove('show'); }
-                if(card){
-                    card.addEventListener('click', open);
-                    card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); open(); } });
-                }
-                if(btnClose) btnClose.addEventListener('click', close);
-                if(btnClose2) btnClose2.addEventListener('click', close);
-                if(modal) modal.addEventListener('click', (e)=>{ if(e.target===modal) close(); });
-                document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
-            })();
+(function () {
+    const card = document.getElementById('loginHistoryCard');
+    const modal = document.getElementById('loginHistoryModal');
+    const btnClose = document.getElementById('loginHistClose');
+    const btnClose2 = document.getElementById('loginHistCloseBtn');
+    function open() { if (modal) modal.classList.add('show'); }
+    function close() { if (modal) modal.classList.remove('show'); }
+    if (card) {
+        card.addEventListener('click', open);
+        card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+    }
+    if (btnClose) btnClose.addEventListener('click', close);
+    if (btnClose2) btnClose2.addEventListener('click', close);
+    if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+})();
 
 
- 
+
 
 // Toggle password visibility helper (used by inline onclicks)
 function togglePasswordVisibility(fieldId) {
@@ -283,8 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         // Default role from template hint (if any), else student
         const hintedRole = loginForm.getAttribute('data-default-role');
-    if (!window.currentRole) window.currentRole = hintedRole || 'student';
-    selectRole(window.currentRole, { silent: true });
+        if (!window.currentRole) window.currentRole = hintedRole || 'student';
+        selectRole(window.currentRole, { silent: true });
 
         loginForm.addEventListener('submit', (e) => {
             const isStudentBackend = loginForm.dataset.mode === 'student-backend' && window.currentRole === 'student';
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fd = new FormData();
             fd.append('role', window.currentRole);
 
-        
+
 
             if (window.currentRole === 'student') {
                 fd.append('student_id', document.getElementById('student_id')?.value || '');
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             // Frontend-only: no submission; log for visibility
-            try { console.log('Login form data:', Object.fromEntries(fd)); } catch {}
+            try { console.log('Login form data:', Object.fromEntries(fd)); } catch { }
             e.preventDefault();
         });
     }
@@ -360,18 +360,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = document.getElementById('student_id')?.value?.trim();
                 const name = document.getElementById('student_name')?.value?.trim();
                 const email = document.getElementById('student_email')?.value?.trim();
-                const password = document.getElementById('student_password')?.value?.trim();
-                const program = document.getElementById('student_program')?.value?.trim();
-                const yearLevel = document.getElementById('student_year_level')?.value?.trim();
+                // const password = document.getElementById('student_password')?.value?.trim();
+                const program = document.getElementById('program')?.value?.trim(); const yearLevel = document.getElementById('student_year_level')?.value?.trim();
                 const department = document.getElementById('student_department')?.value?.trim();
                 const enrollmentStatus = document.getElementById('student_enrollment_status')?.value;
-                const contact = document.getElementById('student_contact_number')?.value?.trim();
+                // const contact = document.getElementById('student_contact_number')?.value?.trim();
                 const gname = document.getElementById('guardian_name')?.value?.trim();
                 const gcontact = document.getElementById('guardian_contact')?.value?.trim();
                 const pfile = document.getElementById('student_profile_image')?.files?.[0];
 
                 // Validate required fields (profile image optional)
-                if (!id || !name || !email || !password || !program || !yearLevel || !department || !enrollmentStatus || !contact || !gname || !gcontact) {
+                // if (!id || !name || !email || !password || !program || !yearLevel || !department || !enrollmentStatus || !contact || !gname || !gcontact) {
+                if (!id || !name || !email || !program || !yearLevel || !department || !enrollmentStatus || !gname || !gcontact) {
                     alert('Please fill in all required fields.');
                     e.preventDefault();
                     return;
@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fd.append('password', password);
             }
             // Frontend-only: no submission; log for visibility
-            try { console.log('Signup form data:', Object.fromEntries(fd)); } catch {}
+            try { console.log('Signup form data:', Object.fromEntries(fd)); } catch { }
             e.preventDefault();
         });
     }
@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (voiceToggleBtn) {
         voiceToggleBtn.addEventListener('click', () => {
             ttsMuted = !ttsMuted;
-            try { localStorage.setItem('svms_tts_muted', ttsMuted ? 'true' : 'false'); } catch (e) {}
+            try { localStorage.setItem('svms_tts_muted', ttsMuted ? 'true' : 'false'); } catch (e) { }
             updateTtsToggleUI();
         });
     }
@@ -566,8 +566,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDashboard) return;
         const nameEl = document.querySelector('.profile-menu .name') || document.querySelector('.top-right .name');
         const userName = (nameEl && nameEl.textContent && nameEl.textContent.trim()) ? nameEl.textContent.trim() : 'there';
-        try { window.speechSynthesis.cancel(); } catch (e) {}
+        try { window.speechSynthesis.cancel(); } catch (e) { }
         const u = new SpeechSynthesisUtterance(`Welcome back, ${userName}.`);
         window.speechSynthesis.speak(u);
-    } catch (e) {}
+    } catch (e) { }
 });

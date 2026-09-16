@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#1a472a" />
   <meta name="format-detection" content="telephone=no" />
-  <title>Sign Up - CHMSU SVMS</title>
+  <title>Sign Up - UDM SVMS</title>
   <link rel="stylesheet" href="{% static 'violations/css/style.css' %}" />
   <link rel="stylesheet" href="{% static 'violations/css/main.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -34,11 +34,11 @@
       <!-- Official Header Inside Card -->
       <div class="card-official-header">
         <div class="header-logo-wrapper">
-          <img src="{% static 'violations/images/chmsu_logo.png' %}" alt="CHMSU Logo" />
+          <img src="{% static 'violations/images/chmsu_logo.png' %}" alt="UDM Logo" />
         </div>
         <div class="header-details">
-          <span class="republic-text">Republic of the Philippines</span>
-          <h1 class="university-name">CARLOS HILADO MEMORIAL STATE UNIVERSITY</h1>
+          <!-- <span class="republic-text">Former City College of Manila</span> -->
+          <h1 class="university-name">Universidad de Manila</h1>
           <span class="department-text">Office of Student Affairs</span>
         </div>
       </div>
@@ -107,14 +107,14 @@
                     <input type="text" id="student_id" name="student_id" placeholder="e.g., 20251234" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required />
                     <span class="input-icon"><i class="fas fa-hashtag"></i></span>
                   </div>
-                  <span class="input-hint"><i class="fas fa-info-circle"></i> Enter your 8-digit CHMSU student ID</span>
+                  <span class="input-hint"><i class="fas fa-info-circle"></i> Enter your 8-digit UDM student ID</span>
                 </div>
                 <div class="form-group" data-role="student">
                   <label for="student_name">
                     <i class="fas fa-user"></i> Full Name
                   </label>
                   <div class="input-wrapper">
-                    <input type="text" id="student_name" name="student_name" placeholder="Surname, Firstname Middlename" pattern="[A-Za-z\s,.-]+" oninput="this.value = this.value.replace(/[^A-Za-z\s,.-]/g, '')" required />
+                    <input type="text" id="student_name" name="student_name" placeholder="Surname, Firstname Middlename" pattern="[A-Za-z\s,.\-]+" oninput="this.value = this.value.replace(/[^A-Za-z\s,.\-]/g, '')" required />
                     <span class="input-icon"><i class="fas fa-signature"></i></span>
                   </div>
                   <span class="input-hint"><i class="fas fa-info-circle"></i> Letters only (e.g., Dela Cruz, Juan Santos)</span>
@@ -220,7 +220,7 @@
                     <i class="fas fa-user-shield"></i> Guardian Name
                   </label>
                   <div class="input-wrapper">
-                    <input type="text" id="guardian_name" name="guardian_name" placeholder="Parent/Guardian full name" pattern="[A-Za-z\s,.-]+" oninput="this.value = this.value.replace(/[^A-Za-z\s,.-]/g, '')" required />
+                    <input type="text" id="guardian_name" name="guardian_name" placeholder="Parent/Guardian full name" pattern="[A-Za-z\s,.\-]+" oninput="this.value = this.value.replace(/[^A-Za-z\s,.\-]/g, '')" required />
                     <span class="input-icon"><i class="fas fa-signature"></i></span>
                   </div>
                   <span class="input-hint"><i class="fas fa-info-circle"></i> Letters only</span>
@@ -324,7 +324,7 @@
         <i class="fas fa-shield-alt"></i>
         Student Violation Management System
       </p>
-      <p class="copyright">&copy; 2026 Carlos Hilado Memorial State University</p>
+      <p class="copyright">&copy; 2026 Universidad de Manila</p>
     </div>
   </main>
 
@@ -1267,7 +1267,7 @@
       }
     }
 
-    // // Collapsible Sections
+    // Collapsible Sections
     // document.querySelectorAll('.collapsible-header').forEach(header => {
     //   header.addEventListener('click', function() {
     //     const section = this.closest('.collapsible');

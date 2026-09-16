@@ -50,13 +50,13 @@ INSTALLED_APPS = [
 
 JAZZMIN_SETTINGS = {
     # Title on the login screen (19 chars max)
-    "site_title": "CHMSU Violations",
+    "site_title": "UDM Violations",
     
     # Title on the brand (19 chars max)
-    "site_header": "CHMSU Violations",
+    "site_header": "UDM Violations",
     
     # Title on the brand in the sidebar
-    "site_brand": "CHMSU OSA",
+    "site_brand": "UDM OSA",
     
     # Logo to use for your site, must be present in static files
     "site_logo": "violations/images/chmsu_logo.png",
@@ -74,7 +74,7 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
     
     # Welcome text on the login screen
-    "welcome_sign": "Welcome to CHMSU Student Violation Management System",
+    "welcome_sign": "Welcome to UDM Student Violation Management System",
     
     # Copyright on the footer
     "copyright": "Carlos Hilado Memorial State University - OSA",
@@ -221,7 +221,7 @@ JAZZMIN_SETTINGS = {
 }
 
 # Jazzmin UI Tweaks - Customize colors and layout
-# Theme based on CHMSU green colors
+# Theme based on UDM green colors
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,

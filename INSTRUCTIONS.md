@@ -1,4 +1,4 @@
-# 🚀 CHMSU Student Violation Monitoring System — Setup Instructions
+# 🚀 UDM Student Violation Monitoring System — Setup Instructions
 
 > Detailed step-by-step guide for setting up the project on **Windows** with **Python 3.11+**.
 

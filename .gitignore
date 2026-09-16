@@ -1,5 +1,5 @@
 # =============================================================
-#  CHMSU Student Violation Monitoring System — .gitignore
+#  UDM Student Violation Monitoring System — .gitignore
 #  Stack: Python 3.11 · Django 5.2 · PostgreSQL / SQLite
 #         OpenCV · gTTS · Pillow · WhiteNoise · Channels
 # =============================================================

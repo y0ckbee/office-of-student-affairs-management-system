@@ -1236,7 +1236,7 @@ def faculty_analytics_api(request):
 	dept_data = []
 	dept_colors = []
 	
-	# Official CHMSU College/Department Colors
+	# Official UDM College/Department Colors
 	college_colors = {
 		'CAS': '#22c55e',      # Green - College of Arts and Sciences
 		'CBMA': '#eab308',     # Yellow/Gold - College of Business Management and Accountancy

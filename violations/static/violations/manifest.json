@@ -1,7 +1,7 @@
 {
-  "name": "CHMSU Student Violation Monitoring System",
-  "short_name": "CHMSU SVMS",
-  "description": "Student Violation Monitoring System for Carlos Hilado Memorial State University",
+  "name": "UDM Student Violation Monitoring System",
+  "short_name": "UDM SVMS",
+  "description": "Student Violation Monitoring System for Universidad de Manila",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

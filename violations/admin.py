@@ -20,9 +20,9 @@ from .models import (
 # =============================================================================
 # Custom Admin Site Configuration
 # =============================================================================
-admin.site.site_header = "CHMSU Student Violation System"
-admin.site.site_title = "CHMSU Violations Admin"
-admin.site.index_title = "Welcome to CHMSU Student Violation Management"
+admin.site.site_header = "UDM Student Violation System"
+admin.site.site_title = "UDM Violations Admin"
+admin.site.index_title = "Welcome to UDM Student Violation Management"
 
 
 @admin.register(User)
@@ -93,7 +93,7 @@ class StudentAdmin(admin.ModelAdmin):
 	
 	@admin.display(description="Department")
 	def department_badge(self, obj):
-		# Official CHMSU College/Department Colors
+		# Official UDM College/Department Colors
 		colors = {
 			"CAS": "#22c55e",      # Green - College of Arts and Sciences
 			"CBMA": "#eab308",     # Yellow/Gold - College of Business Management and Accountancy

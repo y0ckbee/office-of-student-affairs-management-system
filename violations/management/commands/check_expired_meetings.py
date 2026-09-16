@@ -104,7 +104,7 @@ Next Steps:
 
 For questions or to reschedule, contact the OSA Office as soon as possible.
 
-This is an automated notification from the CHMSU Violation Monitoring System.
+This is an automated notification from the UDM Violation Monitoring System.
 """.strip()
                 )
                 notified_count += 1
@@ -137,7 +137,7 @@ Recommended Action:
 
 The student has been notified about the missed meeting.
 
-This is an automated notification from the CHMSU Violation Monitoring System.
+This is an automated notification from the UDM Violation Monitoring System.
 """.strip()
                     )
                 

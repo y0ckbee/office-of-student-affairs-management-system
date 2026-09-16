@@ -1,0 +1,29 @@
+,, Accnts
+.Username: admin255
+Email: admin255@gmail.com
+255086aa
+.my stud
+24221682
+
+,, activate local
+=.\virtualenv\Scripts\Activate.ps1
+=$env:USE_SQLITE = "True"
+=python manage.py runserver
+
+,,panel
+=http://127.0.0.1:8000/admin/
+=http://127.0.0.1:8000/
+
+,,addresses
+.Universidad de Manila
+-659-A Cecilia Muñoz St, Ermita, Manila, 1000 Metro Manila
+-UDM
+-Former City College of Manila
+.REPUBLIC OF THE PHILIPPINES
+CARLOS HILADO MEMORIAL STATE UNIVERSITY
+Talisay City, Negros Occidental
+-OFFICE OF STUDENT AFFAIRS
+-CHMSU
+
+,,todo
+.del unnecessary files

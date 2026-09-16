@@ -15,7 +15,7 @@
   <header class="top-nav">
     <div class="top-left">
       <a href="{% url 'violations:staff_dashboard' %}" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
-        <img src="{% static 'violations/images/chmsu_logo.png' %}" class="header-logo" alt="CHMSU" />
+        <img src="{% static 'violations/images/chmsu_logo.png' %}" class="header-logo" alt="UDM" />
         <span class="header-title">{% if edit_mode %}Edit{% else %}Encode{% endif %} Violation</span>
       </a>
     </div>
@@ -32,10 +32,10 @@
       <!-- Form Header -->
       <div class="form-header">
         <div class="form-header-logo">
-          <img src="{% static 'violations/images/chmsu_logo.png' %}" alt="CHMSU Logo">
+          <img src="{% static 'violations/images/chmsu_logo.png' %}" alt="UDM Logo">
         </div>
         <div class="form-header-text">
-          <h1>Carlos Hilado Memorial State University</h1>
+          <h1>Universidad de Manila</h1>
           <h2>Office of Student Affairs</h2>
           <h3>{% if edit_mode %}Violation Record Amendment Form{% else %}Student Violation Report Form{% endif %}</h3>
         </div>
@@ -298,7 +298,7 @@
               <label class="field-label">Location of Incident <span class="required">*</span></label>
               <input type="text" name="location" required
                      value="{% if edit_mode %}{{ violation.location }}{% endif %}"
-                     placeholder="e.g., CHMSU, LSAB Room 310"
+                     placeholder="e.g., UDM, LSAB Room 310"
                      class="form-input">
             </div>
           </div>
@@ -381,7 +381,7 @@
       <!-- Form Footer -->
       <div class="form-footer">
         <p>This is an official document of the Office of Student Affairs. Unauthorized modification is strictly prohibited.</p>
-        <p class="form-footer-meta">Form Version 2.0 | CHMSU-OSA-VRF</p>
+        <p class="form-footer-meta">Form Version 2.0 | UDM-OSA-VRF</p>
       </div>
     </section>
   </main>

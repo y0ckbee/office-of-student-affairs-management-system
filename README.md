@@ -1,6 +1,6 @@
-# 🛡️ CHMSU Student Violation Monitoring System
+# 🛡️ UDM Student Violation Monitoring System
 
-> **A Django-based web application that automates student discipline tracking, violation workflows, and OSA coordination for CHMSU Talisay Campus.**
+> **A Django-based web application that automates student discipline tracking, violation workflows, and OSA coordination for UDM Talisay Campus.**
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-5.2.7-092E20?logo=django&logoColor=white)
@@ -32,7 +32,7 @@
 
 ## 🔍 Overview
 
-Managing student discipline manually across a campus is slow, inconsistent, and difficult to track over time. The **CHMSU Student Violation Monitoring System** is a full-stack Django web application that digitizes and automates the entire student discipline lifecycle for CHMSU Talisay Campus.
+Managing student discipline manually across a campus is slow, inconsistent, and difficult to track over time. The **UDM Student Violation Monitoring System** is a full-stack Django web application that digitizes and automates the entire student discipline lifecycle for UDM Talisay Campus.
 
 From the moment an incident is reported, the system routes it through a structured workflow:
 
@@ -370,7 +370,7 @@ python check_overdue.py
 
 ---
 
-*This system was built for CHMSU Talisay Campus to modernize and streamline student discipline management.*
+*This system was built for UDM Talisay Campus to modernize and streamline student discipline management.*
 
 ---
 
@@ -378,7 +378,7 @@ python check_overdue.py
 
 ### The Project
 
-The **CHMSU Student Violation Monitoring System** was developed as a capstone/institutional project for **Carlos Hilado Memorial State University — Talisay Campus**. It was built to address the longstanding challenges of managing student discipline cases through paper-based processes, which are slow, inconsistent, and difficult to audit over time.
+The **UDM Student Violation Monitoring System** was developed as a capstone/institutional project for **Carlos Hilado Memorial State University — Talisay Campus**. It was built to address the longstanding challenges of managing student discipline cases through paper-based processes, which are slow, inconsistent, and difficult to audit over time.
 
 The system brings the entire discipline workflow into a single, role-aware digital platform — from the moment an incident is reported by a guard or faculty member, through OSA review and hearing scheduling, to final resolution and apology letter verification.
 
@@ -386,7 +386,7 @@ The system brings the entire discipline workflow into a single, role-aware digit
 
 | | |
 |---|---|
-| 🏫 **Institution** | Carlos Hilado Memorial State University (CHMSU), Talisay Campus |
+| 🏫 **Institution** | Carlos Hilado Memorial State University (UDM), Talisay Campus |
 | 🏢 **Office** | Office of Student Affairs (OSA) |
 | 🎯 **Problem Solved** | Replace manual, paper-based violation tracking with a centralized digital workflow |
 | 👥 **Users Served** | Students, Staff, Faculty, Guards, Formator Heads, OSA Coordinators |
@@ -402,7 +402,7 @@ The system brings the entire discipline workflow into a single, role-aware digit
 
 ### Built With ❤️ For
 
-This system was designed with the CHMSU OSA team and student body in mind — aiming to make disciplinary processes faster, fairer, and more transparent for everyone involved.
+This system was designed with the UDM OSA team and student body in mind — aiming to make disciplinary processes faster, fairer, and more transparent for everyone involved.
 
 ---
 
