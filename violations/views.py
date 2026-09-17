@@ -243,19 +243,21 @@ def get_head_size_guidance(head_size):
 ############################################
 
 def login_view(request):
-	"""Render the staff login page; redirects authenticated users to their dashboard."""
-	# Redirect authenticated users to their dashboards
-	if request.user.is_authenticated:
-		return redirect("violations:route_dashboard")
-	# Pull any prefill hints from session (set by failed student lookup, etc.)
-	default_role = request.session.pop("login_prefill_role", None)
-	prefill_student_id = request.session.pop("login_prefill_student_id", "")
-	ctx = {
-		"default_role": default_role,
-		"prefill_student_id": prefill_student_id,
-	}
-	return render(request, "violations/staff/login.html", ctx)
+    """Render the main login page for OSA Coordinator and Student."""
+    # Redirect authenticated users to their dashboards
+    if request.user.is_authenticated:
+        return redirect("violations:route_dashboard")
 
+    # Pull any prefill hints from session
+    default_role = request.session.pop("login_prefill_role", None)
+    prefill_student_id = request.session.pop("login_prefill_student_id", "")
+
+    ctx = {
+        "default_role": default_role,
+        "prefill_student_id": prefill_student_id,
+    }
+
+    return render(request, "violations/osa_coordinator/login.html", ctx)
 
 def student_login_view(request):
 	"""Render the student login page; redirects authenticated users to their dashboard."""
@@ -346,37 +348,31 @@ def student_login_auth(request):
     return redirect("violations:route_dashboard")
 
 def credentials_login_auth(request):
-	"""Authenticate Staff/Faculty using email + password.
+	"""Authenticate the OSA Coordinator using email + password.
 
-	Students should use Student ID login instead; if a Student attempts this route,
-	show a helpful message.
-	"""
+    Students should use Student ID login instead.
+    """
 	if request.method != "POST":
 		return redirect("violations:login")
 
 	# Determine which login template to use based on the role
-	selected_role = (request.POST.get("role") or "staff").strip().lower()
-	if selected_role == "faculty":
-		login_template = "violations/osa_coordinator/login.html"
-		redirect_login = "violations:faculty_login"
-	else:
-		login_template = "violations/staff/login.html"
-		redirect_login = "violations:login"
+	selected_role = (request.POST.get("role") or "faculty").strip().lower()
+	login_template = "violations/osa_coordinator/login.html"
+	redirect_login = "violations:faculty_login"
 
 	# Accept multiple possible field names from the UI
 	identifier = (
-		(request.POST.get("username") or
-		 request.POST.get("faculty_username") or
-		 request.POST.get("email") or
-		 request.POST.get("staff_email") or
-		 request.POST.get("faculty_email") or
-		 "").strip()
+    (request.POST.get("username") or
+     request.POST.get("faculty_username") or
+     request.POST.get("email") or
+     request.POST.get("faculty_email") or
+     "").strip()
 	)
+ 
 	password = (
-		(request.POST.get("password") or
-		 request.POST.get("staff_password") or
-		 request.POST.get("faculty_password") or
-		 "")
+    (request.POST.get("password") or
+     request.POST.get("faculty_password") or
+     "")
 	)
 
 	if not identifier or not password:
@@ -957,6 +953,80 @@ def faculty_case_management_view(request):
 	
 	return render(request, "violations/osa_coordinator/case_management.html", context)
 
+@role_required({User.Role.OSA_COORDINATOR})
+def osa_report_violation_view(request):
+    """OSA Coordinator: record a violation for an existing student."""
+
+    if request.method == "POST":
+        student_id = (request.POST.get("student_id") or "").strip()
+
+        if not student_id:
+            messages.error(request, "Student ID is required.")
+            return render(
+                request,
+                "violations/osa_coordinator/report_form.html",
+                status=400
+            )
+
+        try:
+            student = StudentModel.objects.select_related("user").get(
+                student_id__iexact=student_id
+            )
+        except StudentModel.DoesNotExist:
+            messages.error(
+                request,
+                "Access Denied. Student ID was not found."
+            )
+            return render(
+                request,
+                "violations/osa_coordinator/report_form.html",
+                status=404
+            )
+
+        # Violation details
+        description = (request.POST.get("description") or "").strip()
+        violation_type = (request.POST.get("violation_type") or "").strip()
+        location = (request.POST.get("location") or "").strip()
+        incident_at = request.POST.get("incident_at") or None
+
+        if not description:
+            messages.error(request, "Violation description is required.")
+            return render(
+                request,
+                "violations/osa_coordinator/report_form.html",
+                status=400
+            )
+
+        violation = Violation.objects.create(
+            student=student,
+            reported_by=request.user,
+            description=description,
+            violation_type=violation_type,
+            location=location,
+            incident_at=incident_at,
+            status=Violation.Status.REPORTED,
+        )
+
+        ActivityLog.objects.create(
+            user=request.user,
+            action="Created violation report",
+            description=(
+                f"Violation reported for Student ID "
+                f"{student.student_id}"
+            ),
+        )
+
+        messages.success(
+            request,
+            "Violation recorded successfully."
+        )
+
+        return redirect("violations:faculty_case_management")
+
+    return render(
+        request,
+        "violations/osa_coordinator/report_form.html"
+    )
 
 @role_required({User.Role.OSA_COORDINATOR})
 def faculty_update_case_status_view(request):
@@ -1043,17 +1113,11 @@ def faculty_activity_logs_view(request):
 	).order_by('-timestamp')
 	
 	# Filter by user role
-	if user_role == 'staff':
-		logs = logs.filter(user__role=User.Role.STAFF)
-	elif user_role == 'student':
+	if user_role == 'student':
 		logs = logs.filter(user__role=User.Role.STUDENT)
 	elif user_role == 'osa_coordinator':
 		logs = logs.filter(user__role=User.Role.OSA_COORDINATOR)
-	elif user_role == 'guard':
-		logs = logs.filter(guard_code__isnull=False).exclude(guard_code='')
-	elif user_role == 'formator':
-		logs = logs.filter(formator_code__isnull=False).exclude(formator_code='')
-	
+  
 	# Filter by action type
 	if action_filter != 'all':
 		logs = logs.filter(action_type=action_filter)
@@ -1100,10 +1164,12 @@ def faculty_activity_logs_view(request):
 	stats = {
 		'total_logs': ActivityLog.objects.count(),
 		'today_logs': ActivityLog.objects.filter(timestamp__date=today).count(),
-		'staff_logs': ActivityLog.objects.filter(user__role=User.Role.STAFF).count(),
-		'student_logs': ActivityLog.objects.filter(user__role=User.Role.STUDENT).count(),
-		'guard_logs': ActivityLog.objects.exclude(guard_code='').count(),
-		'formator_logs': ActivityLog.objects.exclude(formator_code='').count(),
+		'osa_coordinator_logs': ActivityLog.objects.filter(
+			user__role=User.Role.OSA_COORDINATOR
+		).count(),
+		'student_logs': ActivityLog.objects.filter(
+			user__role=User.Role.STUDENT
+		).count(),
 	}
 	
 	context = {
@@ -1900,7 +1966,7 @@ def generate_prescriptive_recommendations(total_violations, total_major, total_m
 # OSA Staff - frontend-only
 ############################################
 
-@role_required({User.Role.STAFF})
+# # @role_required({User.Role.STAFF})
 def staff_dashboard_view(request):
 	"""Staff dashboard — shows overview cards and a student directory table."""
 	from .models import Student as StudentModel
@@ -2009,7 +2075,7 @@ def staff_dashboard_view(request):
 	return render(request, "violations/staff/dashboard.html", ctx)
 
 
-@role_required({User.Role.STAFF})
+# # @role_required({User.Role.STAFF})
 def staff_student_detail_view(request, student_id: str):
 	"""Staff: View a student's profile details and violations by student_id."""
 	# Resolve student by ID (case-insensitive)
@@ -2077,31 +2143,42 @@ def legacy_dashboard_redirect(request):
 
 @login_required
 def route_dashboard_view(request):
-	"""Role-aware router after login: sends users to their dashboard.
+    """Role-aware router after login: sends users to their dashboard.
 
-	If not authenticated, send to login.
-	"""
-	# Superusers act as Faculty(Admin) for routing purposes
-	if getattr(request.user, "is_superuser", False):
-		return redirect("violations:faculty_dashboard")
+    If not authenticated, send to login.
+    """
+    if not request.user.is_authenticated:
+        return redirect("violations:login")
 
-	role = getattr(request.user, "role", None)
-	if role == getattr(getattr(type(request.user), "Role", object), "STUDENT", "student"):
-		return redirect("violations:student_dashboard")
-	if role == getattr(getattr(type(request.user), "Role", object), "OSA_COORDINATOR", "osa_coordinator"):
-		return redirect("violations:faculty_dashboard")
-	if role == getattr(getattr(type(request.user), "Role", object), "STAFF", "staff"):
-		return redirect("violations:staff_dashboard")
+    # Superusers act as OSA Coordinator(Admin) for routing purposes
+    if getattr(request.user, "is_superuser", False):
+        return  redirect("violations:faculty_dashboard")
 
-	# Fallback
-	return redirect("violations:student_dashboard")
+    role = getattr(request.user, "role", None)
+
+    if role == getattr(
+    	getattr(type(request.user), "Role", object),
+        "STUDENT",
+        "student"
+    ):
+        return redirect("violations:student_dashboard")
+
+    if role == getattr(
+        getattr(type(request.user), "Role", object),
+        "OSA_COORDINATOR",
+        "osa_coordinator"
+    ):
+        return redirect("violations:faculty_dashboard")
+
+    # Fallback
+    return redirect("violations:login")
 
 
 ############################################
 # Staff Feature Views - Complete Implementation
 ############################################
 
-@role_required({User.Role.STAFF})
+@role_required({User.Role.OSA_COORDINATOR})
 def staff_violations_list_view(request):
 	"""Staff: View all violations with filtering and search."""
 	from datetime import timedelta
@@ -2144,7 +2221,7 @@ def staff_violations_list_view(request):
 			violations = violations.filter(status=status_filter)
 	
 	# Type (severity) filter
-	type_filter = request.GET.get('type', '')
+	type_filter =          request.GET.get('type', '')
 	if type_filter:
 		violations = violations.filter(type=type_filter)
 	
@@ -2171,7 +2248,7 @@ def staff_violations_list_view(request):
 	return render(request, 'violations/staff/violations_list.html', ctx)
 
 
-@role_required({User.Role.STAFF})
+# # @role_required({User.Role.STAFF})
 def staff_check_student_view(request):
 	"""Staff: AJAX endpoint to check if a student exists in the database."""
 	student_id = request.GET.get('student_id', '').strip()
@@ -2192,7 +2269,7 @@ def staff_check_student_view(request):
 		return JsonResponse({'exists': False})
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_violation_create_view(request):
 	"""Staff: Create a new violation record from physical reports."""
 	if request.method == 'POST':
@@ -2383,7 +2460,7 @@ def staff_violation_create_view(request):
 	return render(request, 'violations/staff/violation_form.html', ctx)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_violation_edit_view(request, violation_id):
 	"""Staff: Edit an existing violation record."""
 	violation = get_object_or_404(Violation.objects.select_related('student', 'student__user'), id=violation_id)
@@ -2461,7 +2538,7 @@ def staff_violation_edit_view(request, violation_id):
 	return render(request, 'violations/staff/violation_form.html', ctx)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_violation_delete_view(request, violation_id):
 	"""Staff: Delete a violation record (with confirmation).
 	
@@ -2490,7 +2567,7 @@ def staff_violation_delete_view(request, violation_id):
 	return render(request, 'violations/staff/violation_delete_confirm.html', ctx)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_violation_detail_view(request, violation_id):
 	"""Staff: View violation details with all related data."""
 	violation = get_object_or_404(
@@ -2518,7 +2595,7 @@ def staff_violation_detail_view(request, violation_id):
 	return render(request, 'violations/staff/violation_detail.html', ctx)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_verify_violation_view(request, violation_id):
 	"""Staff: Verify/validate a violation record."""
 	violation = get_object_or_404(Violation.objects.select_related('student', 'student__user'), id=violation_id)
@@ -2570,7 +2647,7 @@ def staff_verify_violation_view(request, violation_id):
 	return redirect('violations:staff_violation_detail', violation_id=violation.id)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_apology_letters_view(request):
 	"""Staff: View and manage apology letter submissions."""
 	letters = ApologyLetter.objects.select_related(
@@ -2617,7 +2694,7 @@ def staff_apology_letters_view(request):
 	return render(request, 'violations/staff/apology_letters.html', ctx)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_verify_apology_view(request, letter_id):
 	"""Staff: Verify or reject an apology letter."""
 	from .models import ActivityLog
@@ -2680,7 +2757,7 @@ def staff_verify_apology_view(request, letter_id):
 	return render(request, 'violations/staff/verify_apology.html', ctx)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_send_to_formator_view(request, letter_id):
 	"""Staff: Send apology letter to Student Formator for verification."""
 	from .models import ActivityLog
@@ -2710,7 +2787,7 @@ def staff_send_to_formator_view(request, letter_id):
 	return redirect('violations:staff_verify_apology', letter_id=letter.id)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_reports_view(request):
 	"""Staff: Generate and view violation reports with comprehensive statistics."""
 	from datetime import timedelta
@@ -3012,7 +3089,7 @@ def staff_reports_view(request):
 	return render(request, 'violations/staff/reports.html', ctx)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_export_report_view(request):
 	"""Staff: Export violation report as CSV."""
 	start_date = request.GET.get('start_date', '')
@@ -3058,7 +3135,7 @@ def staff_export_report_view(request):
 	return response
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_send_report_view(request):
 	"""Staff: Send violation report summary to OSA Coordinator."""
 	if request.method != 'POST':
@@ -3157,7 +3234,7 @@ Generated: {timezone.now().strftime('%B %d, %Y at %I:%M %p')}"""
 	return redirect('violations:staff_reports')
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_delete_document_view(request, document_id):
 	"""Staff: Delete a violation document."""
 	document = get_object_or_404(ViolationDocument, id=document_id)
@@ -3170,7 +3247,7 @@ def staff_delete_document_view(request, document_id):
 	return redirect('violations:staff_violation_detail', violation_id=violation_id)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_send_message_view(request):
 	"""Staff: Send a message to a student."""
 	if request.method == 'POST':
@@ -3200,7 +3277,7 @@ def staff_send_message_view(request):
 	return redirect('violations:staff_dashboard')
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_send_faculty_message_view(request):
 	"""Staff: Send a message to a faculty member."""
 	if request.method == 'POST':
@@ -3275,7 +3352,7 @@ def student_reply_message_view(request):
 		return JsonResponse({'status': 'error', 'error': str(e)}, status=500)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_add_student_view(request):
 	"""Staff: Add a new student to the system."""
 	if request.method == 'POST':
@@ -3366,7 +3443,7 @@ def staff_add_student_view(request):
 	return redirect('violations:staff_dashboard')
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_delete_message_view(request):
 	"""Staff: Move a message to trash (soft delete)."""
 	if request.method != 'POST':
@@ -3394,7 +3471,7 @@ def staff_delete_message_view(request):
 		return JsonResponse({'status': 'error', 'error': str(e)}, status=500)
 
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_restore_message_view(request):
 	"""Staff: Restore a message from trash."""
 	if request.method != 'POST':
@@ -3740,7 +3817,7 @@ def student_apology_view(request):
 # Staff Alert Management Views
 ############################################
 
-@role_required({User.Role.STAFF})
+# @role_required({User.Role.STAFF})
 def staff_schedule_meeting_view(request, alert_id):
 	"""Staff: Schedule a meeting for a staff alert."""
 	if request.method != "POST":
@@ -3856,7 +3933,7 @@ OSA Staff
 		return JsonResponse({"error": str(e)}, status=400)
 
 
-@role_required({User.Role.STAFF, User.Role.OSA_COORDINATOR})
+@role_required({User.Role.OSA_COORDINATOR})
 def staff_mark_meeting_met_view(request, alert_id):
 	"""Staff/OSA Coordinator: Mark a scheduled meeting as met/completed."""
 	if request.method != "POST":
@@ -3928,7 +4005,7 @@ OSA Office
 		return JsonResponse({"error": str(e)}, status=400)
 
 
-@role_required({User.Role.STAFF, User.Role.OSA_COORDINATOR})
+@role_required({User.Role.OSA_COORDINATOR})
 def staff_resolve_alert_view(request, alert_id):
 	"""Staff/OSA Coordinator: Mark a staff alert as resolved."""
 	if request.method != "POST":
@@ -3946,7 +4023,7 @@ def staff_resolve_alert_view(request, alert_id):
 		return JsonResponse({"error": str(e)}, status=400)
 
 
-@role_required({User.Role.STAFF, User.Role.OSA_COORDINATOR})
+@role_required({User.Role.OSA_COORDINATOR})
 def staff_dismiss_alert_view(request, alert_id):
 	"""Staff/OSA Coordinator: Dismiss (soft delete) a staff alert."""
 	if request.method != "POST":
@@ -3962,7 +4039,7 @@ def staff_dismiss_alert_view(request, alert_id):
 		return JsonResponse({"error": str(e)}, status=400)
 
 
-@role_required({User.Role.STAFF, User.Role.OSA_COORDINATOR})
+@role_required({User.Role.OSA_COORDINATOR})
 def staff_restore_alert_view(request, alert_id):
 	"""Staff/OSA Coordinator: Restore a dismissed staff alert."""
 	if request.method != "POST":
@@ -3978,7 +4055,7 @@ def staff_restore_alert_view(request, alert_id):
 		return JsonResponse({"error": str(e)}, status=400)
 
 
-@role_required({User.Role.STAFF, User.Role.OSA_COORDINATOR})
+@role_required({User.Role.OSA_COORDINATOR})
 def staff_permanent_delete_alert_view(request, alert_id):
 	"""Staff/OSA Coordinator: Permanently delete a dismissed staff alert."""
 	if request.method != "POST":

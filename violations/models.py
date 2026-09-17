@@ -18,7 +18,6 @@ student_id_validator = RegexValidator(
 class User(AbstractUser):
 	class Role(models.TextChoices):
 		OSA_COORDINATOR = "osa_coordinator", "OSA Coordinator"
-		STAFF = "staff", "Staff"
 		STUDENT = "student", "Student"
 
 	# Keep username from AbstractUser
@@ -968,9 +967,19 @@ def violation_post_save_alert(sender, instance, created, **kwargs):
 					effective_major_count=effective,
 				)
 				
-				# Notify all staff via email
-				staff_emails = list(User.objects.filter(role=User.Role.STAFF).values_list('email', flat=True))
-				if staff_emails:
+				# Notify all osa via email
+				osa_emails = list(
+					User.objects.filter(
+						role=User.Role.OSA_COORDINATOR,
+						is_active=True
+					).exclude(
+						email=""
+					).values_list(
+						"email",
+						flat=True
+					)
+				)
+				if osa_emails:
 					subject = f"Student Alert: {student.student_id} Reached Violation Threshold"
 					message = f"""
 Dear Staff,
@@ -994,7 +1003,7 @@ UDM Violation Monitoring System
 						subject,
 						message,
 						settings.DEFAULT_FROM_EMAIL,
-						staff_emails,
+						osa_emails,
 						fail_silently=True,
 					)
 	except Exception:

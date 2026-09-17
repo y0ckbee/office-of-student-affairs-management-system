@@ -95,7 +95,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
         
         # External URLs open in new window
-        {"name": "Staff Dashboard", "url": "/staff/dashboard/", "new_window": True},
+        # {"name": "Staff Dashboard", "url": "/staff/dashboard/", "new_window": True},
         {"name": "OSA Coordinator Dashboard", "url": "/faculty/dashboard/", "new_window": True},
         
         # Model admin to link to (Alarm.URLs.Alarm.URLs & target can be nested)
@@ -111,7 +111,7 @@ JAZZMIN_SETTINGS = {
     
     # Additional links to include in the user menu on the top right
     "usermenu_links": [
-        {"name": "Staff Dashboard", "url": "/staff/dashboard/", "new_window": True, "icon": "fas fa-tachometer-alt"},
+        # {"name": "Staff Dashboard", "url": "/staff/dashboard/", "new_window": True, "icon": "fas fa-tachometer-alt"},
         {"model": "auth.user"},
     ],
 
@@ -136,7 +136,7 @@ JAZZMIN_SETTINGS = {
         "violations",
         "violations.User",
         "violations.Student", 
-        "violations.Staff",
+        # "violations.Staff",
         "violations.OSACoordinator",
         "violations.Violation",
         "violations.ApologyLetter",
@@ -147,14 +147,7 @@ JAZZMIN_SETTINGS = {
     ],
 
     # Custom links to append to app groups, keyed on app name
-    "custom_links": {
-        "violations": [{
-            "name": "Go to Staff Dashboard", 
-            "url": "/staff/dashboard/", 
-            "icon": "fas fa-tachometer-alt",
-            "permissions": ["violations.view_student"]
-        }]
-    },
+    "custom_links": {},
 
     # Custom icons for side menu apps/models
     # https://fontawesome.com/icons?d=gallery&m=free&v=5.0.0,5.0.1,5.0.10,5.0.11,5.0.12,5.0.13,5.0.2,5.0.3,5.0.4,5.0.5,5.0.6,5.0.7,5.0.8,5.0.9,5.1.0,5.1.1,5.2.0,5.3.0,5.3.1,5.4.0,5.4.1,5.4.2,5.13.0,5.12.0,5.11.2,5.11.1,5.10.0,5.9.0,5.8.2,5.8.1,5.7.2,5.7.1,5.7.0,5.6.3,5.5.0,5.4.2
@@ -165,7 +158,7 @@ JAZZMIN_SETTINGS = {
         "violations": "fas fa-gavel",
         "violations.User": "fas fa-user-shield",
         "violations.Student": "fas fa-user-graduate",
-        "violations.Staff": "fas fa-user-tie",
+        # "violations.Staff": "fas fa-user-tie",
         "violations.OSACoordinator": "fas fa-chalkboard-teacher",
         "violations.Violation": "fas fa-exclamation-triangle",
         "violations.ApologyLetter": "fas fa-envelope-open-text",
@@ -362,7 +355,7 @@ AUTH_USER_MODEL = "violations.User"
 
 # These reverse names assume the app is included with namespace 'violations'
 LOGIN_URL = 'violations:auth_login'
-LOGIN_REDIRECT_URL = 'violations:staff_dashboard'
+LOGIN_REDIRECT_URL = 'violations:route_dashboard'
 LOGOUT_REDIRECT_URL = '/admin/login/'  # Redirect to admin login after logout
 
 # Default primary key field type
