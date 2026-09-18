@@ -1,17 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Violation - OSA Coordinator</title>
     <link rel="stylesheet" href="{% static 'violations/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'violations/css/main.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-	<link rel="icon" type="image/png" href="{% static 'violations/images/chmsu_favicon_round.png' %}" />
+    <link rel="icon" type="image/png" href="{% static 'violations/images/chmsu_favicon_round.png' %}" />
 
 </head>
+
 <body class="role-faculty">
     <!-- Official Top Navigation -->
     <header class="official-top-nav">
@@ -42,9 +45,11 @@
                 <div class="nav-divider"></div>
                 <div class="nav-profile">
                     <button class="nav-profile-btn" id="profileBtn">
-                        <span class="profile-avatar">{{ request.user.first_name|default:request.user.username|first|upper }}</span>
+                        <span class="profile-avatar">{{
+                            request.user.first_name|default:request.user.username|first|upper }}</span>
                         <div class="profile-info">
-                            <span class="profile-name">{{ request.user.first_name|default:request.user.username }}</span>
+                            <span class="profile-name">{{ request.user.first_name|default:request.user.username
+                                }}</span>
                             <span class="profile-role">Coordinator</span>
                         </div>
                         <i class="fas fa-chevron-down"></i>
@@ -52,7 +57,8 @@
                     <div class="nav-dropdown" id="profileDropdown">
                         <a href="#"><i class="fas fa-user"></i> View Profile</a>
                         <div class="dropdown-divider"></div>
-                        <a href="{% url 'violations:auth_logout' %}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        <a href="{% url 'violations:auth_logout' %}" class="logout-link"><i
+                                class="fas fa-sign-out-alt"></i> Logout</a>
                     </div>
                 </div>
             </div>
@@ -68,7 +74,7 @@
             right: 0;
             z-index: 10000;
             background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 50%, #1a472a 100%);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
             border-bottom: 3px solid #fbbf24;
             pointer-events: auto !important;
         }
@@ -135,7 +141,7 @@
         .nav-department {
             font-family: 'Times New Roman', Georgia, serif;
             font-size: 10px;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
@@ -161,8 +167,8 @@
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             color: #ffffff;
             font-family: 'Poppins', sans-serif;
@@ -173,14 +179,14 @@
         }
 
         .nav-back-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-1px);
         }
 
         .nav-divider {
             width: 1px;
             height: 32px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             margin: 0 4px;
         }
 
@@ -194,8 +200,8 @@
             align-items: center;
             gap: 10px;
             padding: 5px 10px 5px 5px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -204,7 +210,7 @@
         }
 
         .nav-profile-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .profile-avatar {
@@ -238,11 +244,11 @@
         .profile-role {
             font-family: 'Poppins', sans-serif;
             font-size: 9px;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .nav-profile-btn i {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 10px;
             transition: transform 0.2s;
         }
@@ -254,7 +260,7 @@
             min-width: 180px;
             background: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             border: 1px solid #e5e7eb;
             opacity: 0;
             visibility: hidden;
@@ -338,7 +344,7 @@
     <div class="background-image" style="pointer-events:none;"></div>
 
     <main class="container" style="position:relative; z-index:3; margin-top: calc(var(--header-height) + 24px);">
-        
+
         <!-- Messages Display -->
         {% if messages %}
         <div class="messages-container" style="margin-bottom: 20px;">
@@ -366,7 +372,8 @@
                 color: #1e40af;
                 {% endif %}
             ">
-                <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+                <i
+                    class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
                 {{ message }}
             </div>
             {% endfor %}
@@ -399,83 +406,111 @@
             <!-- Report Form -->
             <form method="POST" enctype="multipart/form-data" class="report-form">
                 {% csrf_token %}
-                
+
                 <div class="form-section">
                     <h3 class="section-title"><i class="fas fa-user-graduate"></i> Student Information</h3>
                     <div class="form-group">
-                        <label for="student_search">Student ID or Name <span class="required">*</span></label>
+                        <label for="student_search">Student ID<span class="required">*</span></label>
                         <div class="input-with-icon">
                             <i class="fas fa-search"></i>
-                            <input type="text" 
-                                   id="student_search" 
-                                   name="student_search" 
-                                   placeholder="Enter Student ID (e.g., 20240001) or Name"
-                                   required
-                                   autocomplete="off">
+                            <input type="text" id="student_id" name="student_id"
+                                placeholder="Enter Student ID (e.g., 20240001)" required autocomplete="off">
                         </div>
-                        <small class="form-hint"><i class="fas fa-info-circle"></i> Enter the student's ID number or search by name</small>
+                        <small class="form-hint"><i class="fas fa-info-circle"></i>
+                            Enter the student's existing UDM Student id
+                        </small>
                     </div>
                 </div>
 
                 <div class="form-section">
                     <h3 class="section-title"><i class="fas fa-exclamation-triangle"></i> Violation Details</h3>
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="incident_dt">Date & Time of Incident <span class="required">*</span></label>
                             <div class="input-with-icon">
                                 <i class="fas fa-calendar-alt"></i>
-                                <input type="datetime-local" 
-                                       id="incident_dt" 
-                                       name="incident_dt" 
-                                       required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="violation_type">Violation Type <span class="required">*</span></label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-tag"></i>
-                                <select id="violation_type" name="violation_type" required>
-                                    <option value="">-- Select Violation Type --</option>
-                                    <option value="minor">Minor Violation</option>
-                                    <option value="major">Major Violation</option>
-                                </select>
-                            </div>
+                                <input type="datetime-local" <div class="form-row">
+                                <div class="form-group">
+                                    <label for="incident_date">
+                                        Date of Incident <span class="required">*</span>
+                                    </label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <input type="date" id="incident_date" name="incident_date" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="incident_time">
+                                        Time of Incident
+                                    </label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-clock"></i>
+                                        <input type="time" id="incident_time" name="incident_time">
+                                    </div>
+                                </div>
+                            </div>>
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <label for="location">Location of Incident <span class="required">*</span></label>
+                        <label for="violation_type">Violation Type <span class="required">*</span></label>
                         <div class="input-with-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <input type="text" 
-                                   id="location" 
-                                   name="location" 
-                                   placeholder="e.g., Building A, Room 101, Campus Grounds"
-                                   required>
-                        </div>
+                            <i class="fas fa-tag"></i>
+                            <select id="violation_type_id" name="violation_type_id" required>
+                                <option value="">-- Select Violation Type --</option>
+                                {% for violation_type in violation_types %}
+                                <option value="{{ violation_type.id }}">
+                                    {{ violation_type.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-group">
+                                <label for="type">
+                                    Severity <span class="required">*</span>
+                                </label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <select id="type" name="type" required>
+                                        <option value="">-- Select Severity --</option>
+                                        {% for value, label in type_choices %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>>
                     </div>
+                </div>
+                </div>
+                </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="description">Description of Incident <span class="required">*</span></label>
-                        <textarea id="description" 
-                                  name="description" 
-                                  rows="5" 
-                                  placeholder="Provide a detailed description of the violation incident..."
-                                  required></textarea>
-                        <small class="form-hint"><i class="fas fa-pen"></i> Include specific details: what happened, when, who was involved</small>
+                <div class="form-group">
+                    <label for="location">Location of Incident <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="location" name="location"
+                            placeholder="e.g., Building A, Room 101, Campus Grounds" required>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description of Incident <span class="required">*</span></label>
+                    <textarea id="description" name="description" rows="5"
+                        placeholder="Provide a detailed description of the violation incident..." required></textarea>
+                    <small class="form-hint"><i class="fas fa-pen"></i> Include specific details: what happened,
+                        when, who was involved</small>
+                </div>
                 </div>
 
                 <div class="form-section">
                     <h3 class="section-title"><i class="fas fa-file-alt"></i> Supporting Information</h3>
-                    
+
                     <div class="form-group">
                         <label for="witness">Witness Statement</label>
-                        <textarea id="witness" 
-                                  name="witness" 
-                                  rows="3" 
-                                  placeholder="Optional: Include witness names and their account of the incident..."></textarea>
+                        <textarea id="witness" name="witness" rows="3"
+                            placeholder="Optional: Include witness names and their account of the incident..."></textarea>
                     </div>
 
                     <div class="form-group">
@@ -484,11 +519,8 @@
                             <i class="fas fa-cloud-upload-alt"></i>
                             <p>Drag & drop files here or <span class="browse-link">browse</span></p>
                             <small>Supported: Images, PDF, Documents (Max 10MB)</small>
-                            <input type="file" 
-                                   id="evidence" 
-                                   name="evidence" 
-                                   accept="image/*,.pdf,.doc,.docx"
-                                   style="display:none;">
+                            <input type="file" id="evidence" name="evidence" accept="image/*,.pdf,.doc,.docx"
+                                style="display:none;">
                         </div>
                         <div id="filePreview" class="file-preview" style="display:none;">
                             <i class="fas fa-file"></i>
@@ -512,8 +544,10 @@
 
             <!-- Footer -->
             <div class="form-footer">
-                <p class="footer-note"><i class="fas fa-shield-alt"></i> This report will be reviewed by OSA Staff. False reports may result in disciplinary action.</p>
-                <p class="footer-generated">Reference: OSA-VR-{% now "Ymd" %} • Reported by: {{ request.user.get_full_name|default:request.user.username }}</p>
+                <p class="footer-note"><i class="fas fa-shield-alt"></i> This report will be reviewed by OSA Staff.
+                    False reports may result in disciplinary action.</p>
+                <p class="footer-generated">Reference: OSA-VR-{% now "Ymd" %} • Reported by: {{
+                    request.user.get_full_name|default:request.user.username }}</p>
             </div>
         </section>
     </main>
@@ -523,7 +557,7 @@
         .official-form-section {
             background: #ffffff;
             border: 2px solid #1a472a;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             font-family: 'Times New Roman', Georgia, serif;
             overflow: hidden;
             max-width: 900px;
@@ -930,91 +964,99 @@
     </style>
 
     <script>
-    (function(){
-        // Profile Dropdown Toggle
-        const profileBtn = document.getElementById('profileBtn');
-        const profileDropdown = document.getElementById('profileDropdown');
-        
-        if(profileBtn && profileDropdown) {
-            profileBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                profileDropdown.classList.toggle('show');
-            });
-            
-            document.addEventListener('click', function(e) {
-                if(!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
-                    profileDropdown.classList.remove('show');
-                }
-            });
-        }
+        (function () {
+            // Profile Dropdown Toggle
+            const profileBtn = document.getElementById('profileBtn');
+            const profileDropdown = document.getElementById('profileDropdown');
 
-        // File Upload Functionality
-        const fileUploadArea = document.getElementById('fileUploadArea');
-        const fileInput = document.getElementById('evidence');
-        const filePreview = document.getElementById('filePreview');
-        const fileName = document.getElementById('fileName');
-        const removeFileBtn = document.getElementById('removeFile');
+            if (profileBtn && profileDropdown) {
+                profileBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    profileDropdown.classList.toggle('show');
+                });
 
-        if(fileUploadArea && fileInput) {
-            // Click to browse
-            fileUploadArea.addEventListener('click', function() {
-                fileInput.click();
-            });
-
-            // Drag and drop
-            fileUploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                fileUploadArea.classList.add('dragover');
-            });
-
-            fileUploadArea.addEventListener('dragleave', function(e) {
-                e.preventDefault();
-                fileUploadArea.classList.remove('dragover');
-            });
-
-            fileUploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                fileUploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if(files.length > 0) {
-                    fileInput.files = files;
-                    showFilePreview(files[0]);
-                }
-            });
-
-            // File selected
-            fileInput.addEventListener('change', function() {
-                if(fileInput.files.length > 0) {
-                    showFilePreview(fileInput.files[0]);
-                }
-            });
-
-            function showFilePreview(file) {
-                if(filePreview && fileName) {
-                    fileName.textContent = file.name;
-                    filePreview.style.display = 'flex';
-                    fileUploadArea.style.display = 'none';
-                }
-            }
-
-            // Remove file
-            if(removeFileBtn) {
-                removeFileBtn.addEventListener('click', function() {
-                    fileInput.value = '';
-                    filePreview.style.display = 'none';
-                    fileUploadArea.style.display = 'block';
+                document.addEventListener('click', function (e) {
+                    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        profileDropdown.classList.remove('show');
+                    }
                 });
             }
-        }
 
-        // Set default datetime to now
-        const incidentDt = document.getElementById('incident_dt');
-        if(incidentDt && !incidentDt.value) {
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            incidentDt.value = now.toISOString().slice(0, 16);
-        }
-    })();
+            // File Upload Functionality
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('evidence');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const removeFileBtn = document.getElementById('removeFile');
+
+            if (fileUploadArea && fileInput) {
+                // Click to browse
+                fileUploadArea.addEventListener('click', function () {
+                    fileInput.click();
+                });
+
+                // Drag and drop
+                fileUploadArea.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                    fileUploadArea.classList.add('dragover');
+                });
+
+                fileUploadArea.addEventListener('dragleave', function (e) {
+                    e.preventDefault();
+                    fileUploadArea.classList.remove('dragover');
+                });
+
+                fileUploadArea.addEventListener('drop', function (e) {
+                    e.preventDefault();
+                    fileUploadArea.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        fileInput.files = files;
+                        showFilePreview(files[0]);
+                    }
+                });
+
+                // File selected
+                fileInput.addEventListener('change', function () {
+                    if (fileInput.files.length > 0) {
+                        showFilePreview(fileInput.files[0]);
+                    }
+                });
+
+                function showFilePreview(file) {
+                    if (filePreview && fileName) {
+                        fileName.textContent = file.name;
+                        filePreview.style.display = 'flex';
+                        fileUploadArea.style.display = 'none';
+                    }
+                }
+
+                // Remove file
+                if (removeFileBtn) {
+                    removeFileBtn.addEventListener('click', function () {
+                        fileInput.value = '';
+                        filePreview.style.display = 'none';
+                        fileUploadArea.style.display = 'block';
+                    });
+                }
+            }
+
+            // Set default incident date and time to now
+            const incidentDate = document.getElementById('incident_date');
+            const incidentTime = document.getElementById('incident_time');
+
+            if (incidentDate && !incidentDate.value) {
+                const now = new Date();
+                incidentDate.value = now.toISOString().slice(0, 10);
+            }
+
+            if (incidentTime && !incidentTime.value) {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                incidentTime.value = now.toISOString().slice(11, 16);
+            }
+        })();
     </script>
 </body>
+
 </html>

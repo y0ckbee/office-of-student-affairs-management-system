@@ -10,7 +10,7 @@ Email: admin255@gmail.com
 =.\virtualenv\Scripts\Activate.ps1
 =$env:USE_SQLITE = "True"
 =python manage.py runserver
-
+indent= python -m black violations\views.py
 ,,panel
 =http://127.0.0.1:8000/admin/
 =http://127.0.0.1:8000/

@@ -1,17 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Profile - {{ student.user.get_full_name|default:student.student_id }}</title>
   <link rel="stylesheet" href="{% static 'violations/css/style.css' %}" />
   <link rel="stylesheet" href="{% static 'violations/css/main.css' %}" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-	<link rel="icon" type="image/png" href="{% static 'violations/images/chmsu_favicon_round.png' %}" />
+  <link rel="icon" type="image/png" href="{% static 'violations/images/chmsu_favicon_round.png' %}" />
 
 </head>
+
 <body class="{% if request.user.role == 'osa_coordinator' %}role-faculty{% else %}role-staff{% endif %}">
   <!-- Official Top Navigation -->
   <header class="official-top-nav">
@@ -22,7 +25,8 @@
         </div>
         <div class="brand-text">
           <span class="brand-university">UDM</span>
-          <span class="brand-title">{% if request.user.role == 'osa_coordinator' %}OSA Coordinator Portal{% else %}OSA Staff Portal{% endif %}</span>
+          <span class="brand-title">{% if request.user.role == 'osa_coordinator' %}OSA Coordinator Portal{% else %}OSA
+            Staff Portal{% endif %}</span>
         </div>
       </div>
 
@@ -35,15 +39,9 @@
         <button class="nav-icon-btn no-print" onclick="window.print()" title="Print Profile">
           <i class="fas fa-print"></i> Print
         </button>
-        {% if request.user.role == 'osa_coordinator' %}
         <a href="{% url 'violations:faculty_dashboard' %}" class="nav-icon-btn no-print" title="Back to Dashboard">
           <i class="fas fa-arrow-left"></i> Back
         </a>
-        {% else %}
-        <a href="{% url 'violations:staff_dashboard' %}" class="nav-icon-btn no-print" title="Back to Dashboard">
-          <i class="fas fa-arrow-left"></i> Back
-        </a>
-        {% endif %}
       </div>
     </div>
   </header>
@@ -52,7 +50,7 @@
   <div class="background-image"></div>
 
   <main class="container" style="position:relative; z-index:3; margin-top: calc(var(--header-height) + 24px);">
-    
+
     <!-- Student Profile Card -->
     <section class="official-profile-section">
       <div class="profile-header">
@@ -80,18 +78,20 @@
         <div class="profile-photo-section">
           <div class="profile-photo-frame">
             {% if student.profile_image %}
-              <img src="{{ student.profile_image.url }}" alt="{{ student.user.get_full_name|default:student.student_id }}" />
+            <img src="{{ student.profile_image.url }}"
+              alt="{{ student.user.get_full_name|default:student.student_id }}" />
             {% else %}
-              <div class="photo-placeholder">
-                <i class="fas fa-user"></i>
-              </div>
+            <div class="photo-placeholder">
+              <i class="fas fa-user"></i>
+            </div>
             {% endif %}
           </div>
           <div class="profile-id-badge">
             <span class="id-label">Student ID</span>
             <span class="id-value">{{ student.student_id }}</span>
           </div>
-          <div class="profile-status-badge {% if student.enrollment_status == 'Enrolled' or student.enrollment_status == 'Active' %}status-active{% elif student.enrollment_status == 'Graduated' %}status-graduated{% else %}status-inactive{% endif %}">
+          <div
+            class="profile-status-badge {% if student.enrollment_status == 'Enrolled' or student.enrollment_status == 'Active' %}status-active{% elif student.enrollment_status == 'Graduated' %}status-graduated{% else %}status-inactive{% endif %}">
             {{ student.enrollment_status|default:"Active" }}
           </div>
         </div>
@@ -101,19 +101,17 @@
             <h3 class="student-full-name">{{ student.user.get_full_name|default:student.student_id }}</h3>
             <div class="quick-actions no-print">
               {% if student.user.email %}
-                <a class="quick-action-btn" href="mailto:{{ student.user.email }}" title="Send Email">
-                  <i class="fas fa-envelope"></i>
-                </a>
+              <a class="quick-action-btn" href="mailto:{{ student.user.email }}" title="Send Email">
+                <i class="fas fa-envelope"></i>
+              </a>
               {% endif %}
               {% if student.contact_number %}
-                <a class="quick-action-btn" href="tel:{{ student.contact_number }}" title="Call Student">
-                  <i class="fas fa-phone"></i>
-                </a>
+              <a class="quick-action-btn" href="tel:{{ student.contact_number }}" title="Call Student">
+                <i class="fas fa-phone"></i>
+              </a>
               {% endif %}
-              <button class="quick-action-btn message-student-btn" 
-                      data-student-id="{{ student.student_id }}"
-                      data-student-name="{{ student.user.get_full_name|default:student.student_id }}"
-                      title="Send Message">
+              <button class="quick-action-btn message-student-btn" data-student-id="{{ student.student_id }}"
+                data-student-name="{{ student.user.get_full_name|default:student.student_id }}" title="Send Message">
                 <i class="fas fa-comment"></i>
               </button>
             </div>
@@ -182,13 +180,13 @@
           </div>
           <div class="goodmoral-badge">
             {% if cgmc.status == 'eligible' %}
-              <span class="badge-eligible"><i class="fas fa-check-circle"></i> ELIGIBLE FOR CGMC</span>
+            <span class="badge-eligible"><i class="fas fa-check-circle"></i> ELIGIBLE FOR CGMC</span>
             {% elif cgmc.status == 'conditional' %}
-              <span class="badge-conditional"><i class="fas fa-exclamation-triangle"></i> CONDITIONAL</span>
+            <span class="badge-conditional"><i class="fas fa-exclamation-triangle"></i> CONDITIONAL</span>
             {% elif cgmc.status == 'pending_review' %}
-              <span class="badge-pending"><i class="fas fa-clock"></i> PENDING CASE</span>
+            <span class="badge-pending"><i class="fas fa-clock"></i> PENDING CASE</span>
             {% else %}
-              <span class="badge-ineligible"><i class="fas fa-ban"></i> NOT ELIGIBLE</span>
+            <span class="badge-ineligible"><i class="fas fa-ban"></i> NOT ELIGIBLE</span>
             {% endif %}
           </div>
         </div>
@@ -198,9 +196,9 @@
           <div class="criteria-item {% if vstats.major_count == 0 %}criteria-pass{% else %}criteria-fail{% endif %}">
             <div class="criteria-icon">
               {% if vstats.major_count == 0 %}
-                <i class="fas fa-check-circle text-success"></i>
+              <i class="fas fa-check-circle text-success"></i>
               {% else %}
-                <i class="fas fa-times-circle text-danger"></i>
+              <i class="fas fa-times-circle text-danger"></i>
               {% endif %}
             </div>
             <div class="criteria-content">
@@ -212,9 +210,9 @@
           <div class="criteria-item {% if vstats.pending == 0 %}criteria-pass{% else %}criteria-fail{% endif %}">
             <div class="criteria-icon">
               {% if vstats.pending == 0 %}
-                <i class="fas fa-check-circle text-success"></i>
+              <i class="fas fa-check-circle text-success"></i>
               {% else %}
-                <i class="fas fa-times-circle text-danger"></i>
+              <i class="fas fa-times-circle text-danger"></i>
               {% endif %}
             </div>
             <div class="criteria-content">
@@ -225,11 +223,10 @@
 
           <div class="criteria-item {% if vstats.effective_major < 3 %}criteria-pass{% else %}criteria-fail{% endif %}">
             <div class="criteria-icon">
-              {% if vstats.effective_major < 3 %}
-                <i class="fas fa-check-circle text-success"></i>
-              {% else %}
+              {% if vstats.effective_major < 3 %} <i class="fas fa-check-circle text-success"></i>
+                {% else %}
                 <i class="fas fa-times-circle text-danger"></i>
-              {% endif %}
+                {% endif %}
             </div>
             <div class="criteria-content">
               <span class="criteria-label">Below Violation Threshold</span>
@@ -237,12 +234,13 @@
             </div>
           </div>
 
-          <div class="criteria-item {% if vstats.expired_meetings == 0 %}criteria-pass{% else %}criteria-fail{% endif %}">
+          <div
+            class="criteria-item {% if vstats.expired_meetings == 0 %}criteria-pass{% else %}criteria-fail{% endif %}">
             <div class="criteria-icon">
               {% if vstats.expired_meetings == 0 %}
-                <i class="fas fa-check-circle text-success"></i>
+              <i class="fas fa-check-circle text-success"></i>
               {% else %}
-                <i class="fas fa-calendar-times text-danger"></i>
+              <i class="fas fa-calendar-times text-danger"></i>
               {% endif %}
             </div>
             <div class="criteria-content">
@@ -251,12 +249,13 @@
             </div>
           </div>
 
-          <div class="criteria-item {% if vstats.pending_meetings == 0 %}criteria-pass{% else %}criteria-warning{% endif %}">
+          <div
+            class="criteria-item {% if vstats.pending_meetings == 0 %}criteria-pass{% else %}criteria-warning{% endif %}">
             <div class="criteria-icon">
               {% if vstats.pending_meetings == 0 %}
-                <i class="fas fa-check-circle text-success"></i>
+              <i class="fas fa-check-circle text-success"></i>
               {% else %}
-                <i class="fas fa-calendar-alt text-warning"></i>
+              <i class="fas fa-calendar-alt text-warning"></i>
               {% endif %}
             </div>
             <div class="criteria-content">
@@ -268,14 +267,20 @@
           <div class="criteria-item {% if cgmc.can_issue %}criteria-pass{% else %}criteria-fail{% endif %}">
             <div class="criteria-icon">
               {% if cgmc.can_issue %}
-                <i class="fas fa-file-certificate text-success"></i>
+              <i class="fas fa-file-certificate text-success"></i>
               {% else %}
-                <i class="fas fa-file-excel text-danger"></i>
+              <i class="fas fa-file-excel text-danger"></i>
               {% endif %}
             </div>
             <div class="criteria-content">
               <span class="criteria-label">Certificate Status</span>
-              <span class="criteria-value">{% if cgmc.can_issue %}Can be Issued{% else %}Cannot be Issued{% endif %}</span>
+              <span class="criteria-value">
+                {% if cgmc.can_issue %}
+                Can be Issued
+                {% else %}
+                Cannot be Issued
+                {% endif %}
+              </span>
             </div>
           </div>
         </div>
@@ -284,27 +289,33 @@
         <div class="goodmoral-breakdown">
           <div class="breakdown-item">
             <span class="breakdown-label">Major Violations</span>
-            <span class="breakdown-value {% if vstats.major_count > 0 %}text-danger{% endif %}">{{ vstats.major_count|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.major_count > 0 %}text-danger{% endif %}">{{
+              vstats.major_count|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Minor Violations</span>
-            <span class="breakdown-value {% if vstats.minor_count >= 3 %}text-warning{% endif %}">{{ vstats.minor_count|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.minor_count >= 3 %}text-warning{% endif %}">{{
+              vstats.minor_count|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Effective Major (3 minor = 1 major)</span>
-            <span class="breakdown-value {% if vstats.effective_major >= 3 %}text-danger{% endif %}">{{ vstats.effective_major|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.effective_major >= 3 %}text-danger{% endif %}">{{
+              vstats.effective_major|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Pending Cases</span>
-            <span class="breakdown-value {% if vstats.pending > 0 %}text-warning{% endif %}">{{ vstats.pending|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.pending > 0 %}text-warning{% endif %}">{{
+              vstats.pending|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Expired Meetings</span>
-            <span class="breakdown-value {% if vstats.expired_meetings > 0 %}text-danger{% endif %}">{{ vstats.expired_meetings|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.expired_meetings > 0 %}text-danger{% endif %}">{{
+              vstats.expired_meetings|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Pending Meetings</span>
-            <span class="breakdown-value {% if vstats.pending_meetings > 0 %}text-warning{% endif %}">{{ vstats.pending_meetings|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.pending_meetings > 0 %}text-warning{% endif %}">{{
+              vstats.pending_meetings|default:'0' }}</span>
           </div>
         </div>
 
@@ -337,12 +348,18 @@
           <div>
             <p><strong>CGMC Eligibility Rules (Per UDM Student Handbook):</strong></p>
             <ul style="margin:8px 0 0 16px; font-size:12px; color:#374151;">
-              <li><strong>Eligible:</strong> No major offenses, no pending cases, no missed meetings, sanctions completed (if any)</li>
-              <li><strong>Conditional:</strong> Minor offenses only, all resolved, may be issued with administrative discretion</li>
-              <li><strong>Pending:</strong> Has unresolved case(s) or pending meeting — wait for resolution before applying</li>
-              <li><strong>Not Eligible:</strong> Major offense on record, missed scheduled meetings, or pattern of repeated misconduct</li>
+              <li><strong>Eligible:</strong> No major offenses, no pending cases, no missed meetings, sanctions
+                completed (if any)</li>
+              <li><strong>Conditional:</strong> Minor offenses only, all resolved, may be issued with administrative
+                discretion</li>
+              <li><strong>Pending:</strong> Has unresolved case(s) or pending meeting — wait for resolution before
+                applying</li>
+              <li><strong>Not Eligible:</strong> Major offense on record, missed scheduled meetings, or pattern of
+                repeated misconduct</li>
             </ul>
-            <p style="margin-top:8px; font-size:11px; color:#6b7280;"><em>This assessment is based on available disciplinary records as of the date of viewing. Certificate issuance requires official request and administrative approval.</em></p>
+            <p style="margin-top:8px; font-size:11px; color:#6b7280;"><em>This assessment is based on available
+                disciplinary records as of the date of viewing. Certificate issuance requires official request and
+                administrative approval.</em></p>
           </div>
         </div>
       </div>
@@ -438,9 +455,10 @@
               </td>
               <td class="col-type">
                 {% if v.violation_type %}
-                  <span class="type-badge type-{{ v.violation_type.severity|default:'minor' }}">{{ v.violation_type.name }}</span>
+                <span class="type-badge type-{{ v.violation_type.severity|default:'minor' }}">{{ v.violation_type.name
+                  }}</span>
                 {% else %}
-                  <span class="type-badge">{{ v.type|default:"General" }}</span>
+                <span class="type-badge">{{ v.type|default:"General" }}</span>
                 {% endif %}
               </td>
               <td class="col-desc">
@@ -451,13 +469,13 @@
               </td>
               <td class="col-status">
                 {% if v.status == 'resolved' %}
-                  <span class="status-badge status-resolved"><i class="fas fa-check"></i> Resolved</span>
+                <span class="status-badge status-resolved"><i class="fas fa-check"></i> Resolved</span>
                 {% elif v.status == 'dismissed' %}
-                  <span class="status-badge status-dismissed"><i class="fas fa-ban"></i> Dismissed</span>
+                <span class="status-badge status-dismissed"><i class="fas fa-ban"></i> Dismissed</span>
                 {% elif v.status == 'under_review' %}
-                  <span class="status-badge status-review"><i class="fas fa-search"></i> Under Review</span>
+                <span class="status-badge status-review"><i class="fas fa-search"></i> Under Review</span>
                 {% else %}
-                  <span class="status-badge status-pending"><i class="fas fa-clock"></i> Pending</span>
+                <span class="status-badge status-pending"><i class="fas fa-clock"></i> Pending</span>
                 {% endif %}
               </td>
               <td class="col-staff">{{ v.reported_by.get_full_name|default:'System' }}</td>
@@ -477,7 +495,8 @@
 
       <!-- Footer -->
       <div class="directory-footer">
-        <p><i class="fas fa-info-circle"></i> This student profile is system-generated. For official records, please contact the Office of Student Affairs.</p>
+        <p><i class="fas fa-info-circle"></i> This student profile is system-generated. For official records, please
+          contact the Office of Student Affairs.</p>
         <p class="print-only">Generated on: {% now "F d, Y - g:i A" %}</p>
       </div>
     </section>
@@ -497,7 +516,7 @@
   </main>
 
   <script src="{% static 'violations/js/script.js' %}"></script>
-  
+
   <style>
     /* Official Top Navigation Styles */
     .official-top-nav {
@@ -507,7 +526,7 @@
       right: 0;
       z-index: 10000;
       background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 50%, #1a472a 100%);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
       border-bottom: 3px solid #fbbf24;
     }
 
@@ -589,8 +608,8 @@
     .nav-icon-btn {
       padding: 8px 16px;
       border-radius: 8px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
       display: flex;
       align-items: center;
@@ -604,14 +623,14 @@
     }
 
     .nav-icon-btn:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     /* Official Profile Section */
     .official-profile-section {
       background: #ffffff;
       border: 2px solid #1a472a;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
 
@@ -905,7 +924,7 @@
     .official-stats-section {
       background: #ffffff;
       border: 2px solid #1a472a;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
 
@@ -974,7 +993,7 @@
     .official-goodmoral-section {
       background: #ffffff;
       border: 2px solid #1a472a;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
 
@@ -1204,7 +1223,8 @@
     }
 
     /* CGMC Reasons & Recommendations */
-    .cgmc-reasons, .cgmc-recommendations {
+    .cgmc-reasons,
+    .cgmc-recommendations {
       background: #f9fafb;
       border: 1px solid #e5e7eb;
       border-radius: 8px;
@@ -1212,7 +1232,8 @@
       margin-bottom: 12px;
     }
 
-    .cgmc-reasons h4, .cgmc-recommendations h4 {
+    .cgmc-reasons h4,
+    .cgmc-recommendations h4 {
       font-family: 'Poppins', sans-serif;
       font-size: 13px;
       font-weight: 600;
@@ -1231,12 +1252,14 @@
       color: #f59e0b;
     }
 
-    .cgmc-reasons ul, .cgmc-recommendations ul {
+    .cgmc-reasons ul,
+    .cgmc-recommendations ul {
       margin: 0;
       padding-left: 20px;
     }
 
-    .cgmc-reasons li, .cgmc-recommendations li {
+    .cgmc-reasons li,
+    .cgmc-recommendations li {
       font-family: 'Poppins', sans-serif;
       font-size: 12px;
       color: #4b5563;
@@ -1379,7 +1402,7 @@
     .official-directory-section {
       background: #ffffff;
       border: 2px solid #1a472a;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
 
@@ -1445,9 +1468,14 @@
       background: #f0fdf4;
     }
 
-    .col-seq { width: 50px; text-align: center; color: #9ca3af; }
+    .col-seq {
+      width: 50px;
+      text-align: center;
+      color: #9ca3af;
+    }
 
-    .time-sub, .location-sub {
+    .time-sub,
+    .location-sub {
       font-size: 11px;
       color: #9ca3af;
       margin-top: 4px;
@@ -1471,9 +1499,20 @@
       color: #374151;
     }
 
-    .type-minor { background: #fef3c7; color: #d97706; }
-    .type-major { background: #fee2e2; color: #dc2626; }
-    .type-severe { background: #fce7f3; color: #db2777; }
+    .type-minor {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .type-major {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .type-severe {
+      background: #fce7f3;
+      color: #db2777;
+    }
 
     .status-badge {
       display: inline-flex;
@@ -1582,7 +1621,7 @@
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
       }
-      
+
       .stat-card {
         border-bottom: 1px solid #e5e7eb;
       }
@@ -1650,17 +1689,28 @@
     }
 
     @media print {
-      .no-print { display: none !important; }
-      .official-top-nav { display: none; }
-      .print-only { display: block !important; }
-      .print-signature-section.print-only { display: block !important; }
+      .no-print {
+        display: none !important;
+      }
+
+      .official-top-nav {
+        display: none;
+      }
+
+      .print-only {
+        display: block !important;
+      }
+
+      .print-signature-section.print-only {
+        display: block !important;
+      }
     }
 
     /* ========================================
        COMPREHENSIVE PRINT STYLES - OPTIMIZED
        For A4 Portrait (210mm x 297mm)
        ======================================== */
-    
+
     @page {
       size: 210mm 297mm portrait;
       margin: 8mm 10mm 12mm 10mm;
@@ -1671,8 +1721,11 @@
     }
 
     @media print {
+
       /* ===== RESET & BASE ===== */
-      *, *::before, *::after {
+      *,
+      *::before,
+      *::after {
         box-shadow: none !important;
         text-shadow: none !important;
         -webkit-print-color-adjust: exact !important;
@@ -1865,18 +1918,21 @@
         font-size: 8pt !important;
       }
 
-      .cgmc-reasons, .cgmc-recommendations {
+      .cgmc-reasons,
+      .cgmc-recommendations {
         padding: 2mm 3mm !important;
         margin-bottom: 2mm !important;
         border-radius: 4px !important;
       }
 
-      .cgmc-reasons h4, .cgmc-recommendations h4 {
+      .cgmc-reasons h4,
+      .cgmc-recommendations h4 {
         font-size: 8pt !important;
         margin-bottom: 2mm !important;
       }
 
-      .cgmc-reasons li, .cgmc-recommendations li {
+      .cgmc-reasons li,
+      .cgmc-recommendations li {
         font-size: 7pt !important;
         padding: 1px 0 !important;
       }
@@ -2366,7 +2422,12 @@
       }
 
       /* ===== PAGE BREAK CONTROLS ===== */
-      h1, h2, h3, h4, h5, h6,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
       .profile-title-bar,
       .stats-title-bar,
       .directory-title-bar {
@@ -2421,4 +2482,5 @@
   </style>
 
 </body>
+
 </html>

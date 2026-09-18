@@ -17,7 +17,7 @@ import base64
 import json
 
 from .models import (
-	User, Student as StudentModel, Staff as StaffModel, OSACoordinator as OSACoordinatorModel,
+	User, Student as StudentModel, OSACoordinator as OSACoordinatorModel,
 	Violation, ViolationType, LoginActivity,
 	ViolationDocument, ApologyLetter,
 	Message, StaffAlert
@@ -404,9 +404,9 @@ def credentials_login_auth(request):
 		messages.warning(request, "Students, please sign in using your Student ID number.")
 		return redirect("violations:student_login")
 
-	# If user selected the Faculty role in the UI, require Django superuser
-	if selected_role == "faculty" and not getattr(user, "is_superuser", False):
-		messages.error(request, "Only Django admin superusers can sign in as OSA Coordinator.")
+	# OSA Coordinator is the administrator role.
+	if role != User.Role.OSA_COORDINATOR and not getattr(user, "is_superuser", False):
+		messages.error(request, "Access Denied.")
 		return render(request, login_template, status=403)
 
 	login(request, user, backend="django.contrib.auth.backends.ModelBackend")
@@ -826,8 +826,6 @@ def faculty_student_detail_view(request, student_id: str):
 	}
 	return render(request, "violations/staff/student_detail.html", ctx)
 
-
-@role_required({User.Role.OSA_COORDINATOR})
 @role_required({User.Role.OSA_COORDINATOR})
 def faculty_case_management_view(request):
 	"""
@@ -965,7 +963,7 @@ def osa_report_violation_view(request):
             return render(
                 request,
                 "violations/osa_coordinator/report_form.html",
-                status=400
+                status=400,
             )
 
         try:
@@ -975,59 +973,138 @@ def osa_report_violation_view(request):
         except StudentModel.DoesNotExist:
             messages.error(
                 request,
-                "Access Denied. Student ID was not found."
+                "Access Denied. Student ID was not found.",
             )
             return render(
                 request,
                 "violations/osa_coordinator/report_form.html",
-                status=404
+                status=404,
             )
 
-        # Violation details
         description = (request.POST.get("description") or "").strip()
-        violation_type = (request.POST.get("violation_type") or "").strip()
+        violation_type_id = (
+            request.POST.get("violation_type_id") or ""
+        ).strip()
+        violation_type = (request.POST.get("type") or "").strip()
         location = (request.POST.get("location") or "").strip()
-        incident_at = request.POST.get("incident_at") or None
+
+        incident_date = (
+            request.POST.get("incident_date") or ""
+        ).strip()
+        incident_time = (
+            request.POST.get("incident_time") or ""
+        ).strip()
 
         if not description:
-            messages.error(request, "Violation description is required.")
+            messages.error(
+                request,
+                "Violation description is required.",
+            )
             return render(
                 request,
                 "violations/osa_coordinator/report_form.html",
-                status=400
+                status=400,
             )
+
+        catalog_violation_type = None
+
+        if violation_type_id:
+            catalog_violation_type = ViolationType.objects.filter(
+                id=violation_type_id,
+                is_active=True,
+            ).first()
+
+        if not catalog_violation_type:
+            messages.error(
+                request,
+                "Please select a valid violation type.",
+            )
+            return render(
+                request,
+                "violations/osa_coordinator/report_form.html",
+                status=400,
+            )
+
+        incident_at = timezone.now()
+
+        if incident_date:
+            try:
+                if incident_time:
+                    incident_at = datetime.strptime(
+                        f"{incident_date} {incident_time}",
+                        "%Y-%m-%d %H:%M",
+                    )
+                else:
+                    incident_at = datetime.strptime(
+                        incident_date,
+                        "%Y-%m-%d",
+                    )
+
+                incident_at = timezone.make_aware(incident_at)
+
+            except ValueError:
+                messages.error(
+                    request,
+                    "Invalid incident date or time.",
+                )
+                return render(
+                    request,
+                    "violations/osa_coordinator/report_form.html",
+                    status=400,
+                )
 
         violation = Violation.objects.create(
             student=student,
             reported_by=request.user,
             description=description,
-            violation_type=violation_type,
-            location=location,
+            type=violation_type or Violation.Severity.MINOR,
+            violation_type=catalog_violation_type,
+            location=location or "Not specified",
             incident_at=incident_at,
             status=Violation.Status.REPORTED,
         )
 
-        ActivityLog.objects.create(
-            user=request.user,
-            action="Created violation report",
+        ActivityLog.log_activity(
+            action_type=ActivityLog.ActionType.VIOLATION_REPORTED,
             description=(
-                f"Violation reported for Student ID "
-                f"{student.student_id}"
+                f"Violation #{violation.id} recorded for "
+                f"Student ID {student.student_id}"
             ),
+            request=request,
+            user=request.user,
+            related_violation=violation,
+            related_student=student,
         )
 
         messages.success(
             request,
-            "Violation recorded successfully."
+            f"Violation #{violation.id} recorded successfully.",
         )
 
-        return redirect("violations:faculty_case_management")
+        return redirect(
+            "violations:faculty_case_management"
+        )
+
+    students = StudentModel.objects.select_related(
+        "user"
+    ).all().order_by("student_id")
+
+    violation_types = ViolationType.objects.filter(
+        is_active=True
+    ).order_by("category", "name")
+
+    context = {
+        "students": students,
+        "type_choices": Violation.Severity.choices,
+        "violation_types": violation_types,
+    }
 
     return render(
         request,
-        "violations/osa_coordinator/report_form.html"
-    )
-
+        "violations/osa_coordinator/report_form.html",
+        context,
+    ) 
+    
 @role_required({User.Role.OSA_COORDINATOR})
 def faculty_update_case_status_view(request):
 	"""OSA Coordinator: Update violation case status via AJAX."""
