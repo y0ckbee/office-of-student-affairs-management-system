@@ -982,7 +982,7 @@ def violation_post_save_alert(sender, instance, created, **kwargs):
 				if osa_emails:
 					subject = f"Student Alert: {student.student_id} Reached Violation Threshold"
 					message = f"""
-Dear Staff,
+Dear OSA Coordinator,
 
 A student has reached the violation threshold requiring immediate attention.
 
@@ -992,7 +992,7 @@ Student Details:
 - Effective Major Violations: {effective} (Majors: {major_count}, Minors: {minor_count})
 - Latest Violation: {instance.description} (Type: {instance.get_type_display()})
 
-Please schedule a meeting with the student and the OSA Coordinator as soon as possible.
+Please schedule a meeting with the student as soon as possible.
 
 This is an automated notification from the UDM Violation System.
 

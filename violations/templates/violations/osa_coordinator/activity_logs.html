@@ -545,11 +545,8 @@
             flex-shrink: 0;
         }
 
-        .user-avatar.staff { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
         .user-avatar.student { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
         .user-avatar.osa_coordinator { background: linear-gradient(135deg, #1a472a, #2d5a3f); color: white; }
-        .user-avatar.guard { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
-        .user-avatar.formator { background: linear-gradient(135deg, #10b981, #059669); color: white; }
 
         .user-info {
             display: flex;
@@ -824,10 +821,6 @@
                 <div class="stat-icon purple">
                     <i class="fas fa-user-tie"></i>
                 </div>
-                <div class="stat-content">
-                    <h3>{{ stats.staff_logs }}</h3>
-                    <p>Staff Activities</p>
-                </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon orange">
@@ -842,18 +835,10 @@
                 <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <div class="stat-content">
-                    <h3>{{ stats.guard_logs }}</h3>
-                    <p>Guard Activities</p>
-                </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);">
                     <i class="fas fa-user-check"></i>
-                </div>
-                <div class="stat-content">
-                    <h3>{{ stats.formator_logs }}</h3>
-                    <p>Formator Activities</p>
                 </div>
             </div>
         </div>
@@ -869,11 +854,8 @@
                         <label>User Role</label>
                         <select name="role">
                             <option value="all" {% if current_filters.role == 'all' %}selected{% endif %}>All Roles</option>
-                            <option value="staff" {% if current_filters.role == 'staff' %}selected{% endif %}>Staff</option>
                             <option value="student" {% if current_filters.role == 'student' %}selected{% endif %}>Student</option>
                             <option value="osa_coordinator" {% if current_filters.role == 'osa_coordinator' %}selected{% endif %}>OSA Coordinator</option>
-                            <option value="guard" {% if current_filters.role == 'guard' %}selected{% endif %}>Guard</option>
-                            <option value="formator" {% if current_filters.role == 'formator' %}selected{% endif %}>Formator</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -934,17 +916,6 @@
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <div class="user-avatar {% if log.user %}{{ log.user.role }}{% elif log.guard_code %}guard{% elif log.formator_code %}formator{% endif %}">
-                                    {% if log.user %}
-                                        {{ log.user.first_name|default:log.user.username|first|upper }}
-                                    {% elif log.guard_code %}
-                                        <i class="fas fa-shield-alt" style="font-size: 14px;"></i>
-                                    {% elif log.formator_code %}
-                                        <i class="fas fa-user-check" style="font-size: 14px;"></i>
-                                    {% else %}
-                                        ?
-                                    {% endif %}
-                                </div>
                                 <div class="user-info">
                                     <span class="user-name">{{ log.get_actor_display }}</span>
                                     <span class="user-role">{{ log.get_actor_role }}</span>

@@ -40,7 +40,7 @@
                     <i class="fas fa-trash-alt"></i>
                     {% if trashed_messages %}<span class="nav-badge nav-badge-gray">{{ trashed_messages|length }}</span>{% endif %}
                 </button>
-                <button class="nav-icon-btn" id="staffAlertsBtn" aria-label="Staff Alerts" title="View Staff Alerts">
+                <button class="nav-icon-btn" id="staffAlertsBtn" aria-label="OSA Alerts" title="View OSA Alerts">
                     <i class="fas fa-exclamation-triangle"></i>
                     {% if staff_alerts %}<span class="nav-badge nav-badge-warning">{{ staff_alerts|length }}</span>{% endif %}
                 </button>
@@ -408,9 +408,9 @@
                         <i class="fas fa-file-alt"></i>
                     </div>
                     <div class="stat-content">
-                        <span class="stat-label">Staff Reports</span>
+                        <span class="stat-label">Violation Reports</span>
                         <span class="stat-value">{{ stats.staff_reports|default:'0' }}</span>
-                        <span class="stat-desc">{% if stats.unread_reports %}{{ stats.unread_reports }} unread{% else %}From staff{% endif %}</span>
+                        <span class="stat-desc">{% if stats.unread_reports %}{{ stats.unread_reports }} unread{% else %}Recorded in the system{% endif %}</span>
                     </div>
                 </div>
 
@@ -489,7 +489,7 @@
                 <button type="button" class="official-action-btn action-warning" onclick="document.getElementById('staffAlertsPanel').classList.add('show');">
                     <div class="action-icon"><i class="fas fa-exclamation-triangle"></i></div>
                     <div class="action-text">
-                        <span class="action-label">Staff Alerts</span>
+                        <span class="action-label">OSA Alerts</span>
                         <span class="action-desc">{% if staff_alerts %}{{ staff_alerts|length }} pending{% else %}No alerts{% endif %}</span>
                     </div>
                 </button>
@@ -1488,10 +1488,10 @@
             }
         }
     </style>
-    <!-- Staff Alerts Panel -->
+    <!-- OSA Alerts Panel -->
     <aside class="notif-panel" id="staffAlertsPanel" aria-hidden="true">
         <div class="notif-header">
-            <h3><i class="fas fa-exclamation-triangle"></i> Staff Alerts {% if staff_alerts %}<span class="badge badge-danger" style="font-size:12px; margin-left:6px;">{{ staff_alerts|length }} pending</span>{% endif %}</h3>
+            <h3><i class="fas fa-exclamation-triangle"></i> OSA Alerts {% if staff_alerts %}<span class="badge badge-danger" style="font-size:12px; margin-left:6px;">{{ staff_alerts|length }} pending</span>{% endif %}</h3>
             <button class="icon-btn" id="staffAlertsClose"><i class="fas fa-times"></i></button>
         </div>
         <ul class="notif-list" style="max-height:400px; overflow-y:auto; padding:0; margin:0;">
@@ -1569,7 +1569,7 @@
                     {% elif alert.meeting_status == 'expired' %}
                     <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
                         <span style="color:#dc2626; font-size:12px; padding:6px 12px; background:#fee2e2; border-radius:6px;">
-                            <i class="fas fa-exclamation-circle"></i> Awaiting Staff to Reschedule
+                            <i class="fas fa-exclamation-circle"></i> Awaiting Reschedule
                         </span>
                         <button class="action-btn resolve-alert-btn" data-alert-id="{{ alert.id }}" style="background:#6b7280; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
                             <i class="fas fa-archive"></i> Resolve Alert
@@ -1587,7 +1587,7 @@
                     <!-- No meeting scheduled yet - OSA can only view, Staff must schedule -->
                     <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
                         <span style="color:#f59e0b; font-size:12px; padding:6px 12px; background:#fef3c7; border-radius:6px;">
-                            <i class="fas fa-clock"></i> Awaiting Staff to Schedule Meeting
+                            <i class="fas fa-clock"></i> Awaiting Meeting Schedule
                         </span>
                         <button class="action-btn resolve-alert-btn" data-alert-id="{{ alert.id }}" style="background:#6b7280; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
                             <i class="fas fa-check"></i> Mark Resolved
@@ -1801,7 +1801,7 @@
                         <strong style="color:var(--chmsu-dark-green); font-size:16px;">
                             <i class="fas fa-user-tie"></i> <span id="msgViewSender">—</span>
                         </strong>
-                        <div style="color:#667085; font-size:13px; margin-top:4px;">OSA Staff</div>
+                        <div style="color:#667085; font-size:13px; margin-top:4px;">OSA Coordinator</div>
                     </div>
                     <small style="color:#667085;" id="msgViewDate">—</small>
                 </div>
@@ -2063,7 +2063,7 @@
             });
         </script>
         <script>
-            // Staff Alerts Panel Logic - Schedule Meeting and Resolve functionality
+            // OSA Alerts Panel Logic - Schedule Meeting and Resolve functionality
             (function(){
                 const panel = document.getElementById('staffAlertsPanel');
                 const btnClose = document.getElementById('staffAlertsClose');
@@ -2441,7 +2441,7 @@
                 });
             }
 
-            // Staff Alerts Panel Toggle
+            // OSA Alerts Panel Toggle
             const staffAlertsBtn = document.getElementById('staffAlertsBtn');
             const staffAlertsPanel = document.getElementById('staffAlertsPanel');
             const staffAlertsClose = document.getElementById('staffAlertsClose');
