@@ -26,10 +26,10 @@
   box-shadow: v.$shadow-hover;
 }
 
-.dash-card .card-icon { font-size: 24px; color: v.$chmsu-green; margin-bottom: 6px; }
+.dash-card .card-icon { font-size: 24px; color: v.$udm-green; margin-bottom: 6px; }
 .dash-card .card-title { font-weight: 600; margin-bottom: 4px; }
 .dash-card .card-desc { color: v.$gray-500; font-size: .9rem; }
-.dash-card .card-metric { font-size: 1.4rem; font-weight: 700; color: v.$chmsu-dark-green; }
+.dash-card .card-metric { font-size: 1.4rem; font-weight: 700; color: v.$udm-dark-green; }
 
 // Equal-height alignment by role (extends existing behavior)
 body.role-faculty .dashboard-grid .dash-card,

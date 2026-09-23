@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
         faculty = ensure_user(
             username="osa_coordinator",
-            email="osa@chmsu.edu.ph",
+            email="osa@udm.edu.ph",
             role=User.Role.OSA_COORDINATOR,
             password="Passw0rd!",
             first_name="Fiona",
@@ -38,7 +38,7 @@ class Command(BaseCommand):
         )
         staff = ensure_user(
             username="osa_staff",
-            email="staff@chmsu.edu.ph",
+            email="staff@udm.edu.ph",
             role=User.Role.STAFF,
             password="Passw0rd!",
             first_name="Sam",
@@ -46,7 +46,7 @@ class Command(BaseCommand):
         )
         student = ensure_user(
             username="student1",
-            email="student1@chmsu.edu.ph",
+            email="student1@udm.edu.ph",
             role=User.Role.STUDENT,
             password="Passw0rd!",
             first_name="Juan",

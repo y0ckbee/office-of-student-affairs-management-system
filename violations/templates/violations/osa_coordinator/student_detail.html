@@ -289,33 +289,27 @@
         <div class="goodmoral-breakdown">
           <div class="breakdown-item">
             <span class="breakdown-label">Major Violations</span>
-            <span class="breakdown-value {% if vstats.major_count > 0 %}text-danger{% endif %}">{{
-              vstats.major_count|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.major_count > 0 %}text-danger{% endif %}">{{vstats.major_count|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Minor Violations</span>
-            <span class="breakdown-value {% if vstats.minor_count >= 3 %}text-warning{% endif %}">{{
-              vstats.minor_count|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.minor_count >= 3 %}text-warning{% endif %}">{{vstats.minor_count|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Effective Major (3 minor = 1 major)</span>
-            <span class="breakdown-value {% if vstats.effective_major >= 3 %}text-danger{% endif %}">{{
-              vstats.effective_major|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.effective_major >= 3 %}text-danger{% endif %}">{{vstats.effective_major|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Pending Cases</span>
-            <span class="breakdown-value {% if vstats.pending > 0 %}text-warning{% endif %}">{{
-              vstats.pending|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.pending > 0 %}text-warning{% endif %}">{{vstats.pending|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Expired Meetings</span>
-            <span class="breakdown-value {% if vstats.expired_meetings > 0 %}text-danger{% endif %}">{{
-              vstats.expired_meetings|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.expired_meetings > 0 %}text-danger{% endif %}">{{vstats.expired_meetings|default:'0' }}</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">Pending Meetings</span>
-            <span class="breakdown-value {% if vstats.pending_meetings > 0 %}text-warning{% endif %}">{{
-              vstats.pending_meetings|default:'0' }}</span>
+            <span class="breakdown-value {% if vstats.pending_meetings > 0 %}text-warning{% endif %}">{{vstats.pending_meetings|default:'0' }}</span>
           </div>
         </div>
 

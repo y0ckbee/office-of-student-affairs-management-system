@@ -8,8 +8,8 @@
     background: #fbbf24;    /* Optional: fallback background color */
 }
 :root {
-    --chmsu-green: #2e7d32; /* A slightly lighter, vibrant green */
-    --chmsu-dark-green: #1b5e20;
+    --udm-green: #2e7d32; /* A slightly lighter, vibrant green */
+    --udm-dark-green: #1b5e20;
     --text-color-dark: #333;
     --text-color-light: #fff;
     --input-border-color: #ccc;
@@ -46,7 +46,7 @@ body {
 /* Header Banner */
 .header-banner {
     width: 100%;
-    background-color: var(--chmsu-dark-green);
+    background-color: var(--udm-dark-green);
     color: var(--text-color-light);
     padding: 10px 20px;
     display: flex;
@@ -82,7 +82,7 @@ body {
 /* ====== Top navigation (for dashboards) ====== */
 .top-nav {
     width: 100%;
-    background-color: var(--chmsu-dark-green);
+    background-color: var(--udm-dark-green);
     color: var(--text-color-light);
     padding: 10px 20px;
     display: flex;
@@ -102,7 +102,7 @@ body {
 .icon-btn:hover { background: rgba(255,255,255,0.1); }
 .profile-menu { position: relative; }
 .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); color:#fff; border: none; border-radius: 999px; padding: 6px 10px; cursor: pointer; }
-.profile-btn .avatar { width: 26px; height: 26px; border-radius: 50%; background: #fff; color: var(--chmsu-dark-green); display:grid; place-items:center; font-weight:600; }
+.profile-btn .avatar { width: 26px; height: 26px; border-radius: 50%; background: #fff; color: var(--udm-dark-green); display:grid; place-items:center; font-weight:600; }
 .profile-menu .dropdown { position: absolute; right: 0; top: calc(100% + 8px); background: #fff; border-radius: 10px; box-shadow: 0 10px 24px rgba(0,0,0,0.15); min-width: 180px; display: none; overflow: hidden; }
 .profile-menu .dropdown a { display:block; padding:10px 12px; color:#333; text-decoration:none; }
 .profile-menu .dropdown a:hover { background:#f2f4f7; }
@@ -122,10 +122,10 @@ body {
 .dash-card.clickable {
     cursor: pointer;
 }
-.dash-card .card-icon { font-size: 24px; color: var(--chmsu-green); margin-bottom: 6px; }
+.dash-card .card-icon { font-size: 24px; color: var(--udm-green); margin-bottom: 6px; }
 .dash-card .card-title { font-weight:600; margin-bottom: 4px; }
 .dash-card .card-desc { color:#666; font-size:.9rem; }
-.dash-card .card-metric { font-size: 1.4rem; font-weight:700; color: var(--chmsu-dark-green); }
+.dash-card .card-metric { font-size: 1.4rem; font-weight:700; color: var(--udm-dark-green); }
 
 /* Equal-height alignment for Faculty dashboard cards */
 body.role-faculty .dashboard-grid { align-items: stretch; }
@@ -319,7 +319,7 @@ body.role-staff .background-image { background-image: url('../images/bg_staff.sv
 }
 
 .form-group input:focus {
-    border-color: var(--chmsu-green);
+    border-color: var(--udm-green);
     outline: none;
     box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2); /* Soft focus ring */
 }
@@ -327,7 +327,7 @@ body.role-staff .background-image { background-image: url('../images/bg_staff.sv
 .form-group select:focus,
 .form-group input[type="number"]:focus,
 .form-group textarea:focus {
-    border-color: var(--chmsu-green);
+    border-color: var(--udm-green);
     outline: none;
     box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
 }
@@ -358,7 +358,7 @@ body.role-staff .background-image { background-image: url('../images/bg_staff.sv
 .login-button {
     width: 100%;
     padding: 14px;
-    background-color: var(--chmsu-green);
+    background-color: var(--udm-green);
     color: var(--text-color-light);
     border: none;
     border-radius: 6px;
@@ -390,14 +390,14 @@ body.role-staff .background-image { background-image: url('../images/bg_staff.sv
 }
 
 .form-links a {
-    color: var(--chmsu-green);
+    color: var(--udm-green);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .form-links a:hover {
     text-decoration: underline;
-    color: var(--chmsu-dark-green);
+    color: var(--udm-dark-green);
 }
 
 .form-links .separator {
@@ -673,10 +673,10 @@ body.role-staff .background-image { background-image: url('../images/bg_staff.sv
     background: #fff;
 }
 .auth-form .form-group input:focus {
-    border-color: var(--chmsu-green);
+    border-color: var(--udm-green);
 }
 .auth-form .form-group select:focus {
-    border-color: var(--chmsu-green);
+    border-color: var(--udm-green);
 }
 
 /* Role selector shared styles (login & signup) */
@@ -699,8 +699,8 @@ body.role-staff .background-image { background-image: url('../images/bg_staff.sv
     gap: 8px;
 }
 .role-btn.active {
-    border-color: var(--chmsu-green);
-    background: var(--chmsu-green);
+    border-color: var(--udm-green);
+    background: var(--udm-green);
     color: #fff;
 }
 
@@ -721,7 +721,7 @@ body.role-staff .background-image { background-image: url('../images/bg_staff.sv
 }
 .role-selector--segmented .role-btn.active {
     background: #fff;
-    color: var(--chmsu-dark-green);
+    color: var(--udm-dark-green);
     border-color: #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }

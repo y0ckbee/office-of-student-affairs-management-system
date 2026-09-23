@@ -46,6 +46,36 @@ faculty_patterns = [
     path("login/auth/", views.credentials_login_auth, name="faculty_login_auth"),
     path("dashboard/", views.faculty_dashboard_view, name="faculty_dashboard"),
     path(
+        "schedule-meeting/<int:alert_id>/",
+        views.staff_schedule_meeting_view,
+        name="faculty_schedule_meeting",
+    ),
+    path(
+        "mark-meeting-met/<int:alert_id>/",
+        views.staff_mark_meeting_met_view,
+        name="faculty_mark_meeting_met",
+    ),
+    path(
+        "resolve-alert/<int:alert_id>/",
+        views.staff_resolve_alert_view,
+        name="faculty_resolve_alert",
+    ),
+    path(
+        "dismiss-alert/<int:alert_id>/",
+        views.staff_dismiss_alert_view,
+        name="faculty_dismiss_alert",
+    ),
+    path(
+        "restore-alert/<int:alert_id>/",
+        views.staff_restore_alert_view,
+        name="faculty_restore_alert",
+    ),
+    path(
+        "delete-alert/<int:alert_id>/",
+        views.staff_permanent_delete_alert_view,
+        name="faculty_delete_alert",
+    ),
+    path(
         "report-violation/",
         views.osa_report_violation_view,
         name="osa_report_violation",

@@ -42,7 +42,7 @@ def welcome_tts_view(request):
     Query params:
       - text: optional explicit text to synthesize
       - name: optional user name to include (used if text missing)
-      - role: optional role label (Student/Staff/Faculty) used for default text
+      - role: optional role label (Student/OSA Coordinator) used for default text
     """
     # Build text
     text = (request.GET.get("text") or "").strip()
@@ -63,15 +63,9 @@ def welcome_tts_view(request):
             or ""
         ).lower()
         if role_raw in {"osa_coordinator", "faculty_admin", "faculty"}:
-            role_label = "Talisay Campus OSA Coordinator"
-        elif role_raw == "staff":
-            role_label = "Talisay Campus Staff"
-        elif role_raw == "guard":
-            role_label = "Talisay Campus Guard"
-        elif role_raw == "formator":
-            role_label = "Talisay Campus Formator"
+            role_label = "Manila Campus OSA Coordinator"
         else:
-            role_label = "Talisay Campus Student"
+            role_label = "Manila Campus Student"
         text = f"Welcome back, {name}. You are now on your {role_label} dashboard."
 
     # Try gTTS first (MP3)
@@ -893,6 +887,16 @@ def faculty_student_detail_view(request, student_id: str):
 
     # CGMC (Certificate of Good Moral Character) eligibility
     cgmc = student.cgmc_eligibility
+    
+    expired_meetings = StaffAlert.objects.filter(
+        student=student,
+        meeting_status=StaffAlert.MeetingStatus.EXPIRED,
+    ).count()
+
+    pending_meetings = StaffAlert.objects.filter(
+        student=student,
+        meeting_status=StaffAlert.MeetingStatus.SCHEDULED,
+    ).count()   
 
     ctx = {
         "student": student,
@@ -906,15 +910,17 @@ def faculty_student_detail_view(request, student_id: str):
             "major_count": student.major_violation_count,
             "minor_count": student.minor_violation_count,
             "effective_major": student.effective_major_violations,
+            "expired_meetings": expired_meetings,
+            "pending_meetings": pending_meetings,
         },
         "cgmc": cgmc,
-        # Backward compatibility
         "good_moral": {
             "status": cgmc["status"],
             "label": cgmc["label"],
             "description": cgmc["description"],
         },
     }
+
     return render(request, "violations/osa_coordinator/student_detail.html", ctx)
 
 
@@ -2287,7 +2293,7 @@ def generate_prescriptive_recommendations(
 
 
 ############################################
-# OSA Staff - frontend-only
+# OSA Office - frontend-only
 ############################################
 
 ############################################
@@ -3020,13 +3026,13 @@ def student_apology_view(request):
 
 
 ############################################
-# Staff Alert Management Views
+# OSA Alert Management Views
 ############################################
 
 
 # @role_required({User.Role.STAFF})
 def staff_schedule_meeting_view(request, alert_id):
-    """Staff: Schedule a meeting for a staff alert."""
+    """OSA Coordinator: Schedule a meeting for a student alert."""
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
@@ -3133,7 +3139,7 @@ Violation Summary:
 For questions, contact the OSA Office.
 
 Regards,
-OSA Staff
+OSA Office
 {request.user.get_full_name() or request.user.username}
 """.strip(),
         )
@@ -3150,7 +3156,7 @@ OSA Staff
 
 @role_required({User.Role.OSA_COORDINATOR})
 def staff_mark_meeting_met_view(request, alert_id):
-    """Staff/OSA Coordinator: Mark a scheduled meeting as met/completed."""
+    """OSA Coordinator: Mark a scheduled meeting as met/completed."""
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
@@ -3229,7 +3235,7 @@ OSA Office
 
 @role_required({User.Role.OSA_COORDINATOR})
 def staff_resolve_alert_view(request, alert_id):
-    """Staff/OSA Coordinator: Mark a staff alert as resolved."""
+    """OSA Coordinator: Mark a student alert as resolved."""
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
@@ -3267,7 +3273,7 @@ def staff_dismiss_alert_view(request, alert_id):
 
 @role_required({User.Role.OSA_COORDINATOR})
 def staff_restore_alert_view(request, alert_id):
-    """Staff/OSA Coordinator: Restore a dismissed staff alert."""
+    """OSA Coordinator: Restore a dismissed student alert."""
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
@@ -3285,7 +3291,7 @@ def staff_restore_alert_view(request, alert_id):
 
 @role_required({User.Role.OSA_COORDINATOR})
 def staff_permanent_delete_alert_view(request, alert_id):
-    """Staff/OSA Coordinator: Permanently delete a dismissed staff alert."""
+    """OSA Coordinator: Permanently delete a dismissed student alert."""
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
@@ -3299,15 +3305,3 @@ def staff_permanent_delete_alert_view(request, alert_id):
         return JsonResponse({"error": "Alert not found or not dismissed"}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-
-
-############################################
-# Guard Portal Views
-############################################
-
-# Valid guard codes - simple authentication
-VALID_GUARD_CODES = ["Guard1", "Guard2", "Guard3"]
-
-############################################
-# Student Formator Portal
-############################################
