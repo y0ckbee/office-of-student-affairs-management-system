@@ -10,7 +10,7 @@ Email: admin255@gmail.com
 =.\virtualenv\Scripts\Activate.ps1
 =$env:USE_SQLITE = "True"
 =python manage.py runserver
-indent= python -m black violations\views.py
+.indent= python -m black violations\views.py
 ,,panel
 =http://127.0.0.1:8000/admin/
 =http://127.0.0.1:8000/
@@ -28,3 +28,22 @@ Talisay City, Negros Occidental
 
 ,,todo
 .del unnecessary files
+
+,,
+I confirm All of is working .
+But what is  the purpose of this 4? Reported,
+Under Review,
+Resolved,
+Dismissed.
+ my osa process in my school is only using 2 and i'm sure that is violation Reported ,Resolved.
+ i would like to remove this in management = Pending Review,Under Review.
+keep = Overdue Cases.
+
+>>> ======================================
+>>> DUMMY STUDENT GENERATION COMPLETE
+>>> ======================================
+>>> Created : 0
+>>> Existing: 0
+>>> Range   : 25000101 - 25000200
+>>> Password: Student@2026
+>>> ======================================

@@ -24,6 +24,7 @@ from .models import (
     ViolationType,
     LoginActivity,
     ViolationDocument,
+    ActivityLog,
     ApologyLetter,
     Message,
     StaffAlert,

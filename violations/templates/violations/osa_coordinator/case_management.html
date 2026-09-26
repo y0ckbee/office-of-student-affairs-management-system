@@ -911,9 +911,23 @@
                         </td>
                         <td>{{ case.created_at|date:"M d, Y" }}</td>
                         <td>
-                            <a href="{% url 'violations:faculty_student_detail' case.student.student_id %}" class="action-btn view">
-                                <i class="fas fa-eye"></i> View
-                            </a>
+                            <div class="action-cell">
+                                <select
+                                    class="status-select status-{{ case.status }}"
+                                    data-case-id="{{ case.id }}"
+                                    aria-label="Update status for case #{{ case.id }}"
+                                >
+                                    {% for value, label in violation_statuses %}
+                                    <option value="{{ value }}" {% if case.status == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+
+                                <a href="{% url 'violations:faculty_student_detail' case.student.student_id %}" class="action-btn view">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -975,6 +989,82 @@
         });
 
         document.addEventListener('click', () => {
+        // Case Status Update
+        document.querySelectorAll('.status-select').forEach((select) => {
+            select.addEventListener('change', async function () {
+                const violationId = this.dataset.caseId;
+                const newStatus = this.value;
+                const previousStatus = this.dataset.previousStatus || this.value;
+
+                this.classList.add('updating');
+
+                try {
+                    const formData = new FormData();
+                    formData.append('violation_id', violationId);
+                    formData.append('status', newStatus);
+
+                    const response = await fetch(
+                        "{% url 'violations:faculty_update_case_status' %}",
+                        {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken'),
+                            },
+                            body: formData,
+                        }
+                    );
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.error || 'Failed to update case status.');
+                    }
+
+                    this.dataset.previousStatus = newStatus;
+
+                    // Update the status badge in the same row.
+                    const row = this.closest('tr');
+                    const statusBadge = row?.querySelector('.status-badge');
+
+                    if (statusBadge) {
+                        statusBadge.textContent = data.new_status_display;
+                        statusBadge.className = `status-badge ${data.new_status}`;
+                    }
+
+                    alert(data.message);
+
+                } catch (error) {
+                    alert(error.message);
+
+                    // Restore previous selection if the update failed.
+                    this.value = previousStatus;
+                } finally {
+                    this.classList.remove('updating');
+                }
+            });
+        });
+
+        // Read Django's CSRF cookie.
+        function getCookie(name) {
+            let cookieValue = null;
+
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(
+                            cookie.substring(name.length + 1)
+                        );
+                        break;
+                    }
+                }
+            }
+
+            return cookieValue;
+        }
             profileDropdown?.classList.remove('show');
         });
     </script>

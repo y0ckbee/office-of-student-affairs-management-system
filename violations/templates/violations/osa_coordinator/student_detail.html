@@ -449,8 +449,7 @@
               </td>
               <td class="col-type">
                 {% if v.violation_type %}
-                <span class="type-badge type-{{ v.violation_type.severity|default:'minor' }}">{{ v.violation_type.name
-                  }}</span>
+                <span class="type-badge type-{{ v.violation_type.severity|default:'minor' }}">{{ v.violation_type.name }}</span>
                 {% else %}
                 <span class="type-badge">{{ v.type|default:"General" }}</span>
                 {% endif %}

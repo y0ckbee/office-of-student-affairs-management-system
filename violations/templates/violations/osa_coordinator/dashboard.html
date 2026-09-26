@@ -46,17 +46,18 @@
                 </button>
                 <button class="nav-icon-btn" id="staffAlertsBtn" aria-label="OSA Alerts" title="View OSA Alerts">
                     <i class="fas fa-exclamation-triangle"></i>
-                    {% if staff_alerts %}<span class="nav-badge nav-badge-warning">{{ staff_alerts|length }}</span>{%
-                    endif %}
+                    {% if staff_alerts %}
+                    <span class="nav-badge nav-badge-warning">
+                        {{ staff_alerts|length }}
+                    </span>
+                    {% endif %}
                 </button>
                 <div class="nav-divider"></div>
                 <div class="nav-profile">
                     <button class="nav-profile-btn" id="profileBtn">
-                        <span class="profile-avatar">{{
-                            request.user.first_name|default:request.user.username|first|upper }}</span>
+                        <span class="profile-avatar">{{request.user.first_name|default:request.user.username|first|upper }}</span>
                         <div class="profile-info">
-                            <span class="profile-name">{{ request.user.first_name|default:request.user.username
-                                }}</span>
+                            <span class="profile-name">{{ request.user.first_name|default:request.user.username }}</span>
                             <span class="profile-role">Coordinator</span>
                         </div>
                         <i class="fas fa-chevron-down"></i>
@@ -395,8 +396,9 @@
 
             <div class="stats-title-bar">
                 <h2 class="stats-title"><i class="fas fa-user-tie"></i> OSA COORDINATOR DASHBOARD</h2>
-                <p class="stats-subtitle">Welcome{% if request.user.first_name %}, {{ request.user.first_name }}{% endif
-                    %} • {% now "F d, Y" %}</p>
+                <p class="stats-subtitle">Welcome{% if request.user.first_name %}, {{ request.user.first_name }}{% endif %}
+                    • {% now "F d, Y" %}
+                </p>
             </div>
 
             <!-- Statistics Grid -->
@@ -433,8 +435,7 @@
                     <div class="stat-content">
                         <span class="stat-label">Pending Review</span>
                         <span class="stat-value">{{ stats.pending_for_review|default:'0' }}</span>
-                        <span class="stat-desc">{{ stats.reported|default:'0' }} new, {{ stats.under_review|default:'0'
-                            }} reviewing</span>
+                        <span class="stat-desc">{{ stats.reported|default:'0' }} new, {{ stats.under_review|default:'0'}} reviewing</span>
                     </div>
                 </a>
 
@@ -477,6 +478,14 @@
             </div>
 
             <div class="actions-grid">
+                <a href="{% url 'violations:osa_report_violation' %}" class="official-action-btn action-danger">
+                    <div class="action-icon"><i class="fas fa-file-circle-exclamation"></i></div>
+                    <div class="action-text">
+                        <span class="action-label">Report Violation</span>
+                        <span class="action-desc">Record a student violation</span>
+                    </div>
+                </a>
+
                 <a href="{% url 'violations:faculty_analytics' %}" class="official-action-btn action-primary">
                     <div class="action-icon"><i class="fas fa-chart-line"></i></div>
                     <div class="action-text">
@@ -498,8 +507,13 @@
                     <div class="action-icon"><i class="fas fa-envelope"></i></div>
                     <div class="action-text">
                         <span class="action-label">Messages</span>
-                        <span class="action-desc">{% if unread_count %}{{ unread_count }} unread{% else %}View inbox{%
-                            endif %}</span>
+                        <span class="action-desc">
+                            {% if unread_count %}
+                            {{ unread_count }} unread
+                            {% else %}
+                            View inbox
+                            {% endif %}
+                        </span>
                     </div>
                 </button>
 
@@ -508,8 +522,13 @@
                     <div class="action-icon"><i class="fas fa-exclamation-triangle"></i></div>
                     <div class="action-text">
                         <span class="action-label">OSA Alerts</span>
-                        <span class="action-desc">{% if staff_alerts %}{{ staff_alerts|length }} pending{% else %}No
-                            alerts{% endif %}</span>
+                        <span class="action-desc">
+                            {% if staff_alerts %}
+                            {{ staff_alerts|length }} pending
+                            {% else %}
+                            No alerts
+                            {% endif %}
+                        </span>
                     </div>
                 </button>
 
@@ -550,8 +569,7 @@
             <!-- Search and Filter Bar -->
             <div class="directory-toolbar">
                 <div class="toolbar-left">
-                    <span class="record-count"><i class="fas fa-user-graduate"></i> Total Records: <strong>{% if
-                            students %}{{ students|length }}{% else %}0{% endif %}</strong></span>
+                    <span class="record-count"><i class="fas fa-user-graduate"></i> Total Records: <strong>{{ students|length }}</strong></span>
                 </div>
                 <div class="toolbar-right">
                     <div class="directory-search">
@@ -587,8 +605,7 @@
                             <td class="col-id"><code>{{ s.student_id }}</code></td>
                             <td class="col-name">
                                 <a href="{% url 'violations:faculty_student_detail' s.student_id %}">
-                                    {{ s.user.last_name|default:'' }}{% if s.user.last_name %}, {% endif %}{{
-                                    s.user.first_name|default:s.user.username }}
+                                    {{ s.user.last_name|default:'' }}{% if s.user.last_name %}, {% endif %}{{ s.user.first_name|default:s.user.username }}
                                 </a>
                             </td>
                             <!-- Program cell removed -->
@@ -689,8 +706,7 @@
             <div class="directory-footer">
                 <p class="footer-note"><i class="fas fa-info-circle"></i> Click on any student row to view detailed
                     profile and violation history.</p>
-                <p class="footer-generated">Document Reference: OSA-SD-{% now "Ymd" %} • Accessed by: {{
-                    request.user.get_full_name|default:request.user.username }}</p>
+                <p class="footer-generated">Document Reference: OSA-SD-{% now "Ymd" %} • Accessed by:{{request.user.get_full_name|default:request.user.username }}</p>
             </div>
         </section>
     </main>
@@ -1590,85 +1606,124 @@
 
                 <!-- Meeting Status Display -->
                 {% if alert.scheduled_meeting %}
+
                 <div
                     style="margin:8px 0; padding:10px; border-radius:8px; {% if alert.meeting_status == 'expired' %}background:#fee2e2; border:1px solid #fecaca;{% elif alert.meeting_status == 'met' %}background:#dcfce7; border:1px solid #bbf7d0;{% else %}background:#dbeafe; border:1px solid #bfdbfe;{% endif %}">
+
                     <p
                         style="margin:0 0 6px 0; font-weight:600; {% if alert.meeting_status == 'expired' %}color:#dc2626;{% elif alert.meeting_status == 'met' %}color:#059669;{% else %}color:#2563eb;{% endif %}">
+
                         {% if alert.meeting_status == 'expired' %}
-                        <i class="fas fa-times-circle"></i> Meeting Expired / Did Not Meet
+                        <i class="fas fa-times-circle"></i>
+                        Meeting Expired / Did Not Meet
                         {% elif alert.meeting_status == 'met' %}
-                        <i class="fas fa-check-circle"></i> Meeting Completed
+                        <i class="fas fa-check-circle"></i>
+                        Meeting Completed
                         {% else %}
-                        <i class="fas fa-calendar-check"></i> Meeting Scheduled
+                        <i class="fas fa-calendar-check"></i>
+                        Meeting Scheduled
                         {% endif %}
+
                     </p>
+
                     <p style="margin:0; color:#374151; font-size:13px;">
-                        <i class="fas fa-clock"></i> Meeting: {{ alert.scheduled_meeting|date:"M d, Y g:i A" }}
+                        <i class="fas fa-clock"></i>
+                        Meeting: {{ alert.scheduled_meeting|date:"M d, Y g:i A" }}
                     </p>
+
                     {% if alert.meeting_deadline %}
                     <p style="margin:4px 0 0 0; color:#f59e0b; font-size:12px;">
-                        <i class="fas fa-hourglass-end"></i> Deadline: {{ alert.meeting_deadline|date:"M d, Y g:i A" }}
+                        <i class="fas fa-hourglass-end"></i>
+                        Deadline: {{ alert.meeting_deadline|date:"M d, Y g:i A" }}
                     </p>
                     {% endif %}
+
                     {% if alert.meeting_status_updated_at %}
                     <p style="margin:4px 0 0 0; color:#6b7280; font-size:11px;">
-                        Status updated: {{ alert.meeting_status_updated_at|date:"M d, Y g:i A" }}
+                        Status updated:
+                        {{ alert.meeting_status_updated_at|date:"M d, Y g:i A" }}
                     </p>
                     {% endif %}
+
                 </div>
 
-                <!-- Action Buttons for OSA Coordinator (View Only - No Schedule Meeting) -->
                 {% if alert.meeting_status == 'scheduled' %}
+
                 <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+
                     <button class="action-btn mark-met-btn" data-alert-id="{{ alert.id }}"
                         style="background:#10b981; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
-                        <i class="fas fa-check"></i> Mark as Met
+                        <i class="fas fa-check"></i>
+                        Mark as Met
                     </button>
+
                     <button class="action-btn resolve-alert-btn" data-alert-id="{{ alert.id }}"
                         style="background:#6b7280; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
-                        <i class="fas fa-archive"></i> Resolve Alert
+                        <i class="fas fa-archive"></i>
+                        Resolve Alert
                     </button>
+
                 </div>
+
                 {% elif alert.meeting_status == 'expired' %}
+
                 <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+
                     <span
                         style="color:#dc2626; font-size:12px; padding:6px 12px; background:#fee2e2; border-radius:6px;">
-                        <i class="fas fa-exclamation-circle"></i> Awaiting Reschedule
+                        <i class="fas fa-exclamation-circle"></i>
+                        Awaiting Reschedule
                     </span>
+
                     <button class="action-btn resolve-alert-btn" data-alert-id="{{ alert.id }}"
                         style="background:#6b7280; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
-                        <i class="fas fa-archive"></i> Resolve Alert
+                        <i class="fas fa-archive"></i>
+                        Resolve Alert
                     </button>
+
                 </div>
+
                 {% elif alert.meeting_status == 'met' %}
+
                 <div style="margin-top:10px; display:flex; gap:8px;">
+
                     <button class="action-btn resolve-alert-btn" data-alert-id="{{ alert.id }}"
                         style="background:#10b981; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
-                        <i class="fas fa-check-double"></i> Resolve Alert
+                        <i class="fas fa-check-double"></i>
+                        Resolve Alert
                     </button>
+
                 </div>
+
                 {% endif %}
 
                 {% else %}
+
                 <!-- No meeting scheduled yet - OSA Coordinator can schedule -->
+
                 <div style="margin-top:12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+
                     <span
                         style="color:#f59e0b; font-size:12px; padding:6px 12px; background:#fef3c7; border-radius:6px;">
-                        <i class="fas fa-clock"></i> Awaiting Meeting Schedule
+                        <i class="fas fa-clock"></i>
+                        Awaiting Meeting Schedule
                     </span>
 
                     <button class="action-btn schedule-meeting-btn" data-alert-id="{{ alert.id }}"
                         data-student-name="{{ alert.student.user.get_full_name }}"
                         style="background:#2563eb; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
-                        <i class="fas fa-calendar-plus"></i> Schedule Meeting
+                        <i class="fas fa-calendar-plus"></i>
+                        Schedule Meeting
                     </button>
 
                     <button class="action-btn resolve-alert-btn" data-alert-id="{{ alert.id }}"
                         style="background:#6b7280; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
-                        <i class="fas fa-check"></i> Mark Resolved
+                        <i class="fas fa-check"></i>
+                        Mark Resolved
                     </button>
+
                 </div>
-                </div>
+
                 {% endif %}
             </li>
             {% endfor %}
@@ -1801,9 +1856,15 @@
     <!-- Messages Panel -->
     <aside class="notif-panel" id="notifPanel" aria-hidden="true">
         <div class="notif-header">
-            <h3><i class="fas fa-envelope"></i> Messages from Staff {% if unread_count %}<span
-                    class="badge badge-danger" style="font-size:12px; margin-left:6px;">{{ unread_count }} new</span>{%
-                endif %}</h3>
+            <h3>
+                <i class="fas fa-envelope"></i>
+                Messages from Staff
+                {% if unread_count %}
+                <span class="badge badge-danger" style="font-size:12px; margin-left:6px;">
+                    {{ unread_count }} new
+                </span>
+                {% endif %}
+            </h3>
             <button class="icon-btn" id="notifClose"><i class="fas fa-times"></i></button>
         </div>
         <ul class="notif-list" style="max-height:400px; overflow-y:auto; padding:0; margin:0;">
