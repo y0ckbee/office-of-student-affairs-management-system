@@ -42,8 +42,7 @@ keep = Overdue Cases.
 >>> ======================================
 >>> DUMMY STUDENT GENERATION COMPLETE
 >>> ======================================
->>> Created : 0
->>> Existing: 0
+>>> abonal@dummy.udm.local
 >>> Range   : 25000101 - 25000200
 >>> Password: Student@2026
 >>> ======================================
