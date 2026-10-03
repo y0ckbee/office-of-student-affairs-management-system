@@ -628,6 +628,28 @@ class StaffAlert(models.Model):
 
 
 class Violation(models.Model):
+    class Type(models.TextChoices):
+        ACADEMIC_DISHONESTY = "academic_dishonesty", "Academic Dishonesty"
+        BULLYING_HARASSMENT = "bullying_harassment", "Bullying / Harassment"
+        DISRESPECTFUL_CONDUCT = "disrespectful_conduct", "Disrespectful Conduct"
+        FIGHTING_PHYSICAL_ALTERCATION = "fighting_physical_altercation", "Fighting / Physical Altercation"
+        THREATENING_BEHAVIOR = "threatening_behavior", "Threatening Behavior"
+        UNAUTHORIZED_ENTRY = "unauthorized_entry", "Unauthorized Entry"
+        UNAUTHORIZED_SCHOOL_PROPERTY_USE = "unauthorized_school_property_use", "Unauthorized Use of School Property"
+        PROPERTY_DAMAGE = "property_damage", "Property Damage"
+        THEFT_UNAUTHORIZED_TAKING = "theft_unauthorized_taking", "Theft / Unauthorized Taking"
+        FRAUD_DOCUMENT_FALSIFICATION = "fraud_document_falsification", "Fraud / Falsification of Documents"
+        SMOKING_VAPING = "smoking_vaping", "Smoking / Vaping"
+        ALCOHOL_RELATED = "alcohol_related", "Alcohol-Related Violation"
+        PROHIBITED_SUBSTANCE = "prohibited_substance", "Prohibited Substance Violation"
+        IMPROPER_UNIFORM_DRESS_CODE = "improper_uniform_dress_code", "Improper Uniform / Dress Code"
+        ID_IDENTIFICATION = "id_identification", "ID / Identification Violation"
+        DISRUPTIVE_BEHAVIOR = "disruptive_behavior", "Disruptive Behavior"
+        UNAUTHORIZED_RECORDING_PHOTOGRAPHY = "unauthorized_recording_photography", "Unauthorized Recording / Photography"
+        ONLINE_SOCIAL_MEDIA_MISCONDUCT = "online_social_media_misconduct", "Online / Social Media Misconduct"
+        GAMBLING = "gambling", "Gambling"
+        OTHER_GENERAL = "other_general", "Other / General Violation"
+    
 	class Severity(models.TextChoices):
 		MINOR = "minor", "Minor"
 		MAJOR = "major", "Major"
@@ -655,7 +677,8 @@ class Violation(models.Model):
 		help_text="Specific violation type from the catalog"
 	)
 	incident_at = models.DateTimeField()
-	type = models.CharField(max_length=10, choices=Severity.choices)
+	type = models.CharField(max_length=50, choices=Type.choices)
+	severity = models.CharField(max_length=10, choices=Severity.choices)
 	location = models.CharField(max_length=200)
 	description = models.TextField()
 	witness_statement = models.TextField(blank=True)
