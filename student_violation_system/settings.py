@@ -49,94 +49,61 @@ INSTALLED_APPS = [
 # =============================================================================
 
 JAZZMIN_SETTINGS = {
-    # Title on the login screen (19 chars max)
-    "site_title": "UDM Violations",
-    
-    # Title on the brand (19 chars max)
-    "site_header": "UDM Violations",
-    
-    # Title on the brand in the sidebar
+    "site_title": "UDM OSA Management System",
+    "site_header": "UDM OSA Management System",
     "site_brand": "UDM OSA",
-    
-    # Logo to use for your site, must be present in static files
     "site_logo": "violations/images/chmsu_logo.png",
-    
-    # Logo to use for your site on the login screen (uses site_logo if None)
     "login_logo": None,
-    
-    # Logo to use for login form in dark themes
     "login_logo_dark": None,
-    
-    # CSS classes that are applied to the logo above
     "site_logo_classes": "img-circle",
-    
-    # Relative path to a favicon for your site
     "site_icon": None,
-    
-    # Welcome text on the login screen
-    "welcome_sign": "Welcome to UDM Student Violation Management System",
-    
-    # Copyright on the footer
-    "copyright": "Carlos Hilado Memorial State University - OSA",
-    
-    # List of model admins to search from the search bar
-    "search_model": ["violations.Student", "violations.User", "violations.Violation"],
-    
-    # Field name on user model that contains avatar ImageField/URLField/Charfield
+
+    "welcome_sign": "Welcome to the UDM Office of Student Affairs Management System",
+
+    "copyright": "Universidad de Manila - Office of Student Affairs",
+
+    "search_model": [
+        "violations.Student",
+        "violations.User",
+        "violations.Violation",
+    ],
+
     "user_avatar": None,
 
-    ############
-    # Top Menu #
-    ############
-    
-    # Links to put along the top menu
     "topmenu_links": [
-        # Url that gets reversed (Alarm.URLs first)
-        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
-        
-        # External URLs open in new window
-        # {"name": "Staff Dashboard", "url": "/staff/dashboard/", "new_window": True},
-        {"name": "OSA Coordinator Dashboard", "url": "/faculty/dashboard/", "new_window": True},
-        
-        # Model admin to link to (Alarm.URLs.Alarm.URLs & target can be nested)
-        {"model": "violations.Student"},
-        
-        # App with dropdown menu to all its models pages
-        {"app": "violations"},
+        {
+            "name": "Home",
+            "url": "admin:index",
+            "permissions": ["auth.view_user"],
+        },
+        {
+            "name": "OSA Coordinator Dashboard",
+            "url": "/faculty/dashboard/",
+            "new_window": True,
+        },
     ],
 
-    #############
-    # User Menu #
-    #############
-    
-    # Additional links to include in the user menu on the top right
     "usermenu_links": [
-        # {"name": "Staff Dashboard", "url": "/staff/dashboard/", "new_window": True, "icon": "fas fa-tachometer-alt"},
-        {"model": "auth.user"},
+        {
+            "model": "auth.user",
+        },
     ],
 
-    #############
-    # Side Menu #
-    #############
-    
-    # Whether to display the side menu
     "show_sidebar": True,
-    
-    # Whether to auto expand the menu
     "navigation_expanded": True,
-    
-    # Hide these apps when generating side menu
-    "hide_apps": [],
-    
-    # Hide these models when generating side menu
+
+    # Hide Django's built-in authentication management
+    # from the main OSA navigation.
+    "hide_apps": [
+        "auth",
+    ],
+
     "hide_models": [],
-    
-    # List of apps (and/or models) to base side menu ordering off of
+
     "order_with_respect_to": [
         "violations",
         "violations.User",
-        "violations.Student", 
-        # "violations.Staff",
+        "violations.Student",
         "violations.OSACoordinator",
         "violations.Violation",
         "violations.ApologyLetter",
@@ -144,22 +111,24 @@ JAZZMIN_SETTINGS = {
         "violations.ViolationClearance",
         "violations.Message",
         "violations.LoginActivity",
+        "violations.ChatMessage",
+        "violations.Staff",
+        "violations.ViolationType",
+        "violations.ViolationDocument",
     ],
 
-    # Custom links to append to app groups, keyed on app name
     "custom_links": {},
 
-    # Custom icons for side menu apps/models
-    # https://fontawesome.com/icons?d=gallery&m=free&v=5.0.0,5.0.1,5.0.10,5.0.11,5.0.12,5.0.13,5.0.2,5.0.3,5.0.4,5.0.5,5.0.6,5.0.7,5.0.8,5.0.9,5.1.0,5.1.1,5.2.0,5.3.0,5.3.1,5.4.0,5.4.1,5.4.2,5.13.0,5.12.0,5.11.2,5.11.1,5.10.0,5.9.0,5.8.2,5.8.1,5.7.2,5.7.1,5.7.0,5.6.3,5.5.0,5.4.2
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
+
         "violations": "fas fa-gavel",
         "violations.User": "fas fa-user-shield",
         "violations.Student": "fas fa-user-graduate",
-        # "violations.Staff": "fas fa-user-tie",
-        "violations.OSACoordinator": "fas fa-chalkboard-teacher",
+        "violations.OSACoordinator": "fas fa-user-tie",
+        "violations.Staff": "fas fa-user-tie",
         "violations.Violation": "fas fa-exclamation-triangle",
         "violations.ApologyLetter": "fas fa-envelope-open-text",
         "violations.IDConfiscation": "fas fa-id-card",
@@ -168,51 +137,30 @@ JAZZMIN_SETTINGS = {
         "violations.LoginActivity": "fas fa-history",
         "violations.Message": "fas fa-comments",
         "violations.ChatMessage": "fas fa-comment-dots",
+        "violations.ViolationType": "fas fa-list",
     },
-    
-    # Icons that are used when one is not manually specified
+
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
 
-    #################
-    # Related Modal #
-    #################
-    
-    # Use modals instead of popups for related
     "related_modal_active": True,
 
-    #############
-    # UI Tweaks #
-    #############
-    
-    # Relative paths to custom CSS/JS scripts (must be present in static files)
     "custom_css": "violations/css/admin_custom.css",
-    "custom_js": None,
-    
-    # Whether to link font from fonts.googleapis.com
+    "custom_js": "violations/js/admin_custom.js",
+
     "use_google_fonts_cdn": True,
-    
-    # Whether to show the UI customizer on the sidebar
     "show_ui_builder": True,
 
-    ###############
-    # Change view #
-    ###############
-    
-    # Render out the change view as a single form, or in tabs
     "changeform_format": "horizontal_tabs",
-    
-    # Override change forms on a per modeladmin basis
+
     "changeform_format_overrides": {
         "violations.User": "collapsible",
         "violations.Violation": "horizontal_tabs",
         "violations.Student": "horizontal_tabs",
     },
-    
-    # Add a language dropdown into the admin
+
     "language_chooser": False,
 }
-
 # Jazzmin UI Tweaks - Customize colors and layout
 # Theme based on UDM green colors
 JAZZMIN_UI_TWEAKS = {

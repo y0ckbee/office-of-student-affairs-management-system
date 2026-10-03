@@ -1,10 +1,11 @@
 ,, Accnts
-.Username: admin255
-Email: admin255@gmail.com
-255086aa
-.my stud
-24221682
-2255aa;
+.admin
+Username= admin255
+=admin255@gmail.com
+=255086aa
+.stud
+=24221682
+=2255aa;
 
 ,, activate local
 =.\virtualenv\Scripts\Activate.ps1
@@ -42,7 +43,7 @@ keep = Overdue Cases.
 >>> ======================================
 >>> DUMMY STUDENT GENERATION COMPLETE
 >>> ======================================
->>> abonal@dummy.udm.local
+>>> abonal@dummy.udm.local, 25000101
 >>> Range   : 25000101 - 25000200
 >>> Password: Student@2026
 >>> ======================================

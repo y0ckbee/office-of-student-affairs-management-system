@@ -20,9 +20,9 @@ from .models import (
 # =============================================================================
 # Custom Admin Site Configuration
 # =============================================================================
-admin.site.site_header = "UDM Student Violation System"
-admin.site.site_title = "UDM Violations Admin"
-admin.site.index_title = "Welcome to UDM Student Violation Management"
+admin.site.site_header = "UDM OSA Management System"
+admin.site.site_title = "UDM OSA Management System"
+admin.site.index_title = "Welcome to the UDM Office of Student Affairs"
 
 
 @admin.register(User)
