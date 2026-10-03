@@ -138,7 +138,7 @@ urlpatterns = [
     # General paths (e.g., home, APIs)
     path(
         "",
-        RedirectView.as_view(pattern_name="violations:login", permanent=False),
+        RedirectView.as_view(pattern_name="violations:student_login", permanent=False),
         name="home",
     ),
     path("api/welcome-tts/", views.welcome_tts_view, name="welcome_tts"),

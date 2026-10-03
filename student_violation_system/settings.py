@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-1m=i!+(*d1tu=a)jwdmg__z=v(v!#ll69!@mdlx7&)@!c4uyz5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # "channels",  # WebSocket support for realtime features (temporarily commented)
     "violations",  # Add the violations app
-        
 ]
 
 # =============================================================================
@@ -57,19 +56,14 @@ JAZZMIN_SETTINGS = {
     "login_logo_dark": None,
     "site_logo_classes": "img-circle",
     "site_icon": None,
-
     "welcome_sign": "Welcome to the UDM Office of Student Affairs Management System",
-
     "copyright": "Universidad de Manila - Office of Student Affairs",
-
     "search_model": [
         "violations.Student",
         "violations.User",
         "violations.Violation",
     ],
-
     "user_avatar": None,
-
     "topmenu_links": [
         {
             "name": "Home",
@@ -82,48 +76,43 @@ JAZZMIN_SETTINGS = {
             "new_window": True,
         },
     ],
-
     "usermenu_links": [
         {
             "model": "auth.user",
         },
     ],
-
     "show_sidebar": True,
     "navigation_expanded": True,
-
     # Hide Django's built-in authentication management
     # from the main OSA navigation.
     "hide_apps": [
         "auth",
     ],
-
-    "hide_models": [],
-
-    "order_with_respect_to": [
-        "violations",
+    # Hide models that are not part of the UDM OSA Coordinator workflow
+    "hide_models": [
         "violations.User",
-        "violations.Student",
         "violations.OSACoordinator",
-        "violations.Violation",
-        "violations.ApologyLetter",
+        "violations.Staff",
+        "violations.Message",
+        "violations.ChatMessage",
         "violations.IDConfiscation",
         "violations.ViolationClearance",
-        "violations.Message",
+        "auth.Group",
+    ],
+    # Only show the models relevant to the UDM OSA Coordinator
+    "order_with_respect_to": [
+        "violations.Student",
+        "violations.Violation",
+        "violations.ApologyLetter",
         "violations.LoginActivity",
-        "violations.ChatMessage",
-        "violations.Staff",
         "violations.ViolationType",
         "violations.ViolationDocument",
     ],
-
     "custom_links": {},
-
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
-
         "violations": "fas fa-gavel",
         "violations.User": "fas fa-user-shield",
         "violations.Student": "fas fa-user-graduate",
@@ -139,26 +128,19 @@ JAZZMIN_SETTINGS = {
         "violations.ChatMessage": "fas fa-comment-dots",
         "violations.ViolationType": "fas fa-list",
     },
-
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-
     "related_modal_active": True,
-
     "custom_css": "violations/css/admin_custom.css",
     "custom_js": "violations/js/admin_custom.js",
-
     "use_google_fonts_cdn": True,
     "show_ui_builder": True,
-
     "changeform_format": "horizontal_tabs",
-
     "changeform_format_overrides": {
         "violations.User": "collapsible",
         "violations.Violation": "horizontal_tabs",
         "violations.Student": "horizontal_tabs",
     },
-
     "language_chooser": False,
 }
 # Jazzmin UI Tweaks - Customize colors and layout
@@ -232,6 +214,7 @@ WSGI_APPLICATION = "student_violation_system.wsgi.application"
 
 # Set USE_SQLITE=True to use SQLite, otherwise PostgreSQL
 import os
+
 USE_SQLITE = os.environ.get("USE_SQLITE", "False").lower() in ("true", "1", "yes")
 
 if USE_SQLITE:
@@ -302,9 +285,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 AUTH_USER_MODEL = "violations.User"
 
 # These reverse names assume the app is included with namespace 'violations'
-LOGIN_URL = 'violations:auth_login'
-LOGIN_REDIRECT_URL = 'violations:route_dashboard'
-LOGOUT_REDIRECT_URL = '/admin/login/'  # Redirect to admin login after logout
+LOGIN_URL = "violations:auth_login"
+LOGIN_REDIRECT_URL = "violations:route_dashboard"
+LOGOUT_REDIRECT_URL = "/admin/login/"  # Redirect to admin login after logout
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
