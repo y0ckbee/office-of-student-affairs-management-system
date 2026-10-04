@@ -47,3 +47,33 @@ keep = Overdue Cases.
 >>> Range   : 25000101 - 25000200
 >>> Password: Student@2026
 >>> ======================================
+
+,, todo
+.QUICK ACTIONS
+
+Frequently used operations 
+Report Violation
+
+Record a student violation
+
+Analytics
+
+View statistics
+
+Activity Logs
+
+Monitor all user activities
+
+
+
+Messages
+
+View inbox
+
+
+
+OSA Alerts
+
+No alerts
+
+Logout
