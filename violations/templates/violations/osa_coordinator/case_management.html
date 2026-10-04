@@ -889,11 +889,7 @@
                             </div>
                         </td>
                         <td>
-                            {% if case.type == 'minor' %}
-                            <span class="type-badge minor">Minor</span>
-                            {% else %}
-                            <span class="type-badge major">Major</span>
-                            {% endif %}
+                            <span class="type-badge {{ case.severity }}">{{ case.get_severity_display }}</span>
                         </td>
                         <td>
                             <span class="status-badge {{ case.status }}">

@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.html import format_html
+from datetime import timedelta
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.utils import timezone
 
 from .models import (
     User,
@@ -265,6 +269,198 @@ class ViolationTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Violation)
 class ViolationAdmin(admin.ModelAdmin):
+    def get_case_management_queryset(self, request):
+        from django.db.models import Q
+        from datetime import timedelta
+        from django.utils import timezone
+        
+        cases = (
+            Violation.objects
+            .select_related(
+                "student__user",
+                "reported_by",
+                "violation_type",
+            )
+            .order_by("-created_at")
+        )
+
+        status_filter = request.GET.get("status", "all")
+        severity_filter = request.GET.get("severity", "all")
+        type_filter = request.GET.get("type", "all")
+        date_from = request.GET.get("date_from", "")
+        date_to = request.GET.get("date_to", "")
+        search_query = request.GET.get("search", "")
+
+        # -----------------------------
+        # STATUS
+        # -----------------------------
+        if status_filter == "pending":
+            cases = cases.filter(
+                status__in=[
+                    Violation.Status.REPORTED,
+                    Violation.Status.UNDER_REVIEW,
+                ]
+            )
+
+        elif status_filter == "overdue":
+            overdue_threshold = timezone.now() - timedelta(days=7)
+
+            cases = cases.filter(
+                status__in=[
+                    Violation.Status.REPORTED,
+                    Violation.Status.UNDER_REVIEW,
+                ],
+                created_at__lt=overdue_threshold,
+            )
+
+        elif status_filter != "all":
+            cases = cases.filter(status=status_filter)
+
+        # -----------------------------
+        # SEVERITY
+        # -----------------------------
+        if severity_filter != "all":
+            cases = cases.filter(
+                severity=severity_filter
+            )
+
+        # -----------------------------
+        # TYPE
+        # -----------------------------
+        if type_filter != "all":
+            cases = cases.filter(
+                type=type_filter
+            )
+
+        # -----------------------------
+        # DATE FROM
+        # -----------------------------
+        if date_from:
+            cases = cases.filter(
+                created_at__date__gte=date_from
+            )
+
+        # -----------------------------
+        # DATE TO
+        # -----------------------------
+        if date_to:
+            cases = cases.filter(
+                created_at__date__lte=date_to
+            )
+
+        # -----------------------------
+        # SEARCH
+        # -----------------------------
+        if search_query:
+            cases = cases.filter(
+                Q(student__student_id__icontains=search_query)
+                | Q(student__user__first_name__icontains=search_query)
+                | Q(student__user__last_name__icontains=search_query)
+                | Q(student__user__username__icontains=search_query)
+                | Q(description__icontains=search_query)
+                | Q(location__icontains=search_query)
+            )
+
+        return cases
+    
+    def get_case_management_stats(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        all_cases = Violation.objects.all()
+
+        overdue_threshold = timezone.now() - timedelta(days=7)
+
+        pending_count = all_cases.filter(
+            status=Violation.Status.REPORTED
+        ).count()
+
+        under_review_count = all_cases.filter(
+            status=Violation.Status.UNDER_REVIEW
+        ).count()
+
+        resolved_count = all_cases.filter(
+            status=Violation.Status.RESOLVED
+        ).count()
+
+        overdue_count = all_cases.filter(
+            status__in=[
+                Violation.Status.REPORTED,
+                Violation.Status.UNDER_REVIEW,
+            ],
+            created_at__lt=overdue_threshold,
+        ).count()
+
+        return {
+            "total": all_cases.count(),
+            "pending": pending_count,
+            "under_review": under_review_count,
+            "resolved": resolved_count,
+            "overdue": overdue_count,
+        }
+    
+    def get_case_management_context(self, request):
+        cases = self.get_case_management_queryset(request)
+
+        stats = self.get_case_management_stats()
+
+        paginator = Paginator(
+            cases,
+            20
+        )
+
+        page_number = request.GET.get("page", 1)
+
+        page_obj = paginator.get_page(page_number)
+
+        return {
+            "cases": page_obj,
+            "page_obj": page_obj,
+
+            "stats": stats,
+
+            "violation_types": Violation._meta.get_field(
+                "type"
+            ).choices,
+
+            "violation_statuses": Violation.Status.choices,
+
+            "violation_severities": Violation.Severity.choices,
+
+            "current_filters": {
+                "status": request.GET.get("status", "all"),
+                "severity": request.GET.get("severity", "all"),
+                "type": request.GET.get("type", "all"),
+                "date_from": request.GET.get("date_from", ""),
+                "date_to": request.GET.get("date_to", ""),
+                "search": request.GET.get("search", ""),
+            },
+
+            "opts": self.model._meta,
+
+            "title": "Case Management",
+
+            "site_header": "UDM",
+
+            "site_title": "UDM",
+
+            "has_permission": True,
+        }
+    
+    def changelist_view(self, request, extra_context=None):
+        from django.template.response import TemplateResponse
+
+        context = self.get_case_management_context(request)
+
+        if extra_context:
+            context.update(extra_context)
+
+        return TemplateResponse(
+            request,
+            "violations/osa_coordinator/case_management.html",
+            context,
+        )
+    
     list_display = (
         "id",
         "get_student_name",
