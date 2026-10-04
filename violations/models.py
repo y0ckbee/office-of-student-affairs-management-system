@@ -649,51 +649,67 @@ class Violation(models.Model):
         ONLINE_SOCIAL_MEDIA_MISCONDUCT = "online_social_media_misconduct", "Online / Social Media Misconduct"
         GAMBLING = "gambling", "Gambling"
         OTHER_GENERAL = "other_general", "Other / General Violation"
-    
-	class Severity(models.TextChoices):
-		MINOR = "minor", "Minor"
-		MAJOR = "major", "Major"
 
-	class Status(models.TextChoices):
-		REPORTED = "reported", "Reported"
-		UNDER_REVIEW = "under_review", "Under Review"
-		RESOLVED = "resolved", "Resolved"
-		DISMISSED = "dismissed", "Dismissed"
+    class Severity(models.TextChoices):
+        MINOR = "minor", "Minor"
+        MAJOR = "major", "Major"
 
-	student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="violations")
-	reported_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="violations_reported")
-	reported_by_guard = models.CharField(
-		max_length=20, 
-		blank=True, 
-		null=True,
-		help_text="Guard code if reported by security guard (Guard1, Guard2, Guard3)"
-	)
-	violation_type = models.ForeignKey(
-		ViolationType, 
-		null=True, 
-		blank=True, 
-		on_delete=models.SET_NULL, 
-		related_name="violations",
-		help_text="Specific violation type from the catalog"
-	)
-	incident_at = models.DateTimeField()
-	type = models.CharField(max_length=50, choices=Type.choices)
-	severity = models.CharField(max_length=10, choices=Severity.choices)
-	location = models.CharField(max_length=200)
-	description = models.TextField()
-	witness_statement = models.TextField(blank=True)
-	evidence_file = models.FileField(upload_to="violations/evidence/", null=True, blank=True)
-	status = models.CharField(max_length=20, choices=Status.choices, default=Status.REPORTED)
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
+    class Status(models.TextChoices):
+        REPORTED = "reported", "Reported"
+        UNDER_REVIEW = "under_review", "Under Review"
+        RESOLVED = "resolved", "Resolved"
+        DISMISSED = "dismissed", "Dismissed"
 
-	@property
-	def reporter(self):  # for template compatibility
-		return self.reported_by
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        related_name="violations",
+    )
+    reported_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="violations_reported",
+    )
+    reported_by_guard = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        help_text="Guard code if reported by security guard (Guard1, Guard2, Guard3)",
+    )
+    violation_type = models.ForeignKey(
+        ViolationType,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="violations",
+        help_text="Specific violation type from the catalog",
+    )
+    incident_at = models.DateTimeField()
+    type = models.CharField(max_length=50, choices=Type.choices)
+    severity = models.CharField(max_length=10, choices=Severity.choices)
+    location = models.CharField(max_length=200)
+    description = models.TextField()
+    witness_statement = models.TextField(blank=True)
+    evidence_file = models.FileField(
+        upload_to="violations/evidence/",
+        null=True,
+        blank=True,
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.REPORTED,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-	def __str__(self) -> str:  # pragma: no cover
-		return f"{self.get_type_display()} violation for {self.student} on {self.incident_at:%Y-%m-%d}"
+    @property
+    def reporter(self):
+        return self.reported_by
 
+    def __str__(self) -> str:
+        return f"{self.get_type_display()} violation for {self.student} on {self.incident_at:%Y-%m-%d}"
 
 class LoginActivity(models.Model):
 	class EventType(models.TextChoices):

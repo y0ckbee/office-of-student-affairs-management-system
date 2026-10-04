@@ -321,16 +321,16 @@ class ViolationAdmin(admin.ModelAdmin):
         )
         
     @admin.display(description="Severity")
-	def severity_badge(self, obj):
-		colors = {
-			"minor": "#f59e0b",
-			"major": "#ef4444",
-		}
-		color = colors.get(obj.severity, "#6b7280")
-		return format_html(
-			'<span style="background-color:{}; color:white; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; text-transform:uppercase;">{}</span>',
-			color, obj.get_severity_display()
-		)		
+    def severity_badge(self, obj):
+        colors = {
+            "minor": "#f59e0b",
+            "major": "#ef4444",
+        }
+        color = colors.get(obj.severity, "#6b7280")
+        return format_html(
+            '<span style="background-color:{}; color:white; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; text-transform:uppercase;">{}</span>',
+            color, obj.get_severity_display()
+        )
 
     @admin.display(description="Status")
     def status_badge(self, obj):
