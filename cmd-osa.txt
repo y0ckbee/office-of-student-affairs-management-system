@@ -28,17 +28,18 @@ Talisay City, Negros Occidental
 -CHMSU
 
 ,,todo
-.del unnecessary files
 
-,,
-I confirm All of is working .
-But what is  the purpose of this 4? Reported,
+,, repository
+. https://github.com/blackraspberryyy/iTrack
+
+But what is  the purpose of this 4? 
+Reported,
 Under Review,
 Resolved,
-Dismissed.
+Dismissed,
+Overdue Cases.
  my osa process in my school is only using 2 and i'm sure that is violation Reported ,Resolved.
  i would like to remove this in management = Pending Review,Under Review.
-keep = Overdue Cases.
 
 >>> ======================================
 >>> DUMMY STUDENT GENERATION COMPLETE
