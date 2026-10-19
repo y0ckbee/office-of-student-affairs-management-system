@@ -46,6 +46,28 @@ faculty_patterns = [
     path("login/auth/", views.credentials_login_auth, name="faculty_login_auth"),
     path("dashboard/", views.faculty_dashboard_view, name="faculty_dashboard"),
     path(
+        "apology-letters/",
+        views.coordinator_apology_letters_view,
+        name="coordinator_apology_letters",
+    ),
+    path(
+    "apology-letters/<int:apology_id>/",
+    views.coordinator_apology_letter_detail_view,
+    name="coordinator_apology_letter_detail",
+),
+    path(
+        "apology-letters/<int:apology_id>/approve/",
+        views.coordinator_review_apology_view,
+        {"decision": "approve"},
+        name="coordinator_approve_apology",
+    ),
+    path(
+        "apology-letters/<int:apology_id>/reject/",
+        views.coordinator_review_apology_view,
+        {"decision": "reject"},
+        name="coordinator_reject_apology",
+    ),
+    path(
         "schedule-meeting/<int:alert_id>/",
         views.staff_schedule_meeting_view,
         name="faculty_schedule_meeting",

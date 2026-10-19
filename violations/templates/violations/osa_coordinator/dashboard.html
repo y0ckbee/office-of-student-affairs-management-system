@@ -501,6 +501,18 @@
                         <span class="action-desc">Monitor all user activities</span>
                     </div>
                 </a>
+                
+                <a href="{% url 'violations:coordinator_apology_letters' %}"
+                    class="official-action-btn action-primary">
+                    <div class="action-icon">
+                        <i class="fas fa-file-signature"></i>
+                    </div>
+                    <div class="action-text">
+                        <span class="action-label">Apology Letter Review</span>
+                        <span class="action-desc">Review, approve, or reject student letters</span>
+                    </div>
+                </a>
+
 
                 <button type="button" class="official-action-btn action-primary"
                     onclick="document.getElementById('notifPanel').classList.add('show');">
@@ -562,8 +574,7 @@
 
             <div class="directory-title-bar">
                 <h2 class="directory-title"><i class="fas fa-users"></i> STUDENT DIRECTORY</h2>
-                <p class="directory-subtitle">Academic Year {{ academic_year|default:"2024-2025" }} • Generated: {% now
-                    "F d, Y" %}</p>
+                <p class="directory-subtitle">Academic Year {{ academic_year|default:"2024-2025" }} • Generated: {% now "F d, Y" %}</p>
             </div>
 
             <!-- Search and Filter Bar -->

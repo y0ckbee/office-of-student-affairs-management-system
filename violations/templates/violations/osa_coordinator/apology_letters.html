@@ -1,0 +1,125 @@
+ {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apology Letter Submissions | UDM OSA</title>
+    <link rel="stylesheet" href="{% static 'violations/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'violations/css/main.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .review-page { max-width: 1150px; margin: 35px auto; padding: 0 24px 40px; font-family: Poppins, sans-serif; }
+        .review-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+        .review-heading h1 { margin: 0 0 6px; font-size: 26px; color: #183b2b; }
+        .review-heading p { margin: 0; color: #6b7280; font-size: 14px; }
+        .back-link, .view-link { display: inline-block; text-decoration: none; border-radius: 8px; padding: 10px 15px; font-size: 13px; font-weight: 600; }
+        .back-link { background: #edf2ee; color: #244b37; }
+        .view-link { background: #1d6847; color: white; white-space: nowrap; }
+        .submission-card { background: #fff; border: 1px solid #e5e9e6; border-radius: 13px; overflow: hidden; box-shadow: 0 4px 18px rgba(25, 55, 38, .06); }
+        .table-wrap { overflow-x: auto; }
+        .submission-table { width: 100%; border-collapse: collapse; min-width: 760px; }
+        .submission-table th { background: #f5f8f5; color: #526158; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; padding: 15px 18px; }
+        .submission-table td { padding: 17px 18px; border-top: 1px solid #edf0ed; font-size: 13px; color: #37443b; vertical-align: middle; }
+        .student-name { font-weight: 600; color: #183b2b; }
+        .student-number { display: block; color: #7b847e; font-size: 12px; margin-top: 4px; }
+        .status { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize; background: #fff3d6; color: #8a5b00; }
+        .status.approved { background: #e3f5e9; color: #17643b; }
+        .status.rejected { background: #fde8e8; color: #a32626; }
+        .status.revision_needed { background: #e8efff; color: #2c4f9b; }
+        .empty-state { padding: 55px 20px; text-align: center; color: #68756c; }
+        .empty-state h2 { color: #244b37; font-size: 18px; margin-bottom: 8px; }
+        /* Keep the logo small on the apology submissions page only */
+.official-top-nav .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.official-top-nav .apology-page-logo {
+    width: 44px !important;
+    height: 44px !important;
+    max-width: 44px !important;
+    max-height: 44px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+        @media (max-width: 600px) { .review-page { padding: 0 12px 25px; margin-top: 22px; } .review-heading h1 { font-size: 22px; } }
+    </style>
+</head>
+<body class="role-faculty">
+<header class="official-top-nav">
+    <div class="nav-container">
+        <div class="nav-brand">
+            <img
+    src="{% static 'violations/images/chmsu_logo.png' %}"
+    alt="UDM Logo"
+    class="brand-logo apology-page-logo"
+>
+            <div class="brand-text">
+                <strong>UDM OSA Coordinator</strong>
+                <span>Office of Student Affairs Student Violation Tracking System</span>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a href="{% url 'violations:faculty_dashboard' %}">Dashboard</a>
+            <a href="{% url 'violations:auth_logout' %}">Logout</a>
+        </div>
+    </div>
+</header>
+
+<main class="review-page">
+    <div class="review-heading">
+        <div>
+            <h1>Apology Letter Submissions</h1>
+            <p>Choose a student's submission to read the letter and record your decision.</p>
+        </div>
+        <a class="back-link" href="{% url 'violations:faculty_dashboard' %}">Back to Dashboard</a>
+    </div>
+
+    <section class="submission-card">
+        {% if apology_letters %}
+        <div class="table-wrap">
+            <table class="submission-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Violation Case</th>
+                        <th>Date Submitted</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for letter in apology_letters %}
+                    <tr>
+                        <td>
+                            <span class="student-name">
+                                {{ letter.student.user.get_full_name|default:letter.student.user.username }}
+                            </span>
+                            <span class="student-number">{{ letter.student.roll_no|default:"Student record" }}</span>
+                        </td>
+                        <td>#{{ letter.violation_id }}</td>
+                        <td>{{ letter.submitted_at|date:"M d, Y · h:i A" }}</td>
+                        <td><span class="status {{ letter.status }}">{{ letter.get_status_display }}</span></td>
+                        <td>
+                            <a class="view-link" href="{% url 'violations:coordinator_apology_letter_detail' letter.id %}">
+                                View Letter
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h2>No apology letters submitted yet</h2>
+            <p>Student submissions will appear here when they submit their letters.</p>
+        </div>
+        {% endif %}
+    </section>
+</main>
+</body>
+</html>

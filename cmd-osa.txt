@@ -1,10 +1,11 @@
 ,, Accnts
-.Username: admin255
-Email: admin255@gmail.com
-255086aa
-.my stud
-24221682
-2255aa;
+.admin
+Username= admin255
+=admin255@gmail.com
+=255086aa
+.stud
+=24221682
+=2255aa;
 
 ,, activate local
 =.\virtualenv\Scripts\Activate.ps1
@@ -26,23 +27,18 @@ Talisay City, Negros Occidental
 -OFFICE OF STUDENT AFFAIRS
 -CHMSU
 
-,,todo
-.del unnecessary files
-
-,,
-I confirm All of is working .
-But what is  the purpose of this 4? Reported,
-Under Review,
-Resolved,
-Dismissed.
- my osa process in my school is only using 2 and i'm sure that is violation Reported ,Resolved.
- i would like to remove this in management = Pending Review,Under Review.
-keep = Overdue Cases.
-
+,, repos
+= https://github.com/blackraspberryyy/iTrack
+= https://github.com/Sakher-AIML/student-management-system
 >>> ======================================
 >>> DUMMY STUDENT GENERATION COMPLETE
 >>> ======================================
->>> abonal@dummy.udm.local
+>>> abonal@dummy.udm.local, 25000101
 >>> Range   : 25000101 - 25000200
 >>> Password: Student@2026
 >>> ======================================
+
+,, todo
+Okay na ako mahal change topic.
+Bring me again the separate list what we should edit into our project.
+bring me a separate list  for the problem   that we are solving with now.

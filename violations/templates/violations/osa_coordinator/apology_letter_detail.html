@@ -1,0 +1,163 @@
+ {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Apology Letter | UDM OSA</title>
+    <link rel="stylesheet" href="{% static 'violations/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'violations/css/main.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .detail-page { max-width: 900px; margin: 30px auto; padding: 0 20px 40px; font-family: Poppins, sans-serif; }
+        .back-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #246343; font-weight: 600; font-size: 13px; }
+        .detail-card { background: #fff; border: 1px solid #e4e9e5; border-radius: 14px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 18px rgba(25,55,38,.05); }
+        .detail-header { padding: 22px 25px; background: #f4f8f4; border-bottom: 1px solid #e4e9e5; }
+        .detail-header h1 { color: #183b2b; font-size: 23px; margin: 0 0 6px; }
+        .detail-header p { color: #6b756d; font-size: 13px; margin: 0; }
+        .detail-content { padding: 24px 25px; }
+        .student-summary { padding: 15px; border-radius: 9px; background: #f8faf8; margin-bottom: 22px; }
+        .student-summary strong { color: #183b2b; display: block; }
+        .student-summary span { color: #6b756d; font-size: 13px; }
+        .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+        .field { min-width: 0; }
+        .field.full { grid-column: 1 / -1; }
+        .field label { display: block; color: #68746b; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; font-weight: 600; margin-bottom: 6px; }
+        .field p { margin: 0; color: #26372d; font-size: 14px; overflow-wrap: anywhere; white-space: pre-wrap; }
+        .section-title { color: #183b2b; font-size: 17px; margin: 0 0 18px; }
+        .signature-box { border: 1px dashed #d2dbd3; border-radius: 8px; padding: 14px; background: #fafcfa; }
+        .uploaded-link { color: #17643b; font-weight: 600; }
+        .review-form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .review-form label { display: block; font-size: 13px; font-weight: 600; color: #34483a; margin-bottom: 8px; }
+        .review-form textarea { box-sizing: border-box; width: 100%; min-height: 115px; resize: vertical; padding: 12px; border: 1px solid #d6ded7; border-radius: 8px; font: inherit; font-size: 13px; }
+        .review-form textarea:focus { outline: 2px solid #b8d8c2; border-color: #367a51; }
+        .decision-actions { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .decision-actions button { border: 0; border-radius: 8px; padding: 11px 16px; color: white; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .approve-btn { background: #247448; }
+        .reject-btn { background: #b93838; }
+        .review-note { font-size: 12px; color: #6b756d; margin-top: 16px; }
+        .status { display: inline-block; padding: 5px 10px; border-radius: 20px; background: #fff3d6; color: #8a5b00; font-size: 11px; font-weight: 600; }
+        .status.approved { background: #e3f5e9; color: #17643b; }
+        .status.rejected { background: #fde8e8; color: #a32626; }
+        .status.revision_needed { background: #e8efff; color: #2c4f9b; }
+        /* Keep the logo small on the apology submissions page only */
+.official-top-nav .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.official-top-nav .apology-page-logo {
+    width: 44px !important;
+    height: 44px !important;
+    max-width: 44px !important;
+    max-height: 44px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+        @media(max-width: 650px) { .field-grid, .review-form { grid-template-columns: 1fr; } .field.full { grid-column: auto; } .detail-content { padding: 18px; } }
+    </style>
+</head>
+<body class="role-faculty">
+<header class="official-top-nav">
+    <div class="nav-container">
+        <div class="nav-brand">
+            <img
+    src="{% static 'violations/images/chmsu_logo.png' %}"
+    alt="UDM Logo"
+    class="brand-logo apology-page-logo"
+>
+            <div class="brand-text">
+                <strong>UDM OSA Coordinator</strong>
+                <span>Office of Student Affairs Student Violation Tracking System</span>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a href="{% url 'violations:faculty_dashboard' %}">Dashboard</a>
+            <a href="{% url 'violations:auth_logout' %}">Logout</a>
+        </div>
+    </div>
+</header>
+
+<main class="detail-page">
+    <a class="back-link" href="{% url 'violations:coordinator_apology_letters' %}">&larr; Back to Submissions</a>
+
+    <section class="detail-card">
+        <div class="detail-header">
+            <h1>Apology Letter #{{ apology.id }}</h1>
+            <p>Submitted {{ apology.submitted_at|date:"F d, Y · h:i A" }}</p>
+            <p style="margin-top: 10px;"><span class="status {{ apology.status }}">{{ apology.get_status_display }}</span></p>
+        </div>
+        <div class="detail-content">
+            <div class="student-summary">
+                <strong>{{ apology.student.user.get_full_name|default:apology.student.user.username }}</strong>
+                <span>Student No.: {{ apology.student.roll_no|default:"Not provided" }} · Violation Case #{{ apology.violation_id }}</span>
+            </div>
+
+            <h2 class="section-title">Student's Letter</h2>
+            <div class="field-grid">
+                <div class="field"><label>Letter Date</label><p>{{ apology.letter_date|date:"F d, Y"|default:"Not provided" }}</p></div>
+                <div class="field"><label>Campus</label><p>{{ apology.letter_campus|default:"Not provided" }}</p></div>
+                <div class="field full"><label>Full Name</label><p>{{ apology.letter_full_name|default:"Not provided" }}{% if apology.letter_suffix %} {{ apology.letter_suffix }}{% endif %}</p></div>
+                <div class="field full"><label>Home Address</label><p>{{ apology.letter_home_address|default:"Not provided" }}</p></div>
+                <div class="field full"><label>Program, Major, Year &amp; Section</label><p>{{ apology.letter_program|default:"Not provided" }}</p></div>
+                <div class="field full"><label>Violation(s) in Letter</label><p>{{ apology.letter_violations|default:"Not provided" }}</p></div>
+                <div class="field"><label>Printed Name for Signature</label><p>{{ apology.letter_printed_name|default:"Not provided" }}</p></div>
+                <div class="field"><label>Student Signature</label>
+                    <div class="signature-box">
+                        {% if apology.signature_data %}
+                            <img src="{{ apology.signature_data }}" alt="Student signature" style="max-width:100%;max-height:150px;">
+                        {% else %}
+                            <p>No signature provided.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if apology.file %}
+            <div style="margin-top: 25px;">
+                <h2 class="section-title">Uploaded Letter</h2>
+                <a class="uploaded-link" href="{{ apology.file.url }}" target="_blank" rel="noopener">View / Download Uploaded File</a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="detail-card">
+        <div class="detail-header">
+            <h2 class="section-title" style="margin:0;">Coordinator Decision</h2>
+            <p style="margin-top:6px;">Review the letter before recording your decision.</p>
+        </div>
+        <div class="detail-content">
+            {% if apology.status == "pending" %}
+            <div class="review-form">
+                <form method="post" action="{% url 'violations:coordinator_approve_apology' apology.id %}">
+                    {% csrf_token %}
+                    <label for="approval-remarks">Approval Remarks (optional)</label>
+                    <textarea id="approval-remarks" name="remarks" placeholder="Enter remarks or feedback for the student"></textarea>
+                    <div class="decision-actions">
+                        <button class="approve-btn" type="submit">Approve Letter</button>
+                    </div>
+                </form>
+
+                <form method="post" action="{% url 'violations:coordinator_reject_apology' apology.id %}">
+                    {% csrf_token %}
+                    <label for="rejection-remarks">Reason for Rejection (required)</label>
+                    <textarea id="rejection-remarks" name="remarks" required placeholder="Explain what needs to be corrected before resubmission"></textarea>
+                    <div class="decision-actions">
+                        <button class="reject-btn" type="submit">Reject Letter</button>
+                    </div>
+                </form>
+            </div>
+            {% else %}
+            <p>This letter has already been reviewed.</p>
+            {% if apology.remarks %}<p><strong>Coordinator remarks:</strong> {{ apology.remarks }}</p>{% endif %}
+            {% if apology.verified_at %}<p><strong>Reviewed on:</strong> {{ apology.verified_at|date:"F d, Y · h:i A" }}</p>{% endif %}
+            {% endif %}
+            <p class="review-note">Reviewing an apology letter does not change the violation case's status.</p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

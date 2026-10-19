@@ -3306,3 +3306,101 @@ def staff_permanent_delete_alert_view(request, alert_id):
         return JsonResponse({"error": "Alert not found or not dismissed"}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+    
+    # ============================================
+# OSA Coordinator: Apology Letter Review
+# ============================================
+
+@role_required({User.Role.OSA_COORDINATOR})
+def coordinator_apology_letters_view(request):
+    apology_letters = (
+        ApologyLetter.objects
+        .select_related("student__user", "violation", "verified_by")
+        .order_by("-submitted_at")
+    )
+
+    return render(
+        request,
+        "violations/osa_coordinator/apology_letters.html",
+        {"apology_letters": apology_letters},
+    )
+    
+def coordinator_apology_letter_detail_view(request, apology_id):
+    apology = get_object_or_404(
+        ApologyLetter.objects.select_related(
+            "student__user",
+            "violation",
+            "verified_by",
+        ),
+        pk=apology_id,
+    )
+
+    return render(
+        request,
+        "violations/osa_coordinator/apology_letter_detail.html",
+        {"apology": apology},
+    )
+
+@role_required({User.Role.OSA_COORDINATOR})
+def coordinator_review_apology_view(request, apology_id, decision):
+    """Approve or reject a submitted apology letter."""
+    if request.method != "POST":
+        return redirect("violations:coordinator_apology_letters")
+
+    if decision not in {"approve", "reject"}:
+        messages.error(request, "Invalid review action.")
+        return redirect("violations:coordinator_apology_letters")
+
+    apology = get_object_or_404(
+        ApologyLetter.objects.select_related("student", "violation"),
+        pk=apology_id,
+    )
+
+    if apology.status != ApologyLetter.Status.PENDING:
+        messages.warning(request, "This letter has already been reviewed.")
+        return redirect("violations:coordinator_apology_letters")
+
+    remarks = (request.POST.get("remarks") or "").strip()
+
+    if decision == "reject" and not remarks:
+        messages.error(request, "Remarks are required when rejecting a letter.")
+        return redirect("violations:coordinator_apology_letters")
+
+    if decision == "approve":
+        apology.status = ApologyLetter.Status.APPROVED
+        action_type = ActivityLog.ActionType.APOLOGY_APPROVED
+        action_label = "approved"
+    else:
+        apology.status = ApologyLetter.Status.REJECTED
+        action_type = ActivityLog.ActionType.APOLOGY_REJECTED
+        action_label = "rejected"
+
+    apology.verified_by = request.user
+    apology.verified_at = timezone.now()
+    apology.remarks = remarks
+    apology.save(
+        update_fields=[
+            "status",
+            "verified_by",
+            "verified_at",
+            "remarks",
+        ]
+    )
+
+    # Preserve the decision and remarks when the student resubmits.
+    ActivityLog.log_activity(
+        user=request.user,
+        action_type=action_type,
+        description=(
+            f"OSA Coordinator {action_label} apology letter "
+            f"for violation #{apology.violation_id}. "
+            f"Remarks: {remarks or 'None'}"
+        ),
+        request=request,
+        related_apology=apology,
+        related_student=apology.student,
+        related_violation=apology.violation,
+    )
+
+    messages.success(request, f"Apology letter {action_label} successfully.")
+    return redirect("violations:coordinator_apology_letters")
