@@ -515,14 +515,6 @@
                     </div>
                 </a>
 
-                <button type="button" class="official-action-btn action-primary" onclick="document.getElementById('notifPanel').classList.add('show');">
-                    <div class="action-icon"><i class="fas fa-envelope"></i></div>
-                    <div class="action-text">
-                        <span class="action-label">Messages</span>
-                        <span class="action-desc">{% if unread_count %}{{ unread_count }} unread{% else %}View inbox{% endif %}</span>
-                    </div>
-                </button>
-
                 <button type="button" class="official-action-btn action-info" id="viewProfileBtn">
                     <div class="action-icon"><i class="fas fa-id-card"></i></div>
                     <div class="action-text">
@@ -1943,49 +1935,6 @@
         }
     </style>
 
-    <!-- Notifications Panel -->
-    <aside class="notif-panel" id="notifPanel" aria-hidden="true">
-        <div class="notif-header">
-            <h3>Messages {% if unread_count %}<span class="badge badge-danger" style="font-size:12px; margin-left:6px;">{{ unread_count }} new</span>{% endif %}</h3>
-            <button class="icon-btn" id="notifClose"><i class="fas fa-times"></i></button>
-        </div>
-        <ul class="notif-list" style="max-height:400px; overflow-y:auto; padding:0; margin:0;">
-            {% if staff_messages %}
-                {% for msg in staff_messages %}
-                <li class="message-item {% if not msg.read_at %}unread{% endif %}" 
-                    data-message-id="{{ msg.id }}"
-                    data-sender-id="{{ msg.sender.id }}"
-                    data-sender="{{ msg.sender.get_full_name|default:msg.sender.username }}"
-                    data-date="{{ msg.created_at|date:'M d, Y H:i' }}"
-                    data-content="{{ msg.content }}"
-                    style="padding:12px; border-bottom:1px solid #eee; cursor:pointer; {% if not msg.read_at %}background:#f0fdf4;{% endif %}">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-                        <strong style="color:var(--udm-dark-green);">
-                            <i class="fas fa-user-tie"></i> {{ msg.sender.get_full_name|default:msg.sender.username }}
-                        </strong>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <small style="color:#667085;">{{ msg.created_at|date:"M d, g:i A" }}</small>
-                            <button class="delete-msg-btn" data-msg-id="{{ msg.id }}" title="Move to Trash" 
-                                    onclick="event.stopPropagation();"
-                                    style="background:none; border:none; color:#ef4444; cursor:pointer; padding:2px; font-size:12px;">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <p style="margin:0; color:#344054; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ msg.content|truncatechars:50 }}</p>
-                    {% if not msg.read_at %}
-                    <span class="unread-dot" style="display:inline-block; width:8px; height:8px; background:#dc2626; border-radius:50%; margin-top:6px;"></span>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            {% else %}
-                <li style="padding:12px; color:#667085; text-align:center;">
-                    <i class="fas fa-inbox"></i> No messages yet.
-                </li>
-            {% endif %}
-        </ul>
-    </aside>
-
     <!-- Trash Panel -->
     <aside class="notif-panel" id="trashPanel" aria-hidden="true">
         <div class="notif-header">
@@ -3145,80 +3094,6 @@
                     }
                 }
             });
-        })();
-    </script>
-
-    <!-- Staff Alert Modal for Students -->
-    {% if student.should_alert_staff %}
-    <div class="modal" id="staffAlertModal" style="display: flex; background: rgba(0,0,0,0.7); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; justify-content: center; align-items: center;">
-        <div class="modal-card" style="max-width: 500px; width: 90%; background: white; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
-            <div class="modal-header" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: 20px; border-radius: 16px 16px 0 0;">
-                <h3 style="margin: 0; font-size: 1.25rem;"><i class="fas fa-exclamation-triangle"></i> Important Notice</h3>
-                <button class="icon-btn" id="staffAlertClose" style="color: white; float: right;"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body" style="padding: 24px; max-height: 60vh; overflow-y: auto;">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <i class="fas fa-user-tie" style="font-size: 4rem; color: #dc2626; margin-bottom: 16px;"></i>
-                    <h4 style="color: #1f2937; margin-bottom: 12px;">Meeting Required with OSA Coordinator</h4>
-                    <p style="color: #6b7280; line-height: 1.6;">
-                        Due to your recent violations, you have reached the threshold requiring a mandatory meeting with the OSA Coordinator.
-                        Please contact the OSA Office to schedule your meeting as soon as possible.
-                    </p>
-                </div>
-                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class="fas fa-info-circle" style="color: #dc2626;"></i>
-                        <strong style="color: #b91c1c;">Violation Summary:</strong>
-                    </div>
-                    <ul style="margin: 0; padding-left: 24px; color: #374151;">
-                        <li>Major Violations: {{ student.major_violation_count }}</li>
-                        <li>Minor Violations: {{ student.minor_violation_count }}</li>
-                        <li>Effective Major Violations: {{ student.effective_major_violations }}</li>
-                    </ul>
-                </div>
-                <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class="fas fa-calendar-alt" style="color: #0369a1;"></i>
-                        <strong style="color: #0c4a6e;">Next Steps:</strong>
-                    </div>
-                    <ol style="margin: 0; padding-left: 24px; color: #374151;">
-                        <li>Contact the OSA Office immediately</li>
-                        <li>Schedule a meeting with the OSA Coordinator</li>
-                        <li>Attend the scheduled meeting</li>
-                        <li>Follow any additional instructions provided</li>
-                    </ol>
-                </div>
-            </div>
-            <div class="modal-actions" style="padding: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end;">
-                <button class="login-button" id="staffAlertCloseBtn" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
-                    <i class="fas fa-times"></i> Close
-                </button>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <script>
-        // Staff Alert Modal functionality
-        (function(){
-            const modal = document.getElementById('staffAlertModal');
-            const closeBtn = document.getElementById('staffAlertClose');
-            const closeBtnFooter = document.getElementById('staffAlertCloseBtn');
-            const alertCard = document.getElementById('alertCard');
-
-            function openModal(){
-                if(modal) modal.style.display = 'flex';
-            }
-
-            function closeModal(){
-                if(modal) modal.style.display = 'none';
-            }
-
-            if(closeBtn) closeBtn.addEventListener('click', closeModal);
-            if(closeBtnFooter) closeBtnFooter.addEventListener('click', closeModal);
-            if(modal) modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
-            if(alertCard) alertCard.addEventListener('click', openModal);
-            document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && modal.style.display === 'flex') closeModal(); });
         })();
     </script>
 

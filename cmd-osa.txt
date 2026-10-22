@@ -39,6 +39,104 @@ Talisay City, Negros Occidental
 >>> ======================================
 
 ,, todo
-Okay na ako mahal change topic.
-Bring me again the separate list what we should edit into our project.
-bring me a separate list  for the problem   that we are solving with now.
+Mahal, yes — the apology-letter reading and approval workflow is now marked as DONE. We will keep it out of the pending list unless a new problem appears.
+
+Your checklist has the right concerns, but a few items need clearer wording and numbering. In particular, Reported and Dismissed are case statuses, while community-service hours and suspension are penalties. They should be handled separately so the system does not confuse a case's progress with its disciplinary outcome.
+
+I also recommend adding safeguards for overdue cases, status changes, and serious penalties so the system records decisions rather than imposing punishments automatically.
+
+## Revised List 1 — Project Edits (Pending Changes)
+
+## UDM OSA Student Violation Management System
+
+Pending
+
+Apology-letter review: completed and excluded from this checklist.
+
+### Progress: 0 of 16 tasks
+
+Check off each task as we finish it.
+
+# List 1 — Project Edits (Pending Changes)
+
+**Project:** UDM Office of Student Affairs Student Violation Management System
+
+**Completed:** Apology-letter reading, submission list, and coordinator approval/rejection workflow.
+
+**Pending:** 16 tasks
+
+## 1. Coordinator and Student Dashboards
+
+- 1\. Remove the Messages and OSA Alerts panels from the Student Dashboard.
+- 2\. Remove the OSA Alerts panel from the Coordinator Dashboard. Confirm whether the Coordinator's Messages panel should also be removed.
+- 3\. Remove the Pending Review dashboard card and update dashboard statistics to reflect the intended case statuses.
+- 4\. Add a Reported case count and a Dismissed case count.
+- 5\. Retain the Under Review and Resolved counts, and display an Overdue count based on the overdue-case rules.
+- 6\. Review dashboard labels, links, and wording for consistency.
+
+## 2. Case Status Workflow
+
+- 7\. Support the following valid case statuses: Reported, Under Review, Resolved, and Dismissed.
+- 8\. Verify that authorized users can select, save, and view each valid status correctly.
+- 9\. Validate status transitions and prevent invalid status values from being saved.
+- 10\. Record important status changes, including who made the change and when.
+
+## 3. Overdue Case Logic
+
+- 11\. Define and implement the seven-day overdue rule for Reported and Under Review cases.
+- 12\. Verify that Resolved and Dismissed cases are excluded from the overdue count, and that overdue cases are clearly identified in the interface.
+
+## 4. Penalties and School Policy
+
+- 13\. Separate the violation category, offense number/severity, case status, and proposed penalty in the data model and interface.
+- 14\. Review the proposed penalty options against verified university policy before displaying them as official.
+- 15\. Require authorized OSA review and recorded approval for serious penalties; do not automatically impose them.
+
+**Proposed options to verify against official policy:**
+
+- 4, 8, 10, 20, or 40 community-service hours
+- Three days' suspension
+- One week's suspension
+- Termination, only if applicable under verified university rules
+
+These are proposed options, not confirmed official UDM penalties.
+
+## 5. University Branding and Data Integrity
+
+- 16\. Replace the current logo with the verified official university logo when the correct image is available, and preserve existing violation records during any necessary database schema changes or migrations.
+
+## Implementation safeguards
+
+- Back up the database before schema changes or migrations.
+- Preserve existing case records and their relationships.
+- Keep overdue as a calculated condition or indicator, rather than a separate case status, unless the approved design specifically requires it.
+- Do not treat an approved apology letter as automatic resolution of a violation case.
+- Do not treat a penalty as imposed until the required authorized decision has been recorded.
+
+## Corrections that matter most
+
+Overdue is not normally a case status.
+
+A case can be `Reported` and overdue at the same time. Calculate the overdue indicator from the case's reporting date and the seven-day rule. This avoids creating conflicting statuses.
+
+Penalty approval must be separate from case status.
+
+A case can be under review while a penalty is being considered. Serious disciplinary action should require the appropriate authorized decision, with the decision and approving person recorded.
+
+Protect existing data before changing the schema.
+
+Since the system already has violation records, we should adapt the existing models and migrations carefully instead of replacing fields or rebuilding the database unnecessarily.
+
+## Recommended order of work
+
+1. Dashboard cleanup and statistics.
+2. Case statuses and status transitions.
+3. Overdue calculations and display.
+4. Penalty/policy structure and authorization.
+5. Official branding and final consistency review.
+
+This order lets us fix what the user sees first, then the logic behind the dashboard, while protecting existing records.
+
+One important note, mahal: we should verify the actual UDM disciplinary policy before labeling any of the proposed penalties official.
+
+Today's Bible verse: “Let all things be done decently and in order.” — 1 Corinthians 14:40 (KJV). A useful reminder for this project: organize the workflow clearly, validate each change, and protect the existing data as we improve the system.
