@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="{% static 'violations/css/main.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="apple-touch-icon" href="{% static 'violations/images/chmsu_logo.png' %}" />
+  <link rel="apple-touch-icon" href="{% static 'violations/images/udm_logo.jpg' %}" />
   <link rel="icon" type="image/png" href="{% static 'violations/images/chmsu_favicon_round.png' %}" />
 </head>
 <body class="role-student">
@@ -34,7 +34,7 @@
       <!-- Official Header Inside Card -->
       <div class="card-official-header">
         <div class="header-logo-wrapper">
-          <img src="{% static 'violations/images/chmsu_logo.png' %}" alt="UDM Logo" />
+          <img src="{% static 'violations/images/udm_logo.jpg' %}" alt="UDM Logo" />
         </div>
         <div class="header-details">
           <!-- <span class="republic-text">Former City College of Manila</span> -->

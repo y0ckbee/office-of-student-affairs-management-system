@@ -59,7 +59,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "UDM OSA",
     
     # Logo to use for your site, must be present in static files
-    "site_logo": "violations/images/chmsu_logo.png",
+    "site_logo": "violations/images/udm_logo.jpg",
     
     # Logo to use for your site on the login screen (uses site_logo if None)
     "login_logo": None,
