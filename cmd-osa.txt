@@ -69,8 +69,22 @@ Check off each task as we finish it.
 
 - 1\. Remove the Messages and OSA Alerts panels from the Student Dashboard.
 - 2\. Remove the OSA Alerts panel from the Coordinator Dashboard. Confirm whether the Coordinator's Messages panel should also be removed.
-- 3\. Remove the Pending Review dashboard card and update dashboard statistics to reflect the intended case statuses.
-- 4\. Add a Reported case count and a Dismissed case count.
+- 3\. Remove the Pending Review dashboard card and update dashboard statistics to reflect the intended case statuses, I like to update this number 3 to remove totally the Pending Review in the system.
+maintain 
+Under Review = because it is using only for serious cases,
+Reported = because a non serious cases must stay in this action while student is taking their community service hours granted to them.
+Resolved = this is using for non serious cases who comply and completed the community service hours granted to them, and also for serious cases where if case is resolved.
+Dismissed = for students, Proposed options to verify against official policy:
+
+
+Three days' suspension
+
+One week's suspension
+
+Termination, only if applicable under verified university rules.
+
+
+- 4\. Add a Reported case count and a Dismissed case count. remove Violation Reports if it is not equal to Reported.
 - 5\. Retain the Under Review and Resolved counts, and display an Overdue count based on the overdue-case rules.
 - 6\. Review dashboard labels, links, and wording for consistency.
 
