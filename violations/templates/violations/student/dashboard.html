@@ -520,6 +520,16 @@
                     </div>
                 </button>
 
+                <button type="button" class="official-action-btn action-info"
+                        id="policyPenaltiesBtn" aria-expanded="false"
+                        aria-controls="policyPenaltiesList">
+                    <div class="action-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="action-text">
+                        <span class="action-label">OSA Policy &amp; Penalties</span>
+                        <span class="action-desc">View possible consequences</span>
+                    </div>
+                </button>
+
                 <a href="{% url 'violations:auth_logout' %}" class="official-action-btn action-secondary">
                     <div class="action-icon"><i class="fas fa-sign-out-alt"></i></div>
                     <div class="action-text">
@@ -527,6 +537,36 @@
                         <span class="action-desc">End session</span>
                     </div>
                 </a>
+            </div>
+
+            <div id="policyPenaltiesList" hidden
+                 style="padding:20px 25px; border-top:1px solid #ddd; background:#fff;">
+                <h3 style="color:#1a472a; margin:0 0 10px;">Community Service</h3>
+                <ul style="line-height:1.9; padding-left:24px;">
+                    <li>0 community-service hours</li>
+                    <li>4 community-service hours</li>
+                    <li>8 community-service hours</li>
+                    <li>10 community-service hours</li>
+                    <li>20 community-service hours</li>
+                    <li>40 community-service hours</li>
+                </ul>
+
+                <h3 style="color:#1a472a; margin:18px 0 10px;">Suspension</h3>
+                <ul style="line-height:1.9; padding-left:24px;">
+                    <li>3 days' suspension</li>
+                    <li>1 week or more suspension</li>
+                </ul>
+
+                <h3 style="color:#1a472a; margin:18px 0 10px;">Termination</h3>
+                <ul style="line-height:1.9; padding-left:24px;">
+                    <li>Termination</li>
+                </ul>
+
+                <p style="margin:18px 0 0; padding:12px; background:#fff8e1;
+                          border-left:4px solid #e0a526;">
+                    <strong>Reminder:</strong> The applicable consequence depends on the
+                    case and its disciplinary decision. This list is for student awareness.
+                </p>
             </div>
         </section>
 
@@ -2785,6 +2825,25 @@
                 const profileSection = document.querySelector('.official-profile-section');
                 if(profileSection) {
                     profileSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        }
+
+        // Toggle OSA Policy & Penalties list
+        const policyPenaltiesBtn = document.getElementById('policyPenaltiesBtn');
+        const policyPenaltiesList = document.getElementById('policyPenaltiesList');
+
+        if (policyPenaltiesBtn && policyPenaltiesList) {
+            policyPenaltiesBtn.addEventListener('click', () => {
+                const willOpen = policyPenaltiesList.hidden;
+                policyPenaltiesList.hidden = !willOpen;
+                policyPenaltiesBtn.setAttribute('aria-expanded', String(willOpen));
+
+                if (willOpen) {
+                    policyPenaltiesList.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
                 }
             });
         }

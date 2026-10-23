@@ -39,37 +39,6 @@ Talisay City, Negros Occidental
 >>> ======================================
 
 ,, todo
-Here is your checklist arranged and grouped logically by topic for easier tracking and review.
-
-📋 Dashboard Panels & Metrics
-
-• 1. Student dashboard panels — Likely done — The checkpoint's student dashboard template does not contain the Messages or OSA Alerts panels.
-• 2. Coordinator dashboard panels — Likely done — The coordinator template does not show Messages or OSA Alerts panels either.
-• 3. Pending Review card — Done in template — No Pending Review card appears in the coordinator dashboard template. Some related statistics remain in the view code.
-• 4. Reported and Dismissed counts — Done in template — Both cards are present.
-• 5. Under Review, Resolved and Overdue counts — Present — All three cards are present, and the view calculates overdue cases.
-• 11. Seven-day overdue rule — Implemented — The coordinator view uses a seven-day threshold for Reported and Under Review cases.
-• 12. Overdue exclusions and display — Partly implemented — The query excludes Resolved and Dismissed cases, and an Overdue card exists. Verify the case-management interface too.
-
-🛠️ Data Model & Status Transitions
-
-• 7. Four valid statuses — Defined — The model defines all four requested status choices.
-• 8. Save and display statuses — Needs testing — The definitions exist, but end-to-end behavior is not confirmed.
-• 9. Validate status transitions — Pending verification — The checkpoint does not establish that invalid transitions are prevented.
-• 10. Record status-change history — Pending verification — A dedicated audit of who changed status and when is still needed.
-• 13. Data-model separation — Needs clarification — The current design keeps the new outcome choices in Violation.type; do not add a separate penalty field contrary to that agreed approach.
-
-⚖️ Rules, Penalties & UI Text
-
-• 6. Labels and wording — Needs revision — The Resolved card currently says “Completed with approved apology,” which can incorrectly imply an apology letter resolves a case.
-• 14. Verify official penalties — Pending — The checkpoint does not establish the official UDM disciplinary policy.
-• 15. Approval for serious penalties — Pending — Authorization and recorded approval need verification and implementation.
-
-🎨 Branding & Assets
-
-• 16. University branding and data integrity — Pending — The templates still reference udm_logo.jpg while displaying UDM branding. Confirm the correct official UDM logo before replacing it.
-Would you like to draft the validation rules for the status transitions (Task 9) or start working on a fix for the Resolved card wording (Task 6)?
-
 //////////////////
 
 
@@ -77,6 +46,4 @@ Under Review = because it is using only for serious cases,
 Reported = because a non serious cases must stay in this action while student is taking their community service hours granted to them,.
 Resolved = this is using for non serious cases who comply and completed the community service hours granted to them, and also for serious cases where if case is resolve.
 Dismissed = for students who had record against official policy:
-Three days' suspension,
-A week or weeks suspension,
-Termination.
+0, 4, 8, 10, 20, and 40 community-service hours; 3 days' suspension; 1 week or more suspension; and Terminated.
