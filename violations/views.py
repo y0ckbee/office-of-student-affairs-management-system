@@ -1028,7 +1028,7 @@ def faculty_case_management_view(request):
     # Summary statistics
     stats = {
         "total_cases": Violation.objects.count(),
-        "pending": Violation.objects.filter(status=Violation.Status.REPORTED).count(),
+        "reported": Violation.objects.filter(status=Violation.Status.REPORTED).count(),
         "under_review": Violation.objects.filter(
             status=Violation.Status.UNDER_REVIEW
         ).count(),
