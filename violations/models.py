@@ -73,12 +73,26 @@ class Student(models.Model):
 	@property
 	def major_violation_count(self):
 		"""Count of major violations for this student (type == 'major')."""
-		return self.violations.filter(type="major").count()
+		return self.violations.filter(
+      		type__in=[
+				"20_hours",
+				"40_hours",
+				"suspension_3_days",
+				"suspension_1_week_plus",
+				"terminated",
+				]
+			).count()
 
 	@property
 	def minor_violation_count(self):
 		"""Count of minor violations for this student (type == 'minor')."""
-		return self.violations.filter(type="minor").count()
+		return self.violations.filter(
+      		type__in=[
+				"0_hours",
+				"4_hours",
+				"8_hours",
+				"10_hours",
+			]).count()
 
 	@property
 	def effective_major_violations(self):
@@ -629,8 +643,15 @@ class StaffAlert(models.Model):
 
 class Violation(models.Model):
 	class Severity(models.TextChoices):
-		MINOR = "minor", "Minor"
-		MAJOR = "major", "Major"
+		NONE = "0_hours", "0 hours"
+		HOURS_4 = "4_hours", "4 hours"
+		HOURS_8 = "8_hours", "8 hours"
+		HOURS_10 = "10_hours", "10 hours"
+		HOURS_20 = "20_hours", "20 hours"
+		HOURS_40 = "40_hours", "40 hours"
+		SUSPENSION_3_DAYS = "suspension_3_days", "3 days' suspension"
+		SUSPENSION_1_WEEK_PLUS = "suspension_1_week_plus", "1 week or more suspension"
+		TERMINATED = "terminated", "Terminated"
 
 	class Status(models.TextChoices):
 		REPORTED = "reported", "Reported"
@@ -655,7 +676,7 @@ class Violation(models.Model):
 		help_text="Specific violation type from the catalog"
 	)
 	incident_at = models.DateTimeField()
-	type = models.CharField(max_length=10, choices=Severity.choices)
+	type = models.CharField(max_length=30, choices=Severity.choices)
 	location = models.CharField(max_length=200)
 	description = models.TextField()
 	witness_statement = models.TextField(blank=True)
@@ -952,8 +973,19 @@ def violation_post_save_alert(sender, instance, created, **kwargs):
 		student = instance.student
 
 		# Compute effective majors: majors + floor(minors / 3)
-		major_count = student.violations.filter(type='major').count()
-		minor_count = student.violations.filter(type='minor').count()
+		major_count = student.violations.filter(type__in=[
+			"20_hours",
+			"40_hours",
+			"suspension_3_days",
+			"suspension_1_week_plus",
+			"terminated",
+		]).count()
+		minor_count = student.violations.filter(type__in=[
+			"0_hours",
+			"4_hours",
+			"8_hours",
+			"10_hours",
+		]).count()
 		effective = major_count + (minor_count // 3)
 
 		# Threshold is 3 effective major violations

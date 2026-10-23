@@ -107,10 +107,10 @@ Termination, only if applicable under verified university rules.
 
 **Proposed options to verify against official policy:**
 
-- 4, 8, 10, 20, or 40 community-service hours
+- 4, 8, 10, 20, and 40 community-service hours
 - Three days' suspension
 - One week's suspension
-- Termination, only if applicable under verified university rules
+- Termination=.
 
 These are proposed options, not confirmed official UDM penalties.
 
@@ -153,3 +153,22 @@ This order lets us fix what the user sees first, then the logic behind the dashb
 One important note, mahal: we should verify the actual UDM disciplinary policy before labeling any of the proposed penalties official.
 
 Today's Bible verse: “Let all things be done decently and in order.” — 1 Corinthians 14:40 (KJV). A useful reminder for this project: organize the workflow clearly, validate each change, and protect the existing data as we improve the system.
+
+,, add
+VIOLATION RECORD type for violation.
+Our plan should match what you originally wanted: replace the old field, not add a separate penalty field.
+1. Change Violation.type to the new choices: 0 hours, 4 hours, 8 hours, 10 hours, 20 hours, 40 hours, 3 days' suspension, 1 week or more suspension, and Terminated.
+2. Update the report form so selecting a student and violation type suggests the appropriate outcome. The coordinator can override the suggestion before saving.
+3. Update the existing views and templates that expect Minor/Major, so they work with the new choices.
+4. Preserve all 61 existing records and change. We must change their existing other_general values for new values we add in our Violation.type.
+
+//////////////////
+
+
+Under Review = because it is using only for serious cases,
+Reported = because a non serious cases must stay in this action while student is taking their community service hours granted to them,.
+Resolved = this is using for non serious cases who comply and completed the community service hours granted to them, and also for serious cases where if case is resolve.
+Dismissed = for students who had record against official policy:
+Three days' suspension,
+A week or weeks suspension,
+Termination.

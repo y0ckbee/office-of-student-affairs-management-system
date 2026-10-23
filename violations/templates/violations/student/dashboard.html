@@ -646,6 +646,7 @@
                             <tr>
                                 <th class="col-seq">#</th>
                                 <th class="col-date">Date</th>
+                                <th class="col-violation-name">Violation Name</th>
                                 <th class="col-type">Type</th>
                                 <th class="col-status">Status</th>
                                 <th class="col-reporter">Reported By</th>
@@ -681,11 +682,10 @@
                                 <td class="col-seq">{{ forloop.counter }}</td>
                                 <td class="col-date">{{ v.created_at|date:"M d, Y" }}</td>
                                 <td class="col-type">
-                                    {% if v.type == 'major' %}
-                                        <span class="type-badge type-major">Major</span>
-                                    {% else %}
-                                        <span class="type-badge type-minor">Minor</span>
-                                    {% endif %}
+                                    <span class="type-badge">{{ v.get_type_display }}</span>
+                                </td>
+                                <td class="col-violation-name">
+                                    {{ v.violation_type.name|default:"—" }}
                                 </td>
                                 <td class="col-status">
                                     {% if v.status == 'resolved' %}
