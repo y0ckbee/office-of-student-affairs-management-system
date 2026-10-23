@@ -340,6 +340,10 @@
         .stat-icon.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
         .stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
         .stat-icon.red { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .stat-icon.yellow {
+        background: linear-gradient(135deg, #facc15, #eab308);
+        color: white;
+}
 
         .stat-content h3 {
             font-family: 'Poppins', sans-serif;
@@ -789,21 +793,21 @@
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon blue">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="stat-content">
-                    <h3>{{ stats.dismissed }}</h3>
-                    <p>Dismissed</p>
-                </div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-icon red">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
                 <div class="stat-content">
                     <h3>{{ stats.overdue }}</h3>
                     <p>Overdue Cases</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon yellow">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>{{ stats.dismissed }}</h3>
+                    <p>Dismissed</p>
                 </div>
             </div>
         </div>

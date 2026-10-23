@@ -427,7 +427,7 @@
 
                 <a href="{% url 'violations:faculty_case_management' %}?status=under_review"
                     class="stat-card stat-card-link">
-                    <div class="stat-icon stat-icon-info">
+                    <div class="stat-icon stat-icon-violet">
                         <i class="fas fa-eye"></i>
                     </div>
                     <div class="stat-content">
@@ -448,19 +448,7 @@
                         <span class="stat-desc">Completed with approved apology</span>
                     </div>
                 </a>
-
-                <a href="{% url 'violations:faculty_case_management' %}?status=dismissed"
-                    class="stat-card stat-card-link">
-                    <div class="stat-icon stat-icon-info">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="stat-content">
-                        <span class="stat-label">Dismissed</span>
-                        <span class="stat-value">{{ stats.dismissed|default:'0' }}</span>
-                        <span class="stat-desc">Dismissed cases</span>
-                    </div>
-                </a>
-
+                
                 <a href="{% url 'violations:faculty_case_management' %}?status=overdue"
                     class="stat-card stat-card-link">
                     <div class="stat-icon stat-icon-danger">
@@ -470,6 +458,18 @@
                         <span class="stat-label">Overdue Cases</span>
                         <span class="stat-value">{{ stats.overdue|default:'0' }}</span>
                         <span class="stat-desc">Pending >7 days</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'violations:faculty_case_management' %}?status=dismissed"
+                    class="stat-card stat-card-link">
+                    <div class="stat-icon stat-icon-yellow">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Dismissed</span>
+                        <span class="stat-value">{{ stats.dismissed|default:'0' }}</span>
+                        <span class="stat-desc">Dismissed cases</span>
                     </div>
                 </a>
             </div>
@@ -843,6 +843,16 @@
 
         .stat-icon-info {
             background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            color: #ffffff;
+        }
+
+        .stat-icon-violet {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff;
+        }
+
+        .stat-icon-yellow {
+            background: linear-gradient(135deg, #facc15 0%, #eab308 100%);
             color: #ffffff;
         }
 
