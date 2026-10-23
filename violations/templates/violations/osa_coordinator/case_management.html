@@ -823,11 +823,10 @@
                         <label for="status">Status</label>
                         <select name="status" id="status">
                             <option value="all" {% if current_filters.status == 'all' %}selected{% endif %}>All Statuses</option>
-                            <option value="pending" {% if current_filters.status == 'pending' %}selected{% endif %}>⏳ Pending (Reported + Under Review)</option>
-                            <option value="overdue" {% if current_filters.status == 'overdue' %}selected{% endif %}>⚠️ Overdue (>7 days)</option>
                             {% for value, label in violation_statuses %}
                             <option value="{{ value }}" {% if current_filters.status == value %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
+                            <option value="overdue" {% if current_filters.status == 'overdue' %}selected{% endif %}>Overdue</option>
                         </select>
                     </div>
                     <div class="filter-group">

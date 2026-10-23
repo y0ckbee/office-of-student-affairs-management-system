@@ -413,18 +413,6 @@
                     </div>
                 </a>
 
-                <div class="stat-card">
-                    <div class="stat-icon stat-icon-warning">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <div class="stat-content">
-                        <span class="stat-label">Violation Reports</span>
-                        <span class="stat-value">{{ stats.staff_reports|default:'0' }}</span>
-                        <span class="stat-desc">{% if stats.unread_reports %}{{ stats.unread_reports }} unread{% else
-                            %}Recorded in the system{% endif %}</span>
-                    </div>
-                </div>
-
                 <a href="{% url 'violations:faculty_case_management' %}?status=under_review"
                     class="stat-card stat-card-link">
                     <div class="stat-icon stat-icon-violet">

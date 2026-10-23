@@ -112,7 +112,6 @@ faculty_patterns = [
         views.faculty_update_case_status_view,
         name="faculty_update_case_status",
     ),
-    path("my-reports/", views.faculty_my_reports_view, name="faculty_my_reports"),
     path(
         "activity-logs/", views.faculty_activity_logs_view, name="faculty_activity_logs"
     ),

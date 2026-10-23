@@ -806,13 +806,6 @@ def faculty_dashboard_view(request):
     unread_count = staff_messages_qs.filter(read_at__isnull=True).count()
     staff_messages = staff_messages_qs[:20]
 
-    # Count staff reports (messages containing VIOLATION REPORT SUMMARY)
-    staff_reports_qs = staff_messages_qs.filter(
-        content__contains="VIOLATION REPORT SUMMARY"
-    )
-    staff_reports_count = staff_reports_qs.count()
-    unread_reports_count = staff_reports_qs.filter(read_at__isnull=True).count()
-
     # Trashed messages
     trashed_messages = (
         Message.objects.select_related("sender", "receiver")
@@ -850,8 +843,6 @@ def faculty_dashboard_view(request):
             "resolved": resolved_count,
             "overdue": overdue_count,
             "latest_created_at": latest.created_at if latest else None,
-            "staff_reports": staff_reports_count,
-            "unread_reports": unread_reports_count,
             "dismissed": dismissed_count,
         },
         "login_history": login_history,
@@ -1286,20 +1277,6 @@ def faculty_update_case_status_view(request):
 # 	\"\"\"OSA Coordinator: Report Violation form — supports GET (form) and POST (create).\"\"\"
 # 	# This view is deprecated - OSA Coordinator role is for oversight, not direct reporting
 # 	pass
-
-
-@role_required({User.Role.OSA_COORDINATOR})
-def faculty_my_reports_view(request):
-    """OSA Coordinator: My Reported Violations list — restricted to OSA Coordinator."""
-    my_reports = (
-        Violation.objects.select_related("student__user")
-        .filter(reported_by=request.user)
-        .order_by("-created_at")
-    )
-    return render(
-        request, "violations/osa_coordinator/my_reports.html", {"reports": my_reports}
-    )
-
 
 @role_required({User.Role.OSA_COORDINATOR})
 def faculty_activity_logs_view(request):
@@ -2411,117 +2388,6 @@ def staff_export_report_view(request):
         )
 
     return response
-
-
-# @role_required({User.Role.STAFF})
-def staff_send_report_view(request):
-    """Staff: Send violation report summary to OSA Coordinator."""
-    if request.method != "POST":
-        return redirect("violations:staff_reports")
-
-    start_date = request.POST.get("start_date", "")
-    end_date = request.POST.get("end_date", "")
-    message_content = request.POST.get("message", "").strip()
-
-    # Get statistics for the report
-    violations = Violation.objects.all()
-    apology_letters = ApologyLetter.objects.all()
-
-    # Apply date filters
-    if start_date:
-        try:
-            start_dt = datetime.strptime(start_date, "%Y-%m-%d")
-            violations = violations.filter(
-                incident_at__gte=timezone.make_aware(start_dt)
-            )
-            apology_letters = apology_letters.filter(
-                submitted_at__gte=timezone.make_aware(start_dt)
-            )
-        except ValueError:
-            pass
-
-    if end_date:
-        try:
-            end_dt = datetime.strptime(end_date, "%Y-%m-%d")
-            violations = violations.filter(incident_at__lte=timezone.make_aware(end_dt))
-            apology_letters = apology_letters.filter(
-                submitted_at__lte=timezone.make_aware(end_dt)
-            )
-        except ValueError:
-            pass
-
-    # Calculate statistics
-    total_violations = violations.count()
-    pending_count = violations.filter(status=Violation.Status.REPORTED).count()
-    in_progress_count = violations.filter(status=Violation.Status.UNDER_REVIEW).count()
-    resolved_count = violations.filter(status=Violation.Status.RESOLVED).count()
-    resolution_rate = (
-        round((resolved_count / total_violations * 100), 1)
-        if total_violations > 0
-        else 0
-    )
-    total_apologies = apology_letters.count()
-
-    # Build the report message
-    period_text = ""
-    if start_date and end_date:
-        period_text = f"Period: {start_date} to {end_date}"
-    else:
-        period_text = f"As of {timezone.now().strftime('%B %d, %Y')}"
-
-    report_message = f"""📊 VIOLATION REPORT SUMMARY
-{period_text}
-
-📈 Statistics:
-• Total Violations: {total_violations}
-• Pending: {pending_count}
-• In Progress: {in_progress_count}
-• Resolved: {resolved_count}
-• Resolution Rate: {resolution_rate}%
-• Apology Letters: {total_apologies}
-"""
-
-    if message_content:
-        report_message += f"""
-📝 Staff Notes:
-{message_content}
-"""
-
-    report_message += f"""
-—
-Sent by: {request.user.get_full_name() or request.user.username}
-Generated: {timezone.now().strftime('%B %d, %Y at %I:%M %p')}"""
-
-    # Find all OSA Coordinators
-    coordinators = User.objects.filter(role=User.Role.OSA_COORDINATOR)
-
-    if not coordinators.exists():
-        messages.error(request, "No OSA Coordinators found in the system.")
-        return redirect("violations:staff_reports")
-
-    # Send message to all coordinators
-    sent_count = 0
-    for coordinator in coordinators:
-        Message.objects.create(
-            sender=request.user, receiver=coordinator, content=report_message
-        )
-        sent_count += 1
-
-    # Log the activity
-    from .models import ActivityLog
-
-    ActivityLog.log_activity(
-        action_type="report_sent",
-        description=f"Sent violation report summary to {sent_count} coordinator(s). {period_text}",
-        request=request,
-        user=request.user,
-    )
-
-    messages.success(
-        request, f"Report sent successfully to {sent_count} OSA Coordinator(s)."
-    )
-    return redirect("violations:staff_reports")
-
 
 # @role_required({User.Role.STAFF})
 def staff_delete_document_view(request, document_id):

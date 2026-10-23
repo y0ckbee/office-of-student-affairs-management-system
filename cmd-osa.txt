@@ -83,8 +83,7 @@ One week's suspension
 
 Termination, only if applicable under verified university rules.
 
-
-- 4\. Add a Reported case count and a Dismissed case count. remove Violation Reports if it is not equal to Reported.
+- 4\. Add a Reported case count and a Dismissed case count if needed. remove Violation Reports if it is equal to Reported.
 - 5\. Retain the Under Review and Resolved counts, and display an Overdue count based on the overdue-case rules.
 - 6\. Review dashboard labels, links, and wording for consistency.
 
