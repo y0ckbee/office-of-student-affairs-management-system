@@ -735,6 +735,9 @@ def faculty_dashboard_view(request):
     resolved_count = all_violations_qs.filter(status=Violation.Status.RESOLVED).count()
     pending_count = reported_count + under_review_count
     latest = all_violations_qs.order_by("-created_at").first()
+    dismissed_count = all_violations_qs.filter(
+    status=Violation.Status.DISMISSED
+    ).count()
 
     # include login history for modal
     # Annotated student directory (violation counts per student)
@@ -849,6 +852,7 @@ def faculty_dashboard_view(request):
             "latest_created_at": latest.created_at if latest else None,
             "staff_reports": staff_reports_count,
             "unread_reports": unread_reports_count,
+            "dismissed": dismissed_count,
         },
         "login_history": login_history,
         "students": students_page,  # page object
