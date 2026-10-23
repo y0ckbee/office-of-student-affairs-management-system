@@ -401,7 +401,19 @@
                     </div>
                 </a>
 
-                <div class="stat-card"
+                <a href="{% url 'violations:faculty_case_management' %}?status=reported"
+                    class="stat-card stat-card-link">
+                    <div class="stat-icon stat-icon-warning">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Reported</span>
+                        <span class="stat-value">{{ stats.reported|default:'0' }}</span>
+                        <span class="stat-desc">Reported violation cases</span>
+                    </div>
+                </a>
+
+                <div class="stat-card">
                     <div class="stat-icon stat-icon-warning">
                         <i class="fas fa-file-alt"></i>
                     </div>
@@ -413,15 +425,15 @@
                     </div>
                 </div>
 
-                <a href="{% url 'violations:faculty_case_management' %}?status=pending"
+                <a href="{% url 'violations:faculty_case_management' %}?status=under_review"
                     class="stat-card stat-card-link">
                     <div class="stat-icon stat-icon-info">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-eye"></i>
                     </div>
                     <div class="stat-content">
-                        <span class="stat-label">Pending Review</span>
-                        <span class="stat-value">{{ stats.pending_for_review|default:'0' }}</span>
-                        <span class="stat-desc">{{ stats.reported|default:'0' }} new, {{ stats.under_review|default:'0'}} reviewing</span>
+                        <span class="stat-label">Under Review</span>
+                        <span class="stat-value">{{ stats.under_review|default:'0' }}</span>
+                        <span class="stat-desc">Under Review cases</span>
                     </div>
                 </a>
 
@@ -434,6 +446,18 @@
                         <span class="stat-label">Resolved Cases</span>
                         <span class="stat-value">{{ stats.resolved|default:'0' }}</span>
                         <span class="stat-desc">Completed with approved apology</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'violations:faculty_case_management' %}?status=dismissed"
+                    class="stat-card stat-card-link">
+                    <div class="stat-icon stat-icon-info">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Dismissed</span>
+                        <span class="stat-value">{{ stats.dismissed|default:'0' }}</span>
+                        <span class="stat-desc">Dismissed cases</span>
                     </div>
                 </a>
 
@@ -465,7 +489,7 @@
 
             <div class="actions-grid">
                 <a href="{% url 'violations:osa_report_violation' %}" class="official-action-btn action-danger">
-                    <div class="action-icon"><i class="fas fa-file-circle-exclamation"></i></div>
+                    <div class="action-icon"><i class="fas fa-eye"></i></div>
                     <div class="action-text">
                         <span class="action-label">Report Violation</span>
                         <span class="action-desc">Record a student violation</span>
